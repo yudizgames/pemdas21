@@ -1,0 +1,67 @@
+<!--<button ng-click="submitExam()">Generate Exam</button> <br> <br>-->
+<!--<button ng-click="startExam()">Start Exam</button>-->
+
+
+<!-- PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="javascript:;" ui-sref="admin.dashboard">Dashboard</a><i class="fa fa-circle"></i>
+    </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+
+<!-- BEGIN MAIN CONTENT -->
+<div class="margin-top-10">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet box blue-madison">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Exam Details {{form_action}}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal form-bordered" name="form_exam" id="form_exam" novalidate ng-submit="submitExam()">
+                        <div class="form-body">
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="vTitle">Exam Title<span class="text-danger">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" value="" class="form-control" name="vTitle" id="vTitle" required ng-model="exam.vTitle">
+                                    <div ng-messages="form_exam.vTitle.$error && form_exam.vTitle.$dirty" ng-show="form_exam.vTitle.$error && form_exam.vTitle.$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_exam.vTitle.$error.required">Exam title is required</div>
+                                    </div>
+                                    <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="vDescription">Exam Description<span class="text-danger">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" value="" class="form-control" name="vDescription" id="vDescription" required ng-model="exam.vDescription">
+                                    <div ng-messages="form_exam.vDescription.$error && form_exam.vDescription.$dirty" ng-show="form_exam.vDescription.$error && form_exam.vDescription.$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_exam.vDescription.$dirty && form_exam.vDescription.$error.required">Exam description <i></i>s required.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button type="submit" class="btn green" data-ng-disabled="form_exam.$invalid"><i class="fa fa-check"></i> Submit</button>
+                                    <button type="button" ng-click="startExam()" class="btn green" data-ng-disabled="form_exam.$invalid"><i class="fa fa-check"></i> Start Games</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+</div>

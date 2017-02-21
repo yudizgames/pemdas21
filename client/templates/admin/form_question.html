@@ -1,0 +1,169 @@
+<!-- PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="javascript:;" ui-sref="admin.dashboard">Dashboard</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        <a href="javascript:;" ui-sref="admin.question">Question List</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        Question {{form_action}}
+    </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+
+<!-- BEGIN MAIN CONTENT -->
+<div class="margin-top-10">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet box blue-madison">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Question {{form_action}}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal form-bordered" name="form_question" id="form_question" novalidate ng-submit="submitQuestion()">
+                        <div class="form-body">
+
+                        <div class="form-group" ng-class="(form_action == 'Edit') ? 'hide':''">
+                                <label class="control-label col-md-3" for="eType">Question Type<span class="text-danger">*</span></label>
+                                <div class="col-md-4">
+                                    <select name="eType" id="eType" class="form-control" ng-model="question.eType" required>
+                                        <option value="">Select Questioin Type</option>
+                                        <option value="MCQ">MCQ</option>
+                                        <option value="VSQ">VSQ</option>
+                                    </select>
+                                    <div ng-messages="form_question.eType.$error && form_question.eType.$dirty" ng-show="form_question.eType.$error && form_question.eType.$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_question.eType.$error.required">Question Type required</div>
+                                    </div>
+                                    <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                                </div>
+                                </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="eMode">Difficult level <span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <select name="eType" id="eMode" class="form-control" ng-model="question.vModeName" required>
+                                    <option value="">Select Difficult level</option>
+                                    <option value="Easy">Easy</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Difficult">Difficult</option>
+                                    <option value="Expert">Expert</option>
+                                    <option value="Custom">Custom</option>
+                                </select>
+                                <div ng-messages="form_question.eMode.$error && form_question.eMode.$dirty" ng-show="form_question.eMode.$error && form_question.eMode.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.eMode.$error.required">Difficult level is required</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="vQuestion">Question <span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <input type="text" value="" class="form-control" name="vQuestion" id="vQuestion"  ng-model="question.vQuestion" required>
+                                <div ng-messages="form_question.vQuestion.$error && form_question.vQuestion.$dirty" ng-show="form_question.vQuestion.$error && form_question.vQuestion.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.vQuestion.$error.required">Question is required</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+                        <!-- Options -->
+
+                        <div class="form-group" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                            <label class="control-label col-md-3" for="vOptionOne">Option A<span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <input type="text" value="" class="form-control" name="vOptionOne" id="vOptionOne"  ng-model="question.vOptionOne.vAnswer" ng-required="(question.eType == 'VSQ' || question.eType == null)? false : true" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                                <div ng-messages="form_question.vOptionOne.$error && form_question.vOptionOne.$dirty" ng-show="form_question.vOptionOne.$error && form_question.vOptionOne.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.vOptionOne.$error.required">Option A is required</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                            <label class="control-label col-md-3" for="vOptionTwo">Option B<span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <input type="text" value="" class="form-control" name="vOptionTwo" id="vOptionTwo" required ng-model="question.vOptionTwo.vAnswer" ng-required="(question.eType == 'VSQ' || question.eType == null)? false : true" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                                <div ng-messages="form_question.vOptionTwo.$error && form_question.vOptionTwo.$dirty" ng-show="form_question.vOptionTwo.$error && form_question.vOptionTwo.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.vOptionTwo.$error.required">Option B is required</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                            <label class="control-label col-md-3" for="vOptionThree">Option C<span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <input type="text" value="" class="form-control" name="vOptionThree" id="vOptionThree" required ng-model="question.vOptionThree.vAnswer" ng-required="(question.eType == 'VSQ' || question.eType == null)? false : true" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                                <div ng-messages="form_question.vOptionThree.$error && form_question.vOptionThree.$dirty" ng-show="form_question.vOptionThree.$error && form_question.vOptionThree.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.vOptionThree.$error.required">Option C is required</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                            <label class="control-label col-md-3" for="vOptionFour">Option D<span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <input type="text" value="" class="form-control" name="vOptionFour" id="vOptionFour" required ng-model="question.vOptionFour.vAnswer" ng-required="(question.eType == 'VSQ' || question.eType == null)? false : true" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                                <div ng-messages="form_question.vOptionFour.$error && form_question.vOptionFour.$dirty" ng-show="form_question.vOptionFour.$error && form_question.vOptionFour.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.vOptionFour.$error.required">Option D is required</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                            <label class="control-label col-md-3" for="vOptionAns">Answer<span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <select name="vOptionAns" id="vOptionAns" class="form-control" ng-model="question.vOptionAns" ng-required="(question.eType == 'VSQ' || question.eType == null)? false : true" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
+                                    <option value="">Select Answer Above</option>
+                                    <option value="0">A</option>
+                                    <option value="1">B</option>
+                                    <option value="2">C</option>
+                                    <option value="3">D</option>
+                                </select>
+                                <div ng-messages="form_question.vOptionAns.$error && form_question.vOptionAns.$dirty" ng-show="form_question.vOptionAns.$error && form_question.vOptionAns.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.vOptionAns.$error.required">Answer is required.</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+                        <!-- ANS -->
+
+
+                        <div class="form-group" ng-class="(question.eType == 'MCQ' || question.eType == null)? 'hide' : ''">
+                            <label class="control-label col-md-3" for="vAnsVsq">Answer <span class="text-danger">*</span></label>
+                            <div class="col-md-4">
+                                <input type="text" value="" class="form-control" name="vAnsVsq" id="vAnsVsq" required ng-model="question.vAnsVsq.vAnswer" ng-required="(question.eType == 'MCQ' || question.eType == null)? false : true" ng-class="(question.eType == 'MCQ' || question.eType == null)? 'hide' : ''">
+                                <div ng-messages="form_question.vAnsVsq.$error && form_question.vAnsVsq.$dirty" ng-show="form_question.vAnsVsq.$error && form_question.vAnsVsq.$dirty" role="alert" class="text-danger">
+                                    <div ng-message="required" ng-show="form_question.vAnsVsq.$error.required">Answer is required</div>
+                                </div>
+                                <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button type="submit" class="btn green" data-ng-disabled="form_question.$invalid"><i class="fa fa-check"></i> Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+</div>

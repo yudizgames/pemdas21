@@ -1,0 +1,123 @@
+<!-- PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="javascript:;" ui-sref="admin.dashboard">Dashboard</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        <a href="javascript:;" ui-sref="admin.question">Questions List</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        Question details
+    </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+
+<!-- BEGIN MAIN CONTENT -->
+<div class="margin-top-10">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet box blue-madison">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Question details
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <table class="table table-bordered table-striped">
+                                    <tr>
+                                        <td>
+                                            Question
+                                        </td>
+                                        <td>
+                                            {{question[0].vQuestion}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Type
+                                        </td>
+                                        <td>
+                                            {{question[0].eType}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Difficult level
+                                        </td>
+                                        <td>
+                                            {{question[0].vModeName}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td ng-hide="(question[0].eType == 'VSQ') ? true : false">
+                                            Option:
+                                        </td>
+                                        <td ng-hide="(question[0].eType == 'VSQ') ? false : true">
+                                            Answer:
+                                        </td>
+                                        <td>
+                                            <div id="pulsate-regular" style="padding:5px;">
+                                            {{question[0].vAnswer}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr ng-hide="(question[0].eType == 'VSQ') ? true : false">
+                                        <td>
+                                            Option:
+                                        </td>
+                                        <td>
+                                            {{question[1].vAnswer}}
+                                        </td>
+                                    </tr>
+                                    <tr ng-hide="(question[0].eType == 'VSQ') ? true : false">
+                                        <td>
+                                            Option:
+                                        </td>
+                                        <td>
+                                            {{question[2].vAnswer}}
+                                        </td>
+                                    </tr>
+                                    <tr ng-hide="(question[0].eType == 'VSQ') ? true : false">
+                                        <td>
+                                            Option:
+                                        </td>
+                                        <td>
+                                            {{question[3].vAnswer}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Last Activity
+                                        </td>
+                                        <td>
+                                            {{question[0].dUpdatedDate}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Status
+                                        </td>
+                                        <td>
+                                           <span class="label" ng-class="(question[0].eStatus == 'y') ? 'label-success' : 'label-warning'">{{(question[0].eStatus == 'y') ? "Active":"In Active"}}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    <!-- END FORM-->
+                </div>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+</div>
+<script>
+    jQuery('#pulsate-regular').pulsate({
+        color: "#4caf50",
+        speed: 1000,
+        glow: true
+    });
+</script>

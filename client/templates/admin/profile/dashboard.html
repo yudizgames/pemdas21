@@ -1,0 +1,66 @@
+<div class="row">
+   <div class="col-md-12">
+      <div class="portlet light">
+         <div class="portlet-title tabbable-line">
+            <div class="caption caption-md">
+               <i class="icon-globe theme-font hide"></i>
+               <span class="caption-subject font-blue-madison bold uppercase">Personal Info</span>
+            </div>
+         </div>
+         <div class="portlet-body">
+            <div class="form-group">
+               <label class="control-label col-xs-3">Full Name</label>
+               <div class="col-xs-9 left-border">
+                  <label class="control-label col-xs-12">{{profile.vFullName}}</label>       
+               </div>
+            </div>
+            <div class="clearfix"></div>
+            <hr>
+            <div class="clearfix"></div>
+            <div class="form-group">
+               <label class="control-label col-xs-3">User Name</label>
+               <div class="col-xs-9 left-border">
+                  <label class="control-label col-xs-12">{{profile.vUserName}}</label>       
+               </div>
+            </div>
+            <div class="clearfix"></div>
+            <hr>
+            <div class="clearfix"></div>
+            <div class="form-group">
+               <label class="control-label col-xs-3">Email</label>
+               <div class="col-xs-9 left-border">
+                  <label class="control-label col-xs-12">{{profile.vEmail}}</label>       
+               </div>
+            </div>
+            <div class="clearfix"></div>
+            <hr>
+            <div class="clearfix"></div>
+            <div class="form-group">
+               <label class="control-label col-xs-3">Country</label>
+               <div class="col-xs-9 left-border">
+                  <label class="control-label col-xs-12">{{profile.vCountry || '-'}}</label>       
+               </div>
+            </div>
+            <div class="clearfix"></div>
+            <hr>
+            <div class="clearfix"></div>
+            <div class="form-group">
+               <label class="control-label col-xs-3">Joining Date</label>
+               <div class="col-xs-9 left-border">
+                  <label class="control-label col-xs-12">{{profile.dCreatedDate | date:'dd-MMM-yyyy HH:mm:ss Z'}}</label>       
+               </div>
+            </div>
+            <div class="clearfix"></div>
+            <hr>
+            <div class="clearfix"></div>
+            <div class="form-group">
+               <label class="control-label col-xs-3">Last Activity</label>
+               <div class="col-xs-9 left-border">
+                  <label class="control-label col-xs-12">{{profile.dLastActivity | date:'dd-MMM-yyyy HH:mm:ss Z'}}</label>       
+               </div>
+            </div>
+            <div class="clearfix"></div>
+         </div>
+      </div>
+   </div>
+</div>

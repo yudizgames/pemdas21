@@ -1,0 +1,162 @@
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+   <!-- BEGIN HEADER INNER -->
+   <div class="page-header-inner">
+      <!-- BEGIN LOGO -->
+      <div class="page-logo">
+         <a href="index.html">
+         <!-- LOGO Here -->
+          <img src="../../assets/admin/upload/logo.png" alt="logo" class="logo-default" style="height: 70px; width: 100px;"/>
+         </a>
+         <div class="menu-toggler sidebar-toggler">
+            <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+         </div>
+      </div>
+      <!-- END LOGO -->
+      <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+      <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+      </a>
+      <!-- END RESPONSIVE MENU TOGGLER -->
+      
+      <!-- BEGIN PAGE TOP -->
+      <div class="page-top">
+         <!-- BEGIN HEADER SEARCH BOX -->
+         <!-- BEGIN TOP NAVIGATION MENU -->
+         <div class="top-menu">
+            <ul class="nav navbar-nav pull-right" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+               <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+               <li class="dropdown dropdown-user dropdown-dark" ng-class="{open:hover}">
+                  <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                  <span class="username username-hide-on-mobile">Travis D </span>
+                  <!-- DOC: Do not remove below empty space(&nbsp;) as its purposely used -->
+                  <img alt="" class="img-circle" src="../assets/admin/layout/img/avatar9.jpg"/>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-default">
+                     <li>
+                        <a href="javascript:;" ui-sref="admin.cpass">
+                        <i class="icon-lock"></i> Change Password </a>
+                     </li>
+                     <li>
+                        <a href="javascript:;" ng-click="logout()">
+                        <i class="icon-key"></i> Log Out </a>
+                     </li>
+                  </ul>
+               </li>
+               <!-- END USER LOGIN DROPDOWN -->
+               <!-- END USER LOGIN DROPDOWN -->
+            </ul>
+         </div>
+         <!-- END TOP NAVIGATION MENU -->
+      </div>
+      <!-- END PAGE TOP -->
+   </div>
+   <!-- END HEADER INNER -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+   <!-- BEGIN SIDEBAR -->
+   <div class="page-sidebar-wrapper">
+      <div class="page-sidebar navbar-collapse collapse">
+         <ul class="page-sidebar-menu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" ng-class="{'page-sidebar-menu-closed': settings.layout.pageSidebarClosed}">
+            <li class="start" ui-sref-active="{'active' : $state.current.name == 'admin.dashboard'">
+               <a ui-sref="admin.dashboard">
+               <i class="icon-home"></i>
+               <span class="title">Dashboard</span>
+               </a>
+            </li>
+
+            <li ui-sref-active="{'active' : $state.current.name == 'admin.cpass' || $state.current.name == 'admin.sitesetting'}">
+               <a href="javascript:;">
+               <i class="icon-settings"></i>
+               <span class="title">General Settings</span>
+               <span class="arrow "></span>
+               </a>
+               <ul class="sub-menu">
+                  <li ui-sref-active="{'active' : $state.current.name == 'admin.sitesetting'}">
+                     <a href="javascrip:;"  ui-sref="admin.sitesetting">
+                     <i class="icon-settings"></i>Site Settings</a>
+                  </li>
+                  <li ui-sref-active="{'active' : $state.current.name == 'admin.cpass'}">
+                     <a href="javascript:;" ui-sref="admin.cpass">
+                     <i class="icon-settings"></i>
+                        Change Password</a>
+                  </li>
+                  <li>
+                     <a href="javascrip:;" ui-sref="admin.setting.userdev">
+                     <i class="icon-settings"></i>
+                     Manage Profile</a>
+                  </li>
+               </ul>
+            </li>
+
+            <li ui-sref-active="{'active' : $state.current.name == 'admin.users'}">
+               <a ui-sref="admin.users" href="javascrit:;">
+                  <i class="icon-user"></i>
+                  <span class="title">Manage Users</span>
+               </a>
+            </li>
+
+            <li>
+               <a ui-sref="admin.question" href="javascrit:;">
+                  <i class="fa fa-question-circle"></i>
+                  <span class="title">Manage Questions</span>
+               </a>
+            </li>
+
+            <li>
+               <a ui-sref="admin.examuser" href="javascrit:;">
+                  <i class="fa fa-pencil"></i>
+                  <span class="title">Manage Exams</span>
+               </a>
+            </li>
+
+            <li class="last ">
+               <a href="javascript:;" ng-click="logout()">
+               <i class="icon-key"></i>
+               <span class="title">Logout</span>
+               </a>
+            </li>
+         </ul>
+         <!-- END SIDEBAR MENU -->
+      </div>
+   </div>
+   <!-- END SIDEBAR -->
+   <!-- BEGIN CONTENT -->
+   <div class="page-content-wrapper">
+      <div ng-spinner-bar class="page-spinner-bar hide">
+             <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+       </div>
+      <div class="page-content" >
+           <ui-view></ui-view>
+      </div>
+   </div>   
+   <!-- END CONTENT -->
+</div>
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->
+<div class="page-footer">
+   <div class="page-footer-inner">
+      <!--2014 &copy; Metronic by keenthemes. <a href="http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes" title="Purchase Metronic just for 27$ and get lifetime updates for free" target="_blank">Purchase Metronic!</a>-->
+   </div>
+   <div class="scroll-to-top">
+      <i class="icon-arrow-up"></i>
+   </div>
+</div>
+<!--<input type="hiden" id="token" value="{{token}})">-->
+<!-- END FOOTER -->
+<script>
+   console.log($('#token').val());
+    $.ajaxSetup({
+        beforeSend: function (xhr)
+        {
+//            xhr.setRequestHeader("Accept","application/vvv.website+json;version=1");
+//            xhr.setRequestHeader("Authorization","JWT ";
+        }
+    });
+</script>
+

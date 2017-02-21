@@ -1,0 +1,90 @@
+<!-- BEGIN PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+   <li>
+      <a href="#dashboard.html">Dashboard</a><i class="fa fa-circle"></i>
+   </li>
+   <li class="active">
+      <a href="#users.html">Users List</a><i class="fa fa-circle"></i>
+   </li>
+   <li class="active">
+      User Profile
+   </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+
+<!-- BEGIN PAGE CONTENT-->
+<div class="row" ng-controller="UserProfileController" ng-init="getUserInfo()">
+   <div class="col-md-12">
+      <!-- BEGIN PROFILE SIDEBAR -->
+      <div class="profile-sidebar">
+         <!-- PORTLET MAIN -->
+         <div class="portlet light profile-sidebar-portlet">
+            <!-- SIDEBAR USERPIC -->
+            <div class="profile-userpic">
+               <img src="../assets/admin/pages/media/profile/profile_user.jpg" class="img-responsive" alt="">
+            </div>
+            <!-- END SIDEBAR USERPIC -->
+            <!-- SIDEBAR USER TITLE -->
+            <div class="profile-usertitle">
+               <div class="profile-usertitle-name">
+                  {{profile.vFullName | uppercase}}
+               </div>
+               
+            </div>
+            <!-- END SIDEBAR USER TITLE -->
+            <!-- SIDEBAR BUTTONS -->
+            <div class="row list-separated profile-stat">
+               <div class="col-md-4 col-sm-4 col-xs-6">
+                  <div class="uppercase profile-stat-title">
+                     L1
+                  </div>
+                  <div class="uppercase profile-stat-text">
+                     Level
+                  </div>
+               </div>
+               <div class="col-md-4 col-sm-4 col-xs-6">
+                  <div class="uppercase profile-stat-title">
+                     $5000
+                  </div>
+                  <div class="uppercase profile-stat-text">
+                     Money
+                  </div>
+               </div>
+               <div class="col-md-4 col-sm-4 col-xs-6">
+                  <div class="uppercase profile-stat-title">
+                     3
+                  </div>
+                  <div class="uppercase profile-stat-text">
+                     Played
+                  </div>
+               </div>
+            </div>
+            <!-- END SIDEBAR BUTTONS -->
+            <!-- SIDEBAR MENU -->
+            <div class="profile-usermenu">
+               <ul class="nav">
+                  <li ng-class="{active: $state.includes('profile.dashboard')}">
+                     <a ui-sref="profile.dashboard">
+                     <i class="icon-home"></i>
+                     Overview </a>
+                  </li>
+                  <li ng-class="{active: $state.includes('profile.account')}">
+                     <a ui-sref="profile.account">
+                     <i class="icon-settings"></i>
+                     Game History </a>
+                  </li>                 
+               </ul>
+            </div>
+            <!-- END MENU -->
+         </div>
+         <!-- END PORTLET MAIN -->
+        
+      </div>
+      <!-- END BEGIN PROFILE SIDEBAR -->
+      <!-- BEGIN PROFILE CONTENT -->
+      <div ui-view class="profile-content fade-in-up"> 
+      </div>
+      <!-- END PROFILE CONTENT -->
+   </div>
+</div>
+<!-- END PAGE CONTENT-->

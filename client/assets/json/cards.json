@@ -1,0 +1,340 @@
+{
+  "players": {
+    "millee_mint": {
+      "name": "Millee Mint",
+      "file": "millee_mint.jpg",
+      "price": 10000
+    },
+    "colin_coin": {
+      "name": "Colin Coin",
+      "file": "colin_coin.jpg",
+      "price": 50000
+    },
+    "debby_dollar": {
+      "name": "Debby Dollar",
+      "file": "debby_dollar.jpg",
+      "price": 100000
+    },
+    "benny_bundle": {
+      "name": "Benny Bundle",
+      "file": "benny_bundle.jpg",
+      "price": 250000
+    },
+    "nobby_note": {
+      "name": "Nobby Note",
+      "file": "nobby_note.jpg",
+      "price": 500000
+    },
+    "fanny_fortune": {
+      "name": "Fanny Fortune",
+      "file": "fanny_fortune.jpg",
+      "price": 1000000
+    }
+  },
+  "levels": {
+    "L1": {
+      "level": "L1",
+      "price": 0,
+      "value": 0,
+      "description": "FREE play, no bank and if you achieve 6 numbers player receives next level free"
+    },
+    "L2": {
+      "level": "L2",
+      "price": 0.99,
+      "value": 100000,
+      "description": "Paid play and if you achieve 6 numbers player receives next level free"
+    },
+    "L3": {
+      "level": "L3",
+      "price": 1.99,
+      "value": 200000,
+      "description": "Paid play and if you achieve 6 numbers player receives next level free"
+    },
+    "L4": {
+      "level": "L4",
+      "price": 2.99,
+      "value": 300000,
+      "description": "Paid play and if you achieve 6 numbers player receives next level free"
+    },
+    "L5": {
+      "level": "L5",
+      "price": 3.99,
+      "value": 400000,
+      "description": "Paid play and if you achieve 6 numbers player receives next level free"
+    },
+    "L6": {
+      "level": "L6",
+      "price": 4.99,
+      "value": 500000,
+      "description": "Paid play and if you achieve 6 numbers player receives a random Fantasy Card"
+    },
+    "monthly": {
+      "level": "Monthly",
+      "price": 0,
+      "value": 1000000,
+      "description": "Allows player full access to all 6 levels continually for 1 month plus Member Bank of $1 million ... Pay One Time for Unlimited Play, No Adds and renewable automatically and able to save their game"
+    }
+  },
+  "buy_no": {
+    "price": 10000,
+    "description": "Lotto number and next number marked off Entry Coupon"
+  },
+  "buy_cash": [
+    {
+      "price": 0.5,
+      "value": 250000,
+      "description": "Adds to player bank balance to their PC"
+    },
+    {
+      "price": 0.99,
+      "value": 500000,
+      "description": "Adds to player bank balance to their PC"
+    }
+  ],
+  "FC": {
+    "overseas_holiday": {
+      "name": "Overseas Holiday",
+      "price": 100000
+    },
+    "shopping_spree": {
+      "name": "Shopping Spree",
+      "price": 150000
+    },
+    "luxury_car": {
+      "name": "Luxury Car",
+      "price": 250000
+    },
+    "luxury_boat": {
+      "name": "Luxury Boat",
+      "price": 350000
+    },
+    "luxury_mansion": {
+      "name": "Luxury Mansion",
+      "price": 1000000
+    },
+    "tropical_island": {
+      "name": "Tropical Island",
+      "price": 2000000
+    }
+  },
+  "OCB": [
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Father’s day.",
+      "value": 500000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Father’s day.",
+      "value": 300000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Father’s day.",
+      "value": 1000000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Christmas.",
+      "value": 600000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Christmas.",
+      "value": 900000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Christmas.",
+      "value": 1000000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Mother’s day.",
+      "value": 200000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Mother’s day.",
+      "value": 300000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Mother’s day.",
+      "value": 1000000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for your Birthday.",
+      "value": 50000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for your Birthday.",
+      "value": 250000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for your Birthday.",
+      "value": 500000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Valentine’s day.",
+      "value": 50000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Valentine’s day.",
+      "value": 100000
+    },
+    {
+      "title": "You are given a OUTRAGEOUS FANTASY LOTTO ENTREY COUPON for Valentine’s day.",
+      "value": 700000
+    }
+  ],
+  "MN": [
+    10000,
+    50000,
+    100000,
+    250000,
+    500000
+  ],
+  "MCC": {
+    "LDN": [
+      "13",
+      "16",
+      "19",
+      "24",
+      "25",
+      "26",
+      "33",
+      "44",
+      "30,31",
+      "32,36",
+      "37,44",
+      "38,42",
+      "39,43",
+      "1,7",
+      "2,11,21",
+      "15,18,28",
+      "23,27,40",
+      "5,17,34",
+      "4,12,45",
+      "3,19,20",
+      "6,8,9,10",
+      "13,16,35,43",
+      "14,16,22,24",
+      "29,31,32,41",
+      "25,30,39,42",
+      "36,37,38,44",
+      "1,2,3,29,30",
+      "40,41,42,43,45",
+      "4,5,18,19,20",
+      "7,8,16,28,38",
+      "21,24,25,36,37",
+      "6,12,26,27,39",
+      "1,7,8,25,26,45",
+      "2,11,19,20,34,40",
+      "3,10,16,17,23,43",
+      "6,9,15,30,32,35",
+      "4,12,13,28,29,41",
+      "5,14,21,31,36,42",
+      "22,24,27,33,37,38",
+      "1,7,8,20,21,39",
+      "2,11,12,17,18,29",
+      "3,4,5,34,35,45",
+      "6,9,10,14,15,33",
+      "22,23,27,28,40,41",
+      "LOTTO,33",
+      "LOTTO,34",
+      "LOTTO,39",
+      "LOTTO,44",
+      "LOTTO,9,10",
+      "LOTTO,11,13",
+      "LOTTO,14,17",
+      "LOTTO,15,22",
+      "LOTTO,23,31",
+      "LOTTO,32,35",
+      "LOTTO,LOTTO,LOTTO,LOTTO,LOTTO,LOTTO"
+    ],
+    "LWO": [
+      {
+        "title": "OFL WIPE OUT",
+        "description": "YOU FORFIET ALL YOUR OUTRAGEOUS FANTASY LOTTO FANTASY CARDS"
+      },
+      {
+        "title": "OFL WIPE OUT",
+        "description": "YOU FORFIET ALL YOUR OUTRAGEOUS FANTASY LOTTO CASH WINNINGS"
+      },
+      {
+        "title": "OFL TOTAL WIPE OUT",
+        "description": "YOU FORFIET ALL YOUR OFL CASH WINNINGS & OFL FANTASY CARDS"
+      },
+      {
+        "title": "OFL TOTAL WIPE OUT",
+        "description": "YOU FORFIET ALL YOUR OFL CASH WINNINGS & OFL FANTASY CARDS"
+      }
+    ],
+    "OFR": [
+      {
+        "title": "You purchased a ticket in a LUXURY CAR raffle.",
+        "FC": "luxury_car"
+      },
+      {
+        "title": "You purchased a ticket in a LUXURY CAR raffle.",
+        "FC": "luxury_car"
+      },
+      {
+        "title": "You purchased a ticket in a LUXURY MANSION raffle.",
+        "FC": "luxury_mansion"
+      },
+      {
+        "title": "You purchased a ticket in a LUXURY MANSION raffle.",
+        "FC": "luxury_mansion"
+      },
+      {
+        "title": "You purchased a ticket in a OVERSEAS HOLIDAY raffle.",
+        "FC": "overseas_holiday"
+      },
+      {
+        "title": "You purchased a ticket in a OVERSEAS HOLIDAY raffle.",
+        "FC": "overseas_holiday"
+      },
+      {
+        "title": "You purchased a ticket in a TROPICAL ISLAND raffle.",
+        "FC": "tropical_island"
+      },
+      {
+        "title": "You purchased a ticket in a TROPICAL ISLAND raffle.",
+        "FC": "tropical_island"
+      },
+      {
+        "title": "You purchased a ticket in a LUXURY BOAT raffle.",
+        "FC": "luxury_boat"
+      },
+      {
+        "title": "You purchased a ticket in a LUXURY BOAT raffle.",
+        "FC": "luxury_boat"
+      },
+      {
+        "title": "You purchased a ticket in a SHOPPING SPREE raffle.",
+        "FC": "shopping_spree"
+      },
+      {
+        "title": "You purchased a ticket in a SHOPPING SPREE raffle.",
+        "FC": "shopping_spree"
+      }
+    ],
+    "OMO": [
+      "1",
+      "2",
+      "4,23",
+      "3,43",
+      "5,24",
+      "8,27,43",
+      "7,26,42",
+      "6,25,44",
+      "10,13,29,45",
+      "1,11,14,30",
+      "9,28,44,25",
+      "2,12,15,31",
+      "5,15,18,28,34",
+      "4,14,17,27,33",
+      "3,13,16,26,32",
+      "6,16,19,29,35,36",
+      "5,17,20,30,36,37",
+      "11,21,24,34,40,41",
+      "9,19,22,32,38,39",
+      "12,22,25,35,41,42",
+      "10,20,23,33,39,40",
+      "8,18,21,31,37,38"
+    ]
+  }
+}

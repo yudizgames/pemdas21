@@ -1,0 +1,100 @@
+<!-- BEGIN PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="#dashboard.html">Dashboard</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        General Settings<i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        Site Settings
+    </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+<!-- BEGIN MAIN CONTENT -->
+<div class="margin-top-10">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet box blue-madison">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Website general settings
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal form-bordered" name="form_siteSettings" id="form_siteSettings" novalidate ng-submit="submitSettings()" enctype="multipart/form-data">
+                        <div class="form-body">
+                            <div class="form-group" ng-repeat="x in siteSettings">
+                                <label class="control-label col-md-3" for="field_{{x.iFieldId}}">{{x.vLabel}} <span ng-if="x.eRequired == 'y'" class="text-danger">*</span></label>
+                                <div class="col-md-4" ng-if="x.vType == 'text' || x.vType == 'email' || x.vType == 'password'">
+                                    <input type="{{x.vType}}" value="{{x.vValue}}" class="form-control" ng-class="{{x.vClass}}" name="{{x.iFieldId}}" minlength="{{x.iMinLength}}" maxlength="{{x.iMaxLength > 0 ? x.iMaxLength : ''}}" id="field_{{x.iFieldId}}" ng-required="x.eRequired == 'y'" data-ng-model="x.vValue">
+                                    <span class="help-block">{{x.vHint}}</span>
+                                    <div ng-messages="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" ng-show="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_siteSettings[x.iFieldId].$error.required">{{x.vLabel}} is required</div>
+                                        <div data-ng-if="x.vType == 'email'" ng-show="form_siteSettings[x.iFieldId].$error.email" ng-message="email">Please enter valid email</div>
+                                        <div ng-message="minlength" ng-show="form_siteSettings[x.iFieldId].$error.minlength">Minimum {{x.iMinLength}} is required</div>
+                                        <div ng-message="maxlength" ng-show="form_siteSettings[x.iFieldId].$error.maxlength">Maximum {{x.iMaxLength}} characters are allowed </div>
+                                    </div>
+                                    <!-- <pre>error = {{ form_siteSettings[x.iFieldId].$error | json }}</pre> -->
+                                </div>
+                                <div class="col-md-4" ng-if="x.vType == 'textarea'">
+                                    <textarea name="{{x.iFieldId}}" id="field_{{x.iFieldId}}" class="form-control" ng-class="{{x.vClass}}" maxlength="225" rows="2" data-ng-model="x.vValue">{{x.vValue}}</textarea>
+                                    <span class="help-block">{{x.vHint}}</span>
+                                    <div ng-messages="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" ng-show="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_siteSettings[x.iFieldId].$error.required">{{x.vLabel}} is required</div>
+                                        <div ng-message="minlength" ng-show="form_siteSettings[x.iFieldId].$error.minlength">Minimum {{x.iMinLength}} is required</div>
+                                        <div ng-message="maxlength" ng-show="form_siteSettings[x.iFieldId].$error.maxlength">Maximum {{x.iMaxLength}} characters are allowed </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" ng-if="x.vType == 'file'">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div class="input-group input-large">
+                                            <div class="form-control uneditable-input span3" data-trigger="fileinput">
+                                                <i class="fa fa-file fileinput-exists"></i>&nbsp; <span class="fileinput-filename">
+                                    </span>
+                                            </div>
+                                            <span class="input-group-addon btn default btn-file">
+                                 <span class="fileinput-new">
+                                 Select file </span>
+                                 <span class="fileinput-exists">
+                                 Change </span>
+                                 <input type="file" name="{{x.iFieldId}}" id="field_{{x.iFieldId}}" ng-class="{{x.vClass}}" accept=".jpg, .png">
+                                 </span>
+                                            <a href="#" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput">
+                                                Remove </a>
+                                        </div>
+                                    </div>
+                                    <span class="help-block">{{x.vHint}}</span>
+                                    <div ng-messages="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" ng-show="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_siteSettings[x.iFieldId].$error.required">{{x.vLabel}} is required</div>
+                                        <div ng-message="accept" ng-show="form_siteSettings[x.iFieldId].$error.accept">Only jpg, jpeg and png allowed</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8" ng-if="x.vType == 'radio'">
+                                    <label class="radio-inline" ng-repeat="o in x.vOptions.split(',')">
+                                        <input type="radio" ng-checked="x.vValue == o" value="{{o}}" id="radio_{{o}}" name="{{x.iFieldId}}">{{o}}</label>
+                                    <div class="clearfix"></div>
+                                    <span class="help-block">{{x.vHint}}</span>
+                                    <div ng-messages="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" ng-show="form_siteSettings[x.iFieldId].$error && form_siteSettings[x.iFieldId].$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_siteSettings[x.iFieldId].$error.required">{{x.vLabel}} is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button type="submit" class="btn green" data-ng-disabled="form_siteSettings.$invalid"><i class="fa fa-check"></i> Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+</div>

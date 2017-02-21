@@ -1,0 +1,157 @@
+<!-- BEGIN PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="javascript:;" ui-sref="admin.dashboard">Dashboard</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        <a href="javascript:;" ui-sref="admin.users">Users List</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        User Profile
+    </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+
+<!-- BEGIN PAGE CONTENT-->
+
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- BEGIN PROFILE SIDEBAR -->
+        <div class="profile-sidebar">
+            <!-- PORTLET MAIN -->
+            <div class="portlet light profile-sidebar-portlet">
+                <!-- SIDEBAR USERPIC -->
+                <div class="profile-userpic">
+                    <img src="../assets/admin/pages/media/profile/profile_user.jpg" class="img-responsive" alt="">
+                </div>
+                <!-- END SIDEBAR USERPIC -->
+                <!-- SIDEBAR USER TITLE -->
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name">
+                        {{profile.vFullName | uppercase}}
+                    </div>
+
+                </div>
+                <!-- END SIDEBAR USER TITLE -->
+                <!-- SIDEBAR BUTTONS -->
+                <div class="row list-separated profile-stat">
+                    <div class="col-md-4 col-sm-4 col-xs-6">
+                        <!--<div class="uppercase profile-stat-title">-->
+                            <!--L1-->
+                        <!--</div>-->
+                        <!--<div class="uppercase profile-stat-text">-->
+                            <!--Level-->
+                        <!--</div>-->
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-6">
+                        <!--<div class="uppercase profile-stat-title">-->
+                            <!--$5000-->
+                        <!--</div>-->
+                        <!--<div class="uppercase profile-stat-text">-->
+                            <!--Money-->
+                        <!--</div>-->
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-6">
+                        <!--<div class="uppercase profile-stat-title">-->
+                            <!--3-->
+                        <!--</div>-->
+                        <!--<div class="uppercase profile-stat-text">-->
+                            <!--Played-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                <!-- END SIDEBAR BUTTONS -->
+                <!-- SIDEBAR MENU -->
+                <!--<div class="profile-usermenu">-->
+                    <!--<ul class="nav">-->
+                        <!--<li ng-class="{active: $state.includes('profile.dashboard')}">-->
+                            <!--<a ui-sref="profile.dashboard">-->
+                                <!--<i class="icon-home"></i>-->
+                                <!--Overview </a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{active: $state.includes('profile.account')}">-->
+                            <!--<a ui-sref="profile.account">-->
+                                <!--<i class="icon-settings"></i>-->
+                                <!--Game History </a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+                <!-- END MENU -->
+            </div>
+            <!-- END PORTLET MAIN -->
+
+        </div>
+        <!-- END BEGIN PROFILE SIDEBAR -->
+        <div class="profile-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet light">
+                        <div class="portlet-title tabbable-line">
+                            <div class="caption caption-md">
+                                <i class="icon-globe theme-font hide"></i>
+                                <span class="caption-subject font-blue-madison bold uppercase">Personal Info</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="form-group">
+                                <label class="control-label col-xs-3">Full Name</label>
+                                <div class="col-xs-9 left-border">
+                                    <label class="control-label col-xs-12">{{profile.vFullName}}</label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <div class="clearfix"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-3">User Name</label>
+                                <div class="col-xs-9 left-border">
+                                    <label class="control-label col-xs-12">{{profile.vUserName}}</label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <div class="clearfix"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-3">Email</label>
+                                <div class="col-xs-9 left-border">
+                                    <label class="control-label col-xs-12">{{profile.vEmail}}</label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <div class="clearfix"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-3">Country</label>
+                                <div class="col-xs-9 left-border">
+                                    <label class="control-label col-xs-12">{{profile.vCountry || '-'}}</label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <div class="clearfix"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-3">Joining Date</label>
+                                <div class="col-xs-9 left-border">
+                                    <label class="control-label col-xs-12">{{profile.dCreatedDate | date:'dd-MMM-yyyy HH:mm:ss Z'}}</label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <div class="clearfix"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-3">Last Activity</label>
+                                <div class="col-xs-9 left-border">
+                                    <label class="control-label col-xs-12">{{profile.dLastActivity | date:'dd-MMM-yyyy HH:mm:ss Z'}}</label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- END PAGE CONTENT-->

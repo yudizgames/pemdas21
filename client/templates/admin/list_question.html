@@ -1,0 +1,65 @@
+<!-- BEGIN PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="#dashboard.html">Dashboard</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        Manage Questions
+    </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+<!-- User datatables -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="actions">
+                    <a href="javascript:;" ui-sref="admin.questionform({action:'Add'})" title="Add User" class="btn btn-circle btn-default btnEdit">
+                        <i class="fa fa-plus"></i>
+                        <span class="hidden-480">Add Question</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="table-container">
+                    <table class="table table-striped table-bordered" datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstanceQuestion">
+                    </table>
+
+                    <!--<table id="example" datatable="ng"  class="table table-striped table-bordered" cellspacing="0" width="100%">-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th>ID</th>-->
+                            <!--<th>Mode</th>-->
+                            <!--<th>Type</th>-->
+                            <!--<th>Question</th>-->
+                            <!--<th>Answer</th>-->
+                            <!--<th>Status</th>-->
+                            <!--<th>Operation</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                        <!--<tr ng-repeat="q in ::questions">-->
+                            <!--<td>{{ q.iQuestionId }}</td>-->
+                            <!--<td>{{ q.vModeName}}</td>-->
+                                <!--<td>{{ q.eType }}</td>-->
+                            <!--<td>{{ q.vQuestion }}</td>-->
+                            <!--<td>{{ q.vAnswer }}</td>-->
+                            <!--&lt;!&ndash;<td><input type="checkbox" ng-model="person.eStatus" bootstrap-switch class="switch-small" /></td>&ndash;&gt;-->
+                            <!--<td><input bs-switch ng-model="q.eStatus" class="switch-small" type="checkbox" ng-true-value="'y'"-->
+                                       <!--ng-false-value="'n'" ng-change="qOperation(q.iQuestionId,'status',q.eStatus)"></td>-->
+                            <!--<td>-->
+                                <!--<button ng-click="qOperation(q.iQuestionId,'view')" title="View"  class="btn btn-success btn-xs">View</button>-->
+                                <!--<button ng-click="qOperation(q.iQuestionId,'edit')" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>-->
+                                <!--<button ng-click="qOperation(q.iQuestionId,'delete')" title="Delete" class="btn btn-danger btn-xs">Delete</button>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                </div>
+            </div>
+        </div>
+
+        {{listUser}} {{count}}
+    </div>
+</div>
