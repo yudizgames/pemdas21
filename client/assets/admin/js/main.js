@@ -50,7 +50,7 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
 					name:'main',
 					insertBefore: '#ng_load_plugins_before',
 					files:[
-						'assets/admin/js/controllers/adminCtrl.js'
+						'assets/admin/js/controllers/adminctrl.js'
 					]
 				});
 			}]
@@ -442,7 +442,7 @@ app.directive('bootstrapSwitch', [
 //Factory for Angular-Socket-io
 app.factory('mySocket', function (socketFactory) {
     return socketFactory({
-        ioSocket: io.connect('http://192.168.10.165:3000')
+        ioSocket: io.connect('http://158.69.227.67:3000')
     });
 });
 
