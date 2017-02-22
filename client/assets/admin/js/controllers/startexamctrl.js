@@ -15,7 +15,7 @@ angular.module('main').controller('StartExamCtrl',function ($scope,$http,$rootSc
             }
         }
     });
-    clock.setTime(60*3); /* set time here - measured in seonds, e.g 60=1 minute; use http://www.calculateme.com/Time/Days/ToSeconds.htm to calculate proper value*/
+    clock.setTime((60*3)+31); /* set time here - measured in seonds, e.g 60=1 minute; use http://www.calculateme.com/Time/Days/ToSeconds.htm to calculate proper value*/
     clock.setCountdown(true);
 
     $scope.startGame = function () {

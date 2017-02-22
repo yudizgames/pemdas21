@@ -241,6 +241,7 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
             templateUrl:'templates/admin/list_examuser.html',
             data :{ pageTitle:'Exam User List',bodyClass:'page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo'},
             controller:'ExamUserCtrl',
+            reload:true,
             resolve:{
                 depends:['$ocLazyLoad',function($ocLazyLoad){
                     console.log("Lazy Load Call");
