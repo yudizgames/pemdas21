@@ -10,8 +10,8 @@ module.exports = {
         // 'password':'root',
         'password':'!$ecUrepa55W0rd!',
         // 'port':'8889',
-        'database':'yudiz_pemdas',
-        // 'database':'pemdas2',
+        // 'database':'yudiz_pemdas',
+        'database':'pemdas2',
     },
     'users_table':'tbl_users'
 }
