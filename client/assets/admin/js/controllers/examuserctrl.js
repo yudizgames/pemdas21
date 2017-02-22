@@ -1,5 +1,6 @@
 angular.module('main').controller('ExamUserCtrl',function ($scope,$http,$rootScope,toastr,$state,DTOptionsBuilder, DTColumnBuilder,$compile,mySocket,$state,$localForage) {
     console.log("ExamUser Controller")
+    $scope.userselected = 0;
     mySocket.on('test',function(data){
         console.log(data);
     });
@@ -16,5 +17,15 @@ angular.module('main').controller('ExamUserCtrl',function ($scope,$http,$rootSco
         mySocket.emit('examUser',{data:$scope.examUser});
         $localForage.setItem('examUser',$scope.examUser)
         $state.go('admin.mcqexam');         
+    }
+
+    $scope.selected = function(isActive){
+        console.log(isActive);
+        if(isActive == true){
+            $scope.userselected += 1;
+        }else{
+            $scope.userselected -= 1;
+        }
+        console.log($scope.userselected);
     }
 });

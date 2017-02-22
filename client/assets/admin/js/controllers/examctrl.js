@@ -7,6 +7,7 @@ angular.module('main').controller('ExamCtrl',function ($scope,$http,$rootScope,t
     //         mySocket.emit('exam',{"Questions":examQuestion,"vTitle":"Test","vDescription":Date()});
     //     });
     // });
+    $scope.status = true;
     $scope.submitExam = function(){
         console.log($scope.exam);
         $http({
@@ -16,31 +17,24 @@ angular.module('main').controller('ExamCtrl',function ($scope,$http,$rootScope,t
             data:{'vTitle':$scope.exam.vTitle,'vDescription':$scope.exam.vDescription}
         }).then(function(res){
             console.log("Success call");
-            console.log(res.data);
-            $localForage.setItem('iExamId',res.data.data.iExamId);
-            $localForage.setItem('iScheduleId',res.data.data.iScheduleId);
+            if(res.data.status == 200)
+            {
+                $scope.status = false;
+                console.log(res.data);
+                $localForage.setItem('iExamId',res.data.data.iExamId);
+                $localForage.setItem('iScheduleId',res.data.data.iScheduleId);
+                $state.go('admin.startexam');
+            }
         },function(err){
             console.log("Error");
             console.log(err);
         });
     }
 
-    $scope.startExam = function () {
-        console.log("startExam call");
-        $localForage.getItem("examUser").then(function(examUser){
-            $localForage.getItem("examQuestion").then(function(examQuestion){
-                $localForage.getItem("iExamId").then(function(iExamId){
-                    $localForage.getItem("iScheduleId").then(function(iScheduleId){
-                        console.log({"examUser":examUser,"examQuestion":examQuestion,"iExamId":iExamId,"iScheduleId":iScheduleId});
-                        mySocket.emit('startGame',{"examUser":examUser,"examQuestion":examQuestion,"iExamId":iExamId,"iScheduleId":iScheduleId});
-                        mySocket.on('vAnswer',function(data){
-                            console.log(data);
-                        });
-                    });
-                });
-            });
-        });
-    }
+    // $scope.startExam = function () {
+    //     console.log("startExam call");
+    //
+    // }
 
 
 

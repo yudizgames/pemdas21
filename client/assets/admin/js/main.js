@@ -257,7 +257,7 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
     .state('admin.mcqexam',{
             url:'/mcqexam',
             templateUrl:'templates/admin/list_mcq.html',
-            data :{ pageTitle:'Exam Question List',bodyClass:'page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo'},
+            data :{ pageTitle:'Round 1 Question List',bodyClass:'page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo'},
             controller:'McqExamCtrl',
             resolve:{
                 depends:['$ocLazyLoad',function($ocLazyLoad){
@@ -267,6 +267,24 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                         insertBefore:'#ng_load_plugins_before',
                         files:[
                             'assets/admin/js/controllers/mcqexamctrl.js',
+                        ]
+                    });
+                }]
+            }
+    })
+    .state('admin.vsqexam',{
+            url:'/vsqexam',
+            templateUrl:'templates/admin/list_vsq.html',
+            data :{ pageTitle:'Round 2 Question List',bodyClass:'page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo'},
+            controller:'VsqExamCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'main',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            'assets/admin/js/controllers/vsqexamctrl.js',
                         ]
                     });
                 }]
@@ -289,10 +307,28 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                     });
                 }]
             }
+    })
+    .state('admin.startexam',{
+        url:'/startexam',
+        templateUrl:'templates/admin/startexam.html',
+        data :{ pageTitle:'Start Exam',bodyClass:'page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo'},
+        controller:'StartExamCtrl',
+        resolve:{
+            depends:['$ocLazyLoad',function($ocLazyLoad){
+                console.log("Lazy Load Call");
+                return $ocLazyLoad.load({
+                    name:'main',
+                    insertBefore:'#ng_load_plugins_before',
+                    files:[
+                        'assets/admin/js/controllers/startexamctrl.js',
+                    ]
+                });
+            }]
+        }
     });
 	$locationProvider.hashPrefix('');
 
-	// To define only one db driver - Logout issue (Because WebSql and Indexdb both store data)
+    // To define only one db driver - Logout issue (Because WebSql and Indexdb both store data)
     $localForageProvider.config({
         driver      : localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
         name        : 'Pemdas',
@@ -440,10 +476,10 @@ app.directive('bootstrapSwitch', [
     }
 ]);
 //Factory for Angular-Socket-io
-app.factory('mySocket', function (socketFactory) {
-    return socketFactory({
-        ioSocket: io.connect('http://158.69.227.67:3000')
-    });
-});
+// app.factory('mySocket', function (socketFactory) {
+//     return socketFactory({
+//         ioSocket: io.connect('http://192.168.10.165:4000')
+//     });
+// });
 
 

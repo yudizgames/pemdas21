@@ -1,13 +1,8 @@
-angular.module('main').controller('McqExamCtrl',function ($scope,$http,$rootScope,toastr,$state,DTOptionsBuilder, DTColumnBuilder,$compile,mySocket,$localForage) {
+angular.module('main').controller('VsqExamCtrl',function ($scope,$http,$rootScope,toastr,$state,DTOptionsBuilder, DTColumnBuilder,$compile,mySocket,$localForage) {
 	console.log("McqExam");
-	mySocket.on('test',function(data){
-			console.log(data);
-	});
-
-
-	$scope.questionStatus = [];
-	$scope.questionSelected = [];
-	$scope.examQuestion = [];
+    $scope.vsqQuestionStatus = [];
+    $scope.vsqQuestionSelected = [];
+    $scope.vsqExamQuestion = [];
     /**
      * Generate Question List
      */
@@ -26,11 +21,11 @@ angular.module('main').controller('McqExamCtrl',function ($scope,$http,$rootScop
 
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax',{
         dataSrc:"data",
-        url:'/list_mcq',
+        url:'/list_vsq',
         type:'POST',
         dataType:'json',
         // data:function(d){
-        //     $scope.questionStatus = [];
+        //     $scope.vsqQuestionStatus = [];
         // }
     }).withOption('processing', true) //for show progress bar
       .withOption('serverSide', true) // for server side processing
@@ -42,36 +37,36 @@ angular.module('main').controller('McqExamCtrl',function ($scope,$http,$rootScop
       });
 
     function actionsHtml(data, type, full, meta) {
-		if($scope.questionSelected[data.iQuestionId] != 'y'){
-    		$scope.questionStatus[data.iQuestionId] = 'n';
+		if($scope.vsqQuestionSelected[data.iQuestionId] != 'y'){
+    		$scope.vsqQuestionStatus[data.iQuestionId] = 'n';
     	}
-		var temp = '<input bs-switch ng-model="questionStatus['+data.iQuestionId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="qOperation('+data.iQuestionId+',&apos;status&apos;,questionStatus['+data.iQuestionId+'])">';
+		var temp = '<input bs-switch ng-model="vsqQuestionStatus['+data.iQuestionId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="qOperation('+data.iQuestionId+',&apos;status&apos;,vsqQuestionStatus['+data.iQuestionId+'])">';
         return temp;
     }
 
 	$scope.qOperation = function(id,vOperation,eStatus){
-		$scope.questionSelected[id] = eStatus;
-		console.log($scope.questionSelected);
+		$scope.vsqQuestionSelected[id] = eStatus;
+		console.log($scope.vsqQuestionSelected);
 		if(eStatus == 'y'){
-			$scope.examQuestion.push(id); 
+			$scope.vsqExamQuestion.push(id); 
 		}else{
-			$scope.examQuestion.splice(getExamQuestionIndex(id),1);
+			$scope.vsqExamQuestion.splice(getvsqExamQuestionIndex(id),1);
 		}
+		console.log($scope.vsqExamQuestion.length);
 	}
 
-	function getExamQuestionIndex(Id){
-		for(var i=0; i<$scope.examQuestion.length;i++){
-			if($scope.examQuestion[i] === Id){
+	function getvsqExamQuestionIndex(Id){
+		for(var i=0; i<$scope.vsqExamQuestion.length;i++){
+			if($scope.vsqExamQuestion[i] === Id){
 				return i;
 	        }
 	    }
 	}
 
 
-	$scope.exam = function(){
-		var exam = [];
-		console.log($scope.examQuestion);
-		$localForage.setItem('examQuestion',$scope.examQuestion);
+	$scope.vsqQuestion = function(){
+        console.log($scope.vsqExamQuestion);
+		$localForage.setItem('vsqExamQuestion',$scope.vsqExamQuestion);
 		$state.go('admin.exam');
 	}
 });

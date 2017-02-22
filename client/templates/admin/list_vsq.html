@@ -3,6 +3,9 @@
     <li>
         <a href="#dashboard.html">Dashboard</a><i class="fa fa-circle"></i>
     </li>
+    <li class="active">
+        Manage Questions
+    </li>
 </ul>
 <!-- END PAGE BREADCRUMB -->
 <!-- User datatables -->
@@ -13,8 +16,8 @@
                 <div style="float: left !important;">
                     <h1>Round 1: Question Select</h1>
                 </div>
-                <div style="margin-top: 18px;" class="actions" ng-hide="examQuestion.length > 0 ? false :true">
-                    <a href="javascript:;" ng-click="exam()" title="Next" class="btn btn-circle btn-default btnEdit">
+                <div style="margin-top: 18px;" class="actions" ng-hide="vsqExamQuestion.length > 0 ? false :true">
+                    <a href="javascript:;" ng-click="vsqQuestion()" title="Next" class="btn btn-circle btn-default btnEdit">
                         <i class="fa fa-plus"></i>
                         <span class="hidden-480">Next</span>
                     </a>

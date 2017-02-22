@@ -84,6 +84,7 @@ module.exports = function (app,cli) {
     app.get('/ws/v1/joinRoom',passport.authenticate('jwt',{session:false}),function(req,res){
         if(req.user.length > 0){
             res.status(200).json({
+                'status':200,
                 'iUserId':req.user[0].iUserId
             });
         }else{

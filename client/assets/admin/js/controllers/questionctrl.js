@@ -60,7 +60,7 @@ angular.module('main').controller('QuestionCtrl',function ($scope,$http,$rootSco
     /**
      * Question Operation View,Status,Delete
      */
-    $scope.qOperation = function(id,vOperation,eStatus = ""){
+    $scope.qOperation = function(id,vOperation,eStatus){
         if(vOperation == 'view'){
             $state.go('admin.questiondetails',{'id':id});
         }else if(vOperation == 'edit'){

@@ -21,6 +21,7 @@ module.exports = function(app,io){
                 io.sockets.emit('listUser',{data:user});
             });
             fn({"message":"You are in watting state",'status':200,'socket':socket.id});
+
         });
         io.sockets.emit('listUser',{data:user}); //Angularjs List of Active User.
 

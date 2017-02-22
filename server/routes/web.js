@@ -932,6 +932,62 @@ module.exports = function (app,cli,mail) {
              * END List Mcq question
              */
 
+
+        /**
+         * BEGIN List Vsq question
+         */
+
+        app.post('/list_vsq',function (req,res) {
+            var obj = {
+                'vModeName':req.body.search.value,
+                'eType':req.body.search.value
+            };
+            queries.ls_vsq_count(obj,function(err,record){
+                if(err) throw err;
+                var iTotalRecords = parseInt(record[0].iTotalRecords);
+                var iDisplayLength = parseInt(req.body.length);
+                iDisplayLength = iDisplayLength < 0 ? iTotalRecords : iDisplayLength;
+                var iDisplayStart = parseInt(req.body.start);
+                var end = iDisplayStart + iDisplayLength;
+                end = end > iTotalRecords ? iTotalRecords : end;
+                var obj = {
+                    'limit': end,
+                    'offset': iDisplayStart,
+                    'vModeName':req.body.search.value,
+                    'eType':req.body.search.value,
+                    'sort':getSorting(req.body)
+                }
+                queries.ls_vsq_select(obj,function(err,question){
+                    if(err) throw err;
+                    var i = 0;
+                    var records = {};
+                    records['draw'] = req.body.draw;
+                    records['recordsTotal'] = iTotalRecords;
+                    records['recordsFiltered'] = iTotalRecords;
+                    records['data'] = [];
+                    for(i=0;i<question.length;i++){
+                        var operation = '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
+                        operation+= '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
+                        operation+= '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                        records['data'][i] = {"iQuestionId":question[i].iQuestionId,
+                            "vModeName":question[i].vModeName,
+                            "eType":question[i].eType,
+                            "vQuestion":question[i].vQuestion,
+                            "vAnswer":question[i].vAnswer,
+                            "eStatus":question[i].eStatus,
+                            "operation":operation
+                        };
+                    }
+                    res.json(records);
+                })
+            });
+        });
+
+
+        /**
+         * END List Vcq question
+         */
+
             /**
              * Generate Exam Start
              */
