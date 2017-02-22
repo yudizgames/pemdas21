@@ -254,7 +254,7 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                     });
                 }]
             }
-    })
+    }) //!$ecUrepa55W0rd!
     .state('admin.mcqexam',{
             url:'/mcqexam',
             templateUrl:'templates/admin/list_mcq.html',
