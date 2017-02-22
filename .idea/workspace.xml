@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="27362cfb-720d-43ba-832c-1edc0aec1adb" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/assets/admin/js/main.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js" />
     </list>
     <ignored path="pemdas21.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,7 +26,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/assets/admin/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-683">
@@ -34,6 +34,36 @@
               <folding>
                 <marker date="1487768673000" expanded="true" signature="13332:13339" ph="×" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mySocket.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="55" selection-start-line="2" selection-start-column="55" selection-end-line="2" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="loginctrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/loginctrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -87,7 +117,6 @@
         <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl" />
         <option value="$PROJECT_DIR$/server/modules/socket_test_v1.js" />
         <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js" />
-        <option value="$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js" />
         <option value="$PROJECT_DIR$/client/index.html" />
         <option value="$PROJECT_DIR$/client/assets/admin/css/custom.css" />
         <option value="$PROJECT_DIR$/server/modules/queries.js" />
@@ -100,6 +129,7 @@
         <option value="$PROJECT_DIR$/client/templates/admin/list_mcq.html" />
         <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl.js" />
         <option value="$PROJECT_DIR$/client/assets/admin/js/main.js" />
+        <option value="$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js" />
       </list>
     </option>
   </component>
@@ -264,7 +294,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
+              <option name="myItemId" value="factory" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -280,7 +310,7 @@
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
-    <property name="SearchEverywhereHistoryKey" value="main&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/main.js&#10;list&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;tart&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/startexamctrl.js&#10;start&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/startexam.html&#10;list_vsq&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;lis&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;socke&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;exam&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_examuser.html&#10;list_mc&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;mcqex&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/mcqexamctrl.js&#10;inde&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;myS&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/factory/mySocket.js&#10;index&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;examctr&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examctrl.js&#10;sock&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;web.js&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/routes/web.js&#10;exa&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examuserctrl.js" />
+    <property name="SearchEverywhereHistoryKey" value="login&#9;null&#9;null&#10;main&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/main.js&#10;list&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;tart&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/startexamctrl.js&#10;start&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/startexam.html&#10;list_vsq&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;lis&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;socke&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;exam&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_examuser.html&#10;list_mc&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;mcqex&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/mcqexamctrl.js&#10;inde&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;myS&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/factory/mySocket.js&#10;index&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;examctr&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examctrl.js&#10;sock&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;web.js&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/routes/web.js&#10;exa&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examuserctrl.js" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
   </component>
   <component name="RecentsManager">
@@ -358,16 +388,16 @@
       <updated>1487596492228</updated>
       <workItem from="1487596493508" duration="96000" />
       <workItem from="1487655578576" duration="16314000" />
-      <workItem from="1487739717913" duration="17887000" />
+      <workItem from="1487739717913" duration="18657000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34297000" />
+    <option name="totallyTimeSpent" value="35067000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="33" width="1920" height="1015" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18690096" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -376,7 +406,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26943558" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26943558" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -509,13 +539,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/database.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -608,14 +631,6 @@
             <marker date="1487747076000" expanded="true" signature="84:2217" ph="..." />
             <marker date="1487747076000" expanded="true" signature="2290:6023" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="3" selection-start-line="4" selection-start-column="3" selection-end-line="4" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -747,6 +762,30 @@
           <folding>
             <marker date="1487768673000" expanded="true" signature="13332:13339" ph="×" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/loginctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="55" selection-start-line="2" selection-start-column="55" selection-end-line="2" selection-end-column="55" />
+          <folding />
         </state>
       </provider>
     </entry>
