@@ -988,11 +988,11 @@ module.exports = function (app,cli,mail) {
          * END List Vcq question
          */
 
-            /**
-             * Generate Exam Start
-             */
+         /**
+          * Generate Exam Start
+          */
 
-            app.post('/generate_exam',passport.authenticate('jwt',{session:false}),function(req,res){
+          app.post('/generate_exam',passport.authenticate('jwt',{session:false}),function(req,res){
                /***
                 * vTitle,vDescription
                 */
@@ -1008,24 +1008,37 @@ module.exports = function (app,cli,mail) {
                                 "Data":result.mapped()
                             });
                     }else{
-                            queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription},function(err,rows){
-                                var iExamId  = rows.insertId;
-                                queries.insert_exam_schedule({"iExamId":iExamId},function(err,result){
-                                    var iScheduleId = result.insertId;
-                                    res.json({
-                                        'status':200,
-                                        'message':'Success',
-                                        'data':{
-                                            "iExamId":iExamId,
-                                            "iScheduleId":iScheduleId
-                                        }
-                                    })
+                            queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:0},function(errOne,rowsOne){
+                                var iRoundOneExamId  = rowsOne.insertId;
+                                queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:iRoundOneExamId},function(errTwo,rowsTwo){
+                                    var iRoundTwoExamId  = rowsTwo.insertId;
+                                    queries.insert_exam_schedule({"iExamId":iRoundOneExamId},function(err,resultOne){
+                                        var iRoundOneScheduleId = resultOne.insertId;
+                                        queries.insert_exam_schedule({"iExamId":iRoundTwoExamId},function(err,resultTwo){
+                                            var iRoundTwoScheduleId = resultTwo.insertId;
+                                            cli.yellow("response")
+                                            res.json({
+                                                'status':200,
+                                                'message':'Success',
+                                                'data':{
+                                                    "RoundOne":{
+                                                        "iExamId":iRoundOneExamId,
+                                                        "iScheduleId":iRoundOneScheduleId
+                                                    },
+                                                    "RoundTwo":{
+                                                        "iExamId":iRoundTwoExamId,
+                                                        "iScheduleId":iRoundTwoScheduleId
+                                                    }
+                                                }
+                                            })
+                                        });
+                                    });
                                 });
                             });
                     }
                  });
 
-            });
+          });
 
             /**
              * Generate Exam Close

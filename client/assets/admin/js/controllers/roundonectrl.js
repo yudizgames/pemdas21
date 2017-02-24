@@ -1,10 +1,12 @@
-angular.module('main').controller('StartExamCtrl',function ($scope,$http,$rootScope,toastr,$state,DTOptionsBuilder, DTColumnBuilder,$compile,mySocket,$localForage,$stateParams) {
-    console.log("start exam call");
+angular.module('main').controller('RoundOneCtrl',function ($scope,$http,$rootScope,toastr,$state,DTOptionsBuilder, DTColumnBuilder,$compile,mySocket,$localForage,$stateParams) {
+    console.log("RoundOneCtrl");
     console.log($stateParams);
     $scope.questionStatus = [];
     $scope.questionSelected = [];
     $scope.examQuestion = [];
     $scope.showTable = false;
+    $scope.clock = true;
+    $scope.showLoading = false;
     var clock;
     clock = $(".clock").FlipClock({
         clockFace: 'MinuteCounter',
@@ -15,43 +17,48 @@ angular.module('main').controller('StartExamCtrl',function ($scope,$http,$rootSc
             }
         }
     });
-    clock.setTime((60*3)+31); /* set time here - measured in seonds, e.g 60=1 minute; use http://www.calculateme.com/Time/Days/ToSeconds.htm to calculate proper value*/
+    // 212.13 Actual Time For
+    clock.setTime(180); /* set time here - measured in seonds, e.g 60=1 minute; use http://www.calculateme.com/Time/Days/ToSeconds.htm to calculate proper value*/
     clock.setCountdown(true);
 
-    $scope.startGame = function () {
 
-        $localForage.getItem("examUser").then(function(examUser){
-            $localForage.getItem("examQuestion").then(function(examQuestion){
-                $localForage.getItem("iExamId").then(function(iExamId){
-                    $localForage.getItem("iScheduleId").then(function(iScheduleId){
-                        $localForage.getItem('examQuestion').then(function(examQuestion){
 
-                            /**
-                             * Generate Datatable
-                             */
 
-                            $scope.examQuestion = examQuestion;
-                            console.log($scope.examQuestion);
-                            $scope.showTable = true;
+    $scope.startGame = function(){
+        $localForage.getItem('examUser').then(function(examUser){
+            $localForage.getItem('mcqQuestion').then(function(mcqQuestion){
+                $localForage.getItem('vsqQuestion').then(function(vsqQuestion){
+                   $localForage.getItem('RoundOne').then(function(RoundOne){
+                       $localForage.getItem('RoundTwo').then(function (RoundTwo) {
 
-                            /**
-                             * Socket Part
-                             */
-
-                            console.log({"examUser":examUser,"examQuestion":examQuestion,"iExamId":iExamId,"iScheduleId":iScheduleId});
-                            mySocket.emit('startGame',{"examUser":examUser,"examQuestion":examQuestion,"iExamId":iExamId,"iScheduleId":iScheduleId});
-                            mySocket.on('vAnswer',function(data){
-                                console.log(data);
-                            });
-
-                            /**
-                             * Start Clock call
-                             */
-                            clock.start();
-                            console.log("Start Game");
-
+                           $scope.showLoading = true;
+                           /**
+                            * Generate Datatable
+                            */
+                           $scope.examQuestion = mcqQuestion;
+                           console.log($scope.examQuestion);
+                           /**
+                            * Socket Part
+                            */
+                           console.log({"examUser":examUser,"mcqQuestion":mcqQuestion,"vsqQuestion":vsqQuestion,"RoundOne":RoundOne,"RoundTwo":RoundTwo});
+                           mySocket.emit('startGame',{"examUser":examUser,"mcqQuestion":mcqQuestion,"vsqQuestion":vsqQuestion,"RoundOne":RoundOne,"RoundTwo":RoundTwo});
+                           mySocket.on('vRoundOneAns',function(data){
+                               console.log(data);
+                           });
+                           /**
+                            * Start Clock call
+                            */
+                           setTimeout(function(){
+                               $scope.$apply(function(){
+                                   $scope.showLoading = false;
+                                   $scope.showTable = true;
+                                   $scope.clock = false;
+                                   clock.start();
+                               });
+                               console.log("Start Game");
+                            },33*1000);
                         });
-                    });
+                   });
                 });
             });
         });
@@ -107,19 +114,29 @@ angular.module('main').controller('StartExamCtrl',function ($scope,$http,$rootSc
                 }
                 var temp = '<input bs-switch ng-model="questionStatus['+data.iQuestionId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="qOperation('+data.iQuestionId+',&apos;status&apos;,questionStatus['+data.iQuestionId+'])">';
                 return temp;
-
-     }
+    }
 
      $scope.qOperation = function(id,vOperation,eStatus){
             $scope.questionSelected[id] = eStatus;
+            var changeQuestion= {};
             if(eStatus == 'y'){
+                changeQuestion = {
+                    'status':'enable',
+                    'iQuestion':id
+                }
                 $scope.examQuestion.push(id);
                 console.log($scope.questionSelected);
             }else{
+                changeQuestion = {
+                    'status':'disable',
+                    'iQuestion':id
+                }
                 $scope.examQuestion.splice(getExamQuestionIndex(id),1);
                 console.log($scope.questionSelected);
             }
-    }
+            console.log('changeQuestion');
+            mySocket.emit('ChangeRoundOneQuestion',changeQuestion);
+     }
 
      function getExamQuestionIndex(Id){
 

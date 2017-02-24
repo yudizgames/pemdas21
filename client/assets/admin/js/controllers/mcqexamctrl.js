@@ -71,7 +71,7 @@ angular.module('main').controller('McqExamCtrl',function ($scope,$http,$rootScop
 	$scope.exam = function(){
 		var exam = [];
 		console.log($scope.examQuestion);
-		$localForage.setItem('examQuestion',$scope.examQuestion);
-		$state.go('admin.exam');
+		$localForage.setItem('mcqQuestion',$scope.examQuestion);
+		$state.go('admin.vsqexam');
 	}
 });

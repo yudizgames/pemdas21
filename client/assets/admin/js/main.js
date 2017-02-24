@@ -309,11 +309,11 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                 }]
             }
     })
-    .state('admin.startexam',{
-        url:'/startexam',
-        templateUrl:'templates/admin/startexam.html',
-        data :{ pageTitle:'Start Exam',bodyClass:'page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo'},
-        controller:'StartExamCtrl',
+    .state('admin.roundone',{
+        url:'/roundone',
+        templateUrl:'templates/admin/roundone.html',
+        data :{ pageTitle:'Round One',bodyClass:'page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo'},
+        controller:'RoundOneCtrl',
         resolve:{
             depends:['$ocLazyLoad',function($ocLazyLoad){
                 console.log("Lazy Load Call");
@@ -321,7 +321,7 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                     name:'main',
                     insertBefore:'#ng_load_plugins_before',
                     files:[
-                        'assets/admin/js/controllers/startexamctrl.js',
+                        'assets/admin/js/controllers/roundonectrl.js',
                     ]
                 });
             }]

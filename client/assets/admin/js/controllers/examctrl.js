@@ -17,13 +17,15 @@ angular.module('main').controller('ExamCtrl',function ($scope,$http,$rootScope,t
             data:{'vTitle':$scope.exam.vTitle,'vDescription':$scope.exam.vDescription}
         }).then(function(res){
             console.log("Success call");
-            if(res.data.status == 200)
-            {
+            console.log(res.data.data.RoundOne);
+            console.log(res.data.status);
+            if(res.data.status === 200)
+            {   console.log("inside if");
                 $scope.status = false;
                 console.log(res.data);
-                $localForage.setItem('iExamId',res.data.data.iExamId);
-                $localForage.setItem('iScheduleId',res.data.data.iScheduleId);
-                $state.go('admin.startexam');
+                $localForage.setItem('RoundOne',res.data.data.RoundOne);
+                $localForage.setItem('RoundTwo',res.data.data.RoundTwo);
+                $state.go('admin.roundone');
             }
         },function(err){
             console.log("Error");

@@ -2,15 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27362cfb-720d-43ba-832c-1edc0aec1adb" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/assets/admin/layout/img/pemdas_waiting_screen_1-01.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/assets/admin/layout/img/pemdas_waiting_screen_1-02.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/assets/admin/layout/img/pemdas_waiting_screen_1-03.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/controllers/roundonectrl.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/client/templates/admin/startexam.html" afterPath="$PROJECT_DIR$/client/templates/admin/roundone.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/assets/admin/js/controllers/mcqexamctrl.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/controllers/mcqexamctrl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/assets/admin/js/controllers/vsqexamctrl.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/controllers/vsqexamctrl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/assets/admin/js/main.js" afterPath="$PROJECT_DIR$/client/assets/admin/js/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/admin/exam.html" afterPath="$PROJECT_DIR$/client/templates/admin/exam.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/admin/list_mcq.html" afterPath="$PROJECT_DIR$/client/templates/admin/list_mcq.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/admin/list_vsq.html" afterPath="$PROJECT_DIR$/client/templates/admin/list_vsq.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database.js" afterPath="$PROJECT_DIR$/config/database.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/modules/queries.js" afterPath="$PROJECT_DIR$/server/modules/queries.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/modules/socket_test_v1.js" afterPath="$PROJECT_DIR$/server/modules/socket_test_v1.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/routes/web.js" afterPath="$PROJECT_DIR$/server/routes/web.js" />
     </list>
     <ignored path="pemdas21.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
+    <ignored path="config/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,74 +44,113 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/main.js">
+      <file leaf-file-name="roundonectrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/roundonectrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-683">
-              <caret line="317" column="29" selection-start-line="317" selection-start-column="29" selection-end-line="317" selection-end-column="29" />
+            <state relative-caret-position="870">
+              <caret line="58" column="39" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="list_mcq.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/templates/admin/list_mcq.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="62" selection-start-line="18" selection-start-column="62" selection-end-line="18" selection-end-column="65" />
               <folding>
-                <marker date="1487768673000" expanded="true" signature="13332:13339" ph="×" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mySocket.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js">
+      <file leaf-file-name="list_examuser.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/templates/admin/list_examuser.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="55" selection-start-line="2" selection-start-column="55" selection-end-line="2" selection-end-column="55" />
+            <state relative-caret-position="270">
+              <caret line="18" column="74" selection-start-line="18" selection-start-column="49" selection-end-line="18" selection-end-column="74" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/database.js">
+      <file leaf-file-name="roundone.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/templates/admin/roundone.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="37" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="37" />
+            <state relative-caret-position="587">
+              <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#div#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="exam.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/templates/admin/exam.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="692">
+              <caret line="54" column="32" selection-start-line="54" selection-start-column="32" selection-end-line="54" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="loginctrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/loginctrl.js">
+      <file leaf-file-name="socket_test_v1.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/modules/socket_test_v1.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
+            <state relative-caret-position="536">
+              <caret line="327" column="94" selection-start-line="327" selection-start-column="52" selection-end-line="327" selection-end-column="94" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="mcqexamctrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/mcqexamctrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+            <state relative-caret-position="821">
+              <caret line="73" column="64" selection-start-line="73" selection-start-column="8" selection-end-line="73" selection-end-column="64" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="examctrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js">
+      <file leaf-file-name="queries.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/modules/queries.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="16" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
+            <state relative-caret-position="386">
+              <caret line="257" column="0" selection-start-line="257" selection-start-column="0" selection-end-line="257" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="startexamctrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl.js">
+      <file leaf-file-name="vsqexamctrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/vsqexamctrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
+            <state relative-caret-position="821">
+              <caret line="68" column="33" selection-start-line="68" selection-start-column="33" selection-end-line="68" selection-end-column="33" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="list_vsq.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/templates/admin/list_vsq.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -121,26 +177,30 @@
         <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/questionctrl.js" />
         <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/examuserctrl.js" />
         <option value="$PROJECT_DIR$/server/routes/game.js" />
-        <option value="$PROJECT_DIR$/client/templates/admin/exam.html" />
         <option value="$PROJECT_DIR$/client/package.json" />
         <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl" />
-        <option value="$PROJECT_DIR$/server/modules/socket_test_v1.js" />
-        <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js" />
         <option value="$PROJECT_DIR$/client/index.html" />
         <option value="$PROJECT_DIR$/client/assets/admin/css/custom.css" />
-        <option value="$PROJECT_DIR$/server/modules/queries.js" />
-        <option value="$PROJECT_DIR$/server/routes/web.js" />
-        <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/vsqexamctrl.js" />
-        <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/mcqexamctrl.js" />
         <option value="$PROJECT_DIR$/client/templates/admin/list_examuser.html" />
-        <option value="$PROJECT_DIR$/client/templates/admin/list_vsq.html" />
         <option value="$PROJECT_DIR$/client/templates/admin/startexam.html" />
-        <option value="$PROJECT_DIR$/client/templates/admin/list_mcq.html" />
         <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl.js" />
-        <option value="$PROJECT_DIR$/client/assets/admin/js/main.js" />
+        <option value="$PROJECT_DIR$/config/config.js" />
         <option value="$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js" />
-        <option value="$PROJECT_DIR$/config/database.js" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/config/database.js" />
+        <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/mcqexamctrl.js" />
+        <option value="$PROJECT_DIR$/client/templates/admin/list_vsq.html" />
+        <option value="$PROJECT_DIR$/client/assets/admin/js/main.js" />
+        <option value="$PROJECT_DIR$/server/routes/web.js" />
+        <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js" />
+        <option value="$PROJECT_DIR$/server/modules/queries.js" />
+        <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/vsqexamctrl.js" />
+        <option value="$PROJECT_DIR$/server/modules/socket_test_v1.js" />
+        <option value="$PROJECT_DIR$/client/templates/admin/exam.html" />
+        <option value="$PROJECT_DIR$/client/templates/admin/roundone.html" />
+        <option value="$PROJECT_DIR$/client/assets/admin/js/controllers/roundonectrl.js" />
+        <option value="$PROJECT_DIR$/client/templates/admin/list_mcq.html" />
       </list>
     </option>
   </component>
@@ -151,9 +211,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="33" />
     <option name="width" value="1920" />
-    <option name="height" value="1015" />
+    <option name="height" value="1080" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -181,6 +240,7 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -199,23 +259,61 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pemdas21" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pemdas21" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pemdas21" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pemdas21" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../pemdas" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="FullScreen" value="true" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
-    <property name="SearchEverywhereHistoryKey" value="login&#9;null&#9;null&#10;main&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/main.js&#10;list&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;tart&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/startexamctrl.js&#10;start&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/startexam.html&#10;list_vsq&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;lis&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;socke&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;exam&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_examuser.html&#10;list_mc&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;mcqex&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/mcqexamctrl.js&#10;inde&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;myS&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/factory/mySocket.js&#10;index&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;examctr&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examctrl.js&#10;sock&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;web.js&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/routes/web.js&#10;exa&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examuserctrl.js" />
+    <property name="SearchEverywhereHistoryKey" value="exam.ht&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/exam.html&#10;round&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/roundone.html&#10;quer&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/queries.js&#10;so&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;rou&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/roundonectrl.js&#10;mcq&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/mcqexamctrl.js&#10;exam&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examctrl.js&#10;vsq&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/vsqexamctrl.js&#10;main&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/main.js&#10;examc&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examctrl.js&#10;web&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/routes/web.js&#10;exa&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examctrl.js&#10;list&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;mcqex&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/mcqexamctrl.js&#10;que&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/queries.js&#10;socke&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;socket&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/factory/mySocket.js&#10;login&#9;null&#9;null&#10;tart&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/startexamctrl.js&#10;start&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/startexam.html&#10;list_vsq&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_vsq.html&#10;lis&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;list_mc&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/templates/admin/list_mcq.html&#10;inde&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;myS&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/factory/mySocket.js&#10;index&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/index.html&#10;examctr&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/client/assets/admin/js/controllers/examctrl.js&#10;sock&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/modules/socket_test_v1.js&#10;web.js&#9;FILE&#9;file:///Users/YudizAshish/node/git/pemdas21/server/routes/web.js" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="settings.editor.selected.configurable" value="settings.github" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/assets/admin/layout/img" />
       <recent name="$PROJECT_DIR$/client/assets/admin/js/controllers" />
     </key>
   </component>
@@ -278,7 +376,7 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="SvnConfiguration">
-    <configuration />
+    <configuration>$USER_HOME$/.subversion</configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -289,25 +387,26 @@
       <updated>1487596492228</updated>
       <workItem from="1487596493508" duration="96000" />
       <workItem from="1487655578576" duration="16314000" />
-      <workItem from="1487739717913" duration="19334000" />
+      <workItem from="1487739717913" duration="20331000" />
+      <workItem from="1487825845306" duration="12005000" />
+      <workItem from="1487911141537" duration="17382000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35744000" />
+    <option name="totallyTimeSpent" value="66128000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="33" width="1920" height="1015" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18690096" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18530351" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32861805" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26943558" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26943558" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -315,6 +414,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32861805" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -337,28 +437,47 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="16" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/roundonectrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client/assets/admin/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4560">
           <caret line="304" column="58" selection-start-line="304" selection-start-column="58" selection-end-line="304" selection-end-column="58" />
           <folding>
-            <marker date="1487768673000" expanded="true" signature="13332:13339" ph="×" />
+            <marker date="1487839283000" expanded="true" signature="13326:13333" ph="×" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/admin/startexam.html">
+    <entry file="file://$PROJECT_DIR$/client/templates/admin/roundone.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="41" selection-start-line="1" selection-start-column="41" selection-end-line="1" selection-end-column="41" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#button#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl.js">
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/roundonectrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="615">
           <caret line="41" column="20" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
@@ -378,7 +497,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="79" selection-start-line="15" selection-start-column="79" selection-end-line="15" selection-end-column="79" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -386,11 +504,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="25" column="96" selection-start-line="25" selection-start-column="96" selection-end-line="25" selection-end-column="96" />
-          <folding>
-            <marker date="1487747076000" expanded="true" signature="77:6031" ph="..." />
-            <marker date="1487747076000" expanded="true" signature="84:2217" ph="..." />
-            <marker date="1487747076000" expanded="true" signature="2290:6023" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -398,7 +511,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="720">
           <caret line="48" column="28" selection-start-line="48" selection-start-column="28" selection-end-line="48" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -414,7 +526,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -451,7 +562,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -487,19 +597,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl" />
-    <entry file="file://$PROJECT_DIR$/client/templates/admin/exam.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="48" column="28" selection-start-line="48" selection-start-column="28" selection-end-line="48" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/adminctrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -520,11 +621,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="74" selection-start-line="7" selection-start-column="74" selection-end-line="7" selection-end-column="74" />
-          <folding>
-            <marker date="1487747076000" expanded="true" signature="77:6031" ph="..." />
-            <marker date="1487747076000" expanded="true" signature="84:2217" ph="..." />
-            <marker date="1487747076000" expanded="true" signature="2290:6023" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -532,7 +628,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -552,134 +647,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/modules/queries.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="227" column="12" selection-start-line="227" selection-start-column="12" selection-end-line="227" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/routes/web.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="939" column="49" selection-start-line="939" selection-start-column="49" selection-end-line="939" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/admin/list_examuser.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="65" selection-start-line="18" selection-start-column="65" selection-end-line="18" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/vsqexamctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="727">
-          <caret line="67" column="8" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/modules/socket_test_v1.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="85" column="83" selection-start-line="85" selection-start-column="70" selection-end-line="85" selection-end-column="83" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/mcqexamctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1050">
-          <caret line="70" column="11" selection-start-line="70" selection-start-column="11" selection-end-line="70" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/admin/list_vsq.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="16" selection-start-line="15" selection-start-column="16" selection-end-line="17" selection-end-column="22" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/admin/list_mcq.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/admin/startexam.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="20" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="20" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#button#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/startexamctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="16" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-683">
-          <caret line="317" column="29" selection-start-line="317" selection-start-column="29" selection-end-line="317" selection-end-column="29" />
-          <folding>
-            <marker date="1487768673000" expanded="true" signature="13332:13339" ph="×" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/loginctrl.js">
+    <entry file="file://$PROJECT_DIR$/config/config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
-          <folding />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="55" selection-start-line="2" selection-start-column="55" selection-end-line="2" selection-end-column="55" />
-          <folding />
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="11" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="37" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="37" />
-          <folding />
+      <provider editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
@@ -687,7 +676,160 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/factory/mySocket.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="56" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/loginctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4665">
+          <caret line="311" column="26" selection-start-line="311" selection-start-column="18" selection-end-line="311" selection-end-column="26" />
+          <folding>
+            <marker date="1487839283000" expanded="true" signature="13326:13333" ph="×" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/examctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="41" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/routes/web.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15150">
+          <caret line="1010" column="106" selection-start-line="1010" selection-start-column="94" selection-end-line="1010" selection-end-column="106" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/modules/queries.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="257" column="0" selection-start-line="257" selection-start-column="0" selection-end-line="257" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/vsqexamctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="821">
+          <caret line="68" column="33" selection-start-line="68" selection-start-column="33" selection-end-line="68" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/mcqexamctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="821">
+          <caret line="73" column="64" selection-start-line="73" selection-start-column="8" selection-end-line="73" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/layout/img/pemdas_waiting_screen_1-01.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/layout/img/pemdas_waiting_screen_1-02.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/layout/img/pemdas_waiting_screen_1-03.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/modules/socket_test_v1.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="536">
+          <caret line="327" column="94" selection-start-line="327" selection-start-column="52" selection-end-line="327" selection-end-column="94" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/admin/exam.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="692">
+          <caret line="54" column="32" selection-start-line="54" selection-start-column="32" selection-end-line="54" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/assets/admin/js/controllers/roundonectrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="58" column="39" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/admin/list_examuser.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="74" selection-start-line="18" selection-start-column="49" selection-end-line="18" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/admin/list_mcq.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="62" selection-start-line="18" selection-start-column="62" selection-end-line="18" selection-end-column="65" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/admin/list_vsq.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/admin/roundone.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#div#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

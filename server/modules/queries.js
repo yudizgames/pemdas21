@@ -239,8 +239,11 @@ var Users = {
     get_mcq_by_Ids:function(body,cb){
         db.query("SELECT tbl_questions.iQuestionId,tbl_questions.vQuestion, tbl_answers.vAnswer, tbl_answers.iAnswerId FROM tbl_answers JOIN tbl_questions ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.iQuestionId IN (?)",[body.iQuestionId],cb)
     },
+    get_vsq_by_Ids:function(body,cb){
+        db.query("SELECT iQuestionId,vQuestion FROM tbl_questions WHERE iQuestionId IN (?)",[body.iQuestionId],cb)
+    },
     insert_exam:function(body,cb){
-        db.query("INSERT INTO tbl_exams (iUserId,vTitle,vDescription,eStatus,dCreatedDate) VALUES (?,?,?,?,?)",[0,body.vTitle,body.vDescription,"y",dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
+        db.query("INSERT INTO tbl_exams (iUserId,vTitle,vDescription,eStatus,dCreatedDate,iParentId) VALUES (?,?,?,?,?,?)",[0,body.vTitle,body.vDescription,"y",dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iParentId],cb);
     },
     insert_exam_schedule:function(body,cb){
         db.query("INSERT INTO tbl_exam_schedule (iExamId,dExamDate,iWinnerId,dCreatedDate) VALUES (?,?,?,?)",[body.iExamId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),0,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
@@ -248,14 +251,17 @@ var Users = {
     insert_exam_participant:function(body,cb){
         db.query("INSERT INTO tbl_exam_participant (iScheduleId,iUserId,iTotalQuestion,iRightAnswers,iWrongAnswers,eStatus,dCreatedDate) VALUES (?,?,?,?,?,?,?)",[body.iScheduleId,body.iUserId,0,0,0,"y",dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
     },
-    check_question_answer:function(body,cb){
+    check_round_one_question_answer:function(body,cb){
         db.query("SELECT COUNT(*) as rowCount FROM tbl_questions WHERE iQuestionId = ? AND iAnswerId = ? AND eStatus != 'd'",[body.iQuestionId,body.iAnswerId],cb);
     },
     insert_participant_questions:function(body,cb){
-        db.query("INSERT INTO tbl_participant_questions (iParticipantId,iQuestionId,iAnswerId,eCheck,eStatus) VALUES (?,?,?,?,?)",[body.iParticipantId,body.iQuestionId,body.iAnswerId,body.eCheck,body.eStatus],cb);
+        db.query("INSERT INTO tbl_participant_questions (iParticipantId,iQuestionId,iAnswerId,vAnswer,eCheck,eStatus) VALUES (?,?,?,?,?,?)",[body.iParticipantId,body.iQuestionId,body.iAnswerId,body.vAnswer,body.eCheck,body.eStatus],cb);
     },
     update_exam_participant:function(body,cb){
         db.query("UPDATE tbl_exam_participant SET iTotalQuestion = iTotalQuestion + 1 , iRightAnswers = iRightAnswers + ? , iWrongAnswers = iWrongAnswers + ? WHERE iParticipantId = ? ",[body.iRightAnswers,body.iWrongAnswers,body.iParticipantId],cb);
+    },
+    check_round_two_question_answer:function(body,cb){
+        db.query("SELECT COUNT(*) as rowCount FROM tbl_questions JOIN tbl_answers ON tbl_questions.iAnswerId = tbl_answers.iAnswerId WHERE tbl_questions.iQuestionId = ? AND tbl_answers.vAnswer = ? AND tbl_questions.eStatus != 'd'",[body.iQuestionId,body.vAnswer],cb);
     }
     //EXAM MODULE MCQ END
 

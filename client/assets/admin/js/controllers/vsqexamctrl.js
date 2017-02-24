@@ -66,7 +66,7 @@ angular.module('main').controller('VsqExamCtrl',function ($scope,$http,$rootScop
 
 	$scope.vsqQuestion = function(){
         console.log($scope.vsqExamQuestion);
-		$localForage.setItem('vsqExamQuestion',$scope.vsqExamQuestion);
+		$localForage.setItem('vsqQuestion',$scope.vsqExamQuestion);
 		$state.go('admin.exam');
 	}
 });
