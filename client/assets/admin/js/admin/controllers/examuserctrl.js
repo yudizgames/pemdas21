@@ -15,6 +15,7 @@ angular.module('main').controller('ExamUserCtrl',function ($scope,$http,$rootSco
     $scope.sendQutsion = function(){
         console.log($scope.examUser);
         mySocket.emit('examUser',{data:$scope.examUser});
+        console.log($scope.examUser);
         $localForage.setItem('examUser',$scope.examUser)
         $state.go('admin.mcqexam');         
     }

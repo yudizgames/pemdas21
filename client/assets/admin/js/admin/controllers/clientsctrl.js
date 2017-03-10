@@ -1,5 +1,5 @@
-angular.module('main').controller('UsersCtrl',function ($scope,$rootScope,$resource,$http,$state,toastr,DTOptionsBuilder, DTColumnBuilder,$compile) {
-    console.log("Users controller call");
+angular.module('main').controller('ClientsCtrl',function ($scope,$rootScope,$resource,$http,$state,toastr,DTOptionsBuilder,DTColumnDefBuilder,DTColumnBuilder,$compile) {
+    console.log("Cleints controller call");
     //Status Store for every user
     $scope.userStatus = [];
     //Status change event fire
@@ -10,7 +10,7 @@ angular.module('main').controller('UsersCtrl',function ($scope,$rootScope,$resou
         $rootScope.hideLoad = false;  //Loading Stop For Network Operation Start
         $http({
             method:'post',
-            url:'/useroperation',
+            url:'/clientoperation',
             data:{
                 'id':id,
                 'vOperation':'status',
@@ -40,11 +40,11 @@ angular.module('main').controller('UsersCtrl',function ($scope,$rootScope,$resou
         }
 
         if(OperationType == 'view'){
-            $state.go('admin.userdetails',{'id':iUserId});
+            $state.go('admin.clientetails',{'id':iUserId});
         }else if(OperationType == 'delete'){
             $http({
                 method:'post',
-                url:'/useroperation',
+                url:'/clientoperation',
                 dataType:'json',
                 data:postData
             }).then(function(res){
@@ -58,7 +58,7 @@ angular.module('main').controller('UsersCtrl',function ($scope,$rootScope,$resou
             });
         }else if(OperationType == 'edit'){
             $state.current.data.form_action = "Edit";
-            $state.go('admin.userform',{'id':iUserId,'action':'Edit'});
+            $state.go('admin.clientform',{'id':iUserId,'action':'Edit'});
         }
 
     }
@@ -75,19 +75,26 @@ angular.module('main').controller('UsersCtrl',function ($scope,$rootScope,$resou
             //here We will add .withOption('name','column_name') for send column name to the server
             //here we will add .newColumn('column_name','Title for column name')
             DTColumnBuilder.newColumn("iUserId", "User ID").withOption('name', 'iUserId'),
-            DTColumnBuilder.newColumn("vUserName", "User Name").withOption('name', 'vUserName'),
+            DTColumnBuilder.newColumn("vFullName", "Full Name").withOption('name', 'vFullName'),
             DTColumnBuilder.newColumn("vEmail", "Email").withOption('name', 'vEmail'),
             DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(actionsHtml),
             // DTColumnBuilder.newColumn("Status",'Status').withOption('name','Status').notSortable(),
-            DTColumnBuilder.newColumn("vOperation",'Operation').withOption('name','vOperation').notSortable()
+            DTColumnBuilder.newColumn("vOperation",'Operation').withOption('name','vOperation').notSortable(),
+            // DTColumnBuilder.newColumn('foo','foo').withOption('name', 'foo').notVisible()
+            DTColumnBuilder.newColumn("vUserType", "User Type").withOption('name', 'vUserType').notVisible(),
         ];
+
+        // $scope.dtColumnDefs = [
+        //     DTColumnDefBuilder.newColumnDef(0).withOption('sContentPadding', 'mmm')
+        // ];
 
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
             dataSrc: "data",
-            url: "/user_list",
+            url: "/list_client",
             type: 'POST',
             dataType:'json',
             data:function(d){
+
                 $scope.userStatus = [];
                 console.log("data call");
             }
@@ -96,6 +103,7 @@ angular.module('main').controller('UsersCtrl',function ($scope,$rootScope,$resou
             .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
             .withDisplayLength(10) // Page size
             .withOption('aaSorting',[0,'desc'])
+            .withDataProp('data.inner')
             .withOption('createdRow',function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
                 $compile(nRow)($scope);
             });

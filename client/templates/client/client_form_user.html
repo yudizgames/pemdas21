@@ -1,0 +1,69 @@
+<!-- PAGE BREADCRUMB -->
+<ul class="page-breadcrumb breadcrumb">
+    <li>
+        <a href="javascript:;" ui-sref="admin.dashboard">Dashboard</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        <a href="javascript:;" ui-sref="admin.users">Users List</a><i class="fa fa-circle"></i>
+    </li>
+    <li class="active">
+        User {{form_action}}
+    </li>
+</ul>
+<!-- END PAGE BREADCRUMB -->
+
+<!-- BEGIN MAIN CONTENT -->
+<div class="margin-top-10">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN PORTLET-->
+            <div class="portlet box blue-madison">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>User Details {{form_action}}
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal form-bordered" name="form_user" id="form_user" novalidate ng-submit="submitUser()">
+                        <div class="form-body">
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="vFullName">Full name <span class="text-danger">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" value="" class="form-control" name="vFullName" id="vFullName" required ng-model="user.vFullName">
+                                    <div ng-messages="form_user.vFullName.$error && form_user.vFullName.$dirty" ng-show="form_user.vFullName.$error && form_user.vFullName.$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_user.vFullName.$error.required">Full name is required</div>
+                                    </div>
+                                    <!-- <pre>error = {{ form_cpass.oPassword.$error | json }}</pre>  -->
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="vEmail">Email <span class="text-danger">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="email" value="" class="form-control" name="vEmail" id="vEmail" ng-readonly="{{form_action == 'Edit' ? true : false}}" required ng-model="user.vEmail">
+                                    <div ng-messages="form_cpass.nPassword.$error && form_cpass.nPassword.$dirty" ng-show="form_user.vEmail.$error && form_user.vEmail.$dirty" role="alert" class="text-danger">
+                                        <div ng-message="required" ng-show="form_user.vEmail.$dirty && form_user.vEmail.$error.required">Email is required.</div>
+                                        <div ng-show="form_user.vEmail.$dirty && form_user.vEmail.$error.email">Enter valid email address.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button type="submit" class="btn green" data-ng-disabled="form_user.$invalid"><i class="fa fa-check"></i> Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END FORM-->
+                </div>
+            </div>
+            <!-- END PORTLET-->
+        </div>
+    </div>
+</div>

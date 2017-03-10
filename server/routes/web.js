@@ -7,7 +7,7 @@ var jwt = require('jsonwebtoken'); // use for jwt.sign
 var passport = require("passport");
 var randomstring = require("randomstring");
 var JWTStrategy = require('../../config/passport-auth'); //passport-jwt Authorization Strategy
-
+var async = require("async");
 
 passport.use(JWTStrategy);
 module.exports = function (app,cli,mail) {
@@ -29,7 +29,7 @@ module.exports = function (app,cli,mail) {
                     if(err)throw err
                     if(rows.length === 1){
                         var hash = md5(rows[0].iUserId + Math.random() + Date.now());
-                        var payload = { 'token':hash,'device':'DeskTop' };
+                        var payload = { 'token':hash,'device':'DeskTop','vUserType':rows[0].vUserType};
                         var token = jwt.sign(payload,"pemdas");
                         queries.setTocket({
                             'token': hash,
@@ -41,7 +41,7 @@ module.exports = function (app,cli,mail) {
                             $status = 200;
                             $message = "Success";
                             res.json({
-                                'status':$status,'message':$message,'token':token
+                                'status':$status,'message':$message,'token':token,'vUserType':rows[0].vUserType,'vUserName':rows[0].vFullName,'iUserId':rows[0].iUserId
                             })
                         })
                     }else{
@@ -224,75 +224,123 @@ module.exports = function (app,cli,mail) {
                 }
             });
 
+
+
+
+
             //User Module
-
-            // app.post('/user',passport.authenticate('jwt',{session:false}),function(req,res){
-            //     cli.blue("Its Work users");
-            //     if(req.user.length > 0){
-            //         queries.getAllUser(req,function(error,rows){
-            //             res.json({
-            //                 'status':200,
-            //                 'message':'Success',
-            //                 'result':rows
-            //             })
-            //         });
-            //     }else{
-            //         res.json({
-            //             "status":404,
-            //             "message":"Something went wrong"
-            //         })
-            //     }
-            // });
-
-
             /**
              *  Data Table With Server Side Rendering Start
              */
-            app.post('/user_list',function(req,res){
-                var obj = {
-                    'vUserName': req.body.search.value, //Search Apply for default search text box
-                    'vEmail': req.body.search.value //Search Apply for default search text box
-                };
-                queries.ls_user_count(obj, function(err, record) {
-                    var iTotalRecords = parseInt(record[0].iTotalRecords);
-                    var iDisplayLength = parseInt(req.body.length);
-                    iDisplayLength = iDisplayLength < 0 ? iTotalRecords : iDisplayLength;
-                    var iDisplayStart = parseInt(req.body.start);
-                    var end = iDisplayStart + iDisplayLength;
-                    end = end > iTotalRecords ? iTotalRecords : end;
+            app.post('/user_list',passport.authenticate('jwt',{session:false}),function(req,res){
+
+
+                cli.yellow(JSON.stringify(req.user));
+
+                queries.getUserById({"id":req.user[0].iUserId},function(error,users){
                     var obj = {
-                        'limit': end,
-                        'offset': iDisplayStart,
-                        'vUserName': req.body.search.value,
-                        'vEmail': req.body.search.value,
-                        'sort':getSorting(req.body)
+                        'vUserName': req.body.search.value, //Search Apply for default search text box
+                        'vEmail': req.body.search.value,//Search Apply for default search text box
+                        'iUserId':req.user[0].iUserId,
+                        'vUserType':users[0].vUserType
                     };
-                    queries.ls_user_select(obj, function(err, users) {
-                        if (err) return err;
-                        var i = 0;
-                        var records = {};
-                        records['draw'] = req.body.draw;
-                        records['recordsTotal'] = iTotalRecords;
-                        records['recordsFiltered'] = iTotalRecords;
-                        records['data'] = [];
-                        for (var key in users) {
-                            // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                            var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
-                            operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
-                            operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
-                            records['data'][i] = {"iUserId":users[i].iUserId,"vUserName":users[i].vUserName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation};
-                            i++;
-                        }
-                        res.json(records);
-                    });
+
+                    if(users[0].vUserType == 'client' )
+                    {
+
+                        queries.ls_user_count(obj, function(err, record) {
+                            var iTotalRecords = parseInt(record[0].iTotalRecords);
+                            var iDisplayLength = parseInt(req.body.length);
+                            iDisplayLength = iDisplayLength < 0 ? iTotalRecords : iDisplayLength;
+                            var iDisplayStart = parseInt(req.body.start);
+                            var end = iDisplayStart + iDisplayLength;
+                            end = end > iTotalRecords ? iTotalRecords : end;
+                            var obj = {
+                                'limit': end,
+                                'offset': iDisplayStart,
+                                'vFullName': req.body.search.value,
+                                'vEmail': req.body.search.value,
+                                'sort':getSorting(req.body),
+                                'iParentId':req.user[0].iUserId,
+                            };
+                            queries.ls_user_select(obj, function(err, users) {
+                                if (err) return err;
+                                var i = 0;
+                                var records = {};
+                                records['draw'] = req.body.draw;
+                                records['recordsTotal'] = iTotalRecords;
+                                records['recordsFiltered'] = iTotalRecords;
+                                records['data'] = [];
+                                for (var key in users) {
+                                    // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
+                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                                    records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
+                                    i++;
+                                }
+                                res.json(records);
+                            });
+                        });
+
+
+
+                    }else{
+
+                        queries.ls_user_count(obj, function(err, record) {
+                            var iTotalRecords = parseInt(record[0].iTotalRecords);
+                            var iDisplayLength = parseInt(req.body.length);
+                            iDisplayLength = iDisplayLength < 0 ? iTotalRecords : iDisplayLength;
+                            var iDisplayStart = parseInt(req.body.start);
+                            var end = iDisplayStart + iDisplayLength;
+                            end = end > iTotalRecords ? iTotalRecords : end;
+                            var obj = {
+                                'limit': end,
+                                'offset': iDisplayStart,
+                                'vFullName': req.body.search.value,
+                                'vEmail': req.body.search.value,
+                                'sort':getSorting(req.body),
+                                'vUserType':users[0].vUserType
+                            };
+                            queries.ls_user_select(obj, function(err, users) {
+                                if (err) return err;
+                                var i = 0;
+                                var records = {};
+                                records['draw'] = req.body.draw;
+                                records['recordsTotal'] = iTotalRecords;
+                                records['recordsFiltered'] = iTotalRecords;
+                                records['data'] = [];
+                                for (var key in users) {
+                                    // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
+                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                                    records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
+                                    i++;
+                                }
+                                res.json(records);
+                            });
+                        });
+
+
+
+                    }
+
+
                 });
+
 
             });
             /**
              *  Data Table With Server Side Rendering End
              */
 
-            app.post('/useradd',passport.authenticate('jwt',{session:false}),function (req,res) {
+
+    /**
+     *  When Client Add New User
+     */
+
+    app.post('/useradd',passport.authenticate('jwt',{session:false}),function (req,res) {
                 if(req.user.length > 0){
                     cli.blue("Check Email");
                     cli.blue(validator.isEmail(req.body.vEmail));
@@ -306,36 +354,72 @@ module.exports = function (app,cli,mail) {
                                 });
                             }else{
                                 var vPassword = randomstring.generate(6);
-                                queries.addUser({"vFullName":req.body.vFullName,"vUserName":req.body.vEmail,"vEmail":req.body.vEmail,"vPassword":vPassword},function(err,rows){
-                                    if(err) throw err;
-                                    if(rows.affectedRows > 0){
-                                        //Send Mail
-                                        var mailOptions = {
-                                            from: '"Pemdas" <info@pemdas.com>', // sender address
-                                            to: req.body.vEmail, // list of receivers
-                                            subject: 'Hello '+ req.body.vFullName, // Subject line
-                                            text: 'One time password  : ' + vPassword // plaintext body
-                                        };
-                                        mail.sendMail(mailOptions,function(err,info){
-                                            if(err){
-                                                cli.red("Mail not send");
-                                                console.log(err);
-                                            }
-                                        });
-                                        //Send mail end
+
+                                /**
+                                 * Check Which User Add value super_admin or client
+                                 */
+                                queries.getParentId({'iUserId':req.user[0].iUserId},function(e,parent){
+                                    if(e) throw e;
+                                    /**
+                                     * Add User
+                                     */
+                                    queries.addUser({"vUserType":'user',"vFullName":req.body.vFullName,"vUserName":req.body.vEmail,"vEmail":req.body.vEmail,"vPassword":vPassword},function(err,rows){
+                                        if(err) throw err;
+                                        if(rows.affectedRows > 0){
+
+                                            queries.addChild({"iUserId":rows.insertId,"iParentId":parent[0].iParentId},function(errors,child){
+
+                                                if(child.affectedRows > 0) {
+                                                    //Send Mail
+                                                    var mailOptions = {
+                                                        from: '"Pemdas" <info@pemdas.com>', // sender address
+                                                        to: req.body.vEmail, // list of receivers
+                                                        subject: 'Hello '+ req.body.vFullName, // Subject line
+                                                        text: 'One time password  : ' + vPassword // plaintext body
+                                                    };
+                                                    mail.sendMail(mailOptions,function(err,info){
+                                                        if(err){
+                                                            cli.red("Mail not send");
+                                                            console.log(err);
+                                                        }else{
+                                                            cli.yellow("Mail send");
+                                                        }
+                                                    });
+                                                    //Send mail end
 
 
-                                        res.json({
-                                            "status":200,
-                                            "message":"User Insert Successfully."
-                                        });
-                                    }else{
-                                        res.json({
-                                            "status":400,
-                                            "message":"Something went wrong"
-                                        });
-                                    }
+                                                    res.json({
+                                                        "status":200,
+                                                        "message":"User Insert Successfully."
+                                                    });
+                                                }else{
+
+                                                    res.json({
+                                                        "status":400,
+                                                        "message":"Something went wrong"
+                                                    });
+
+                                                }
+
+
+
+                                            });
+
+                                        }else{
+                                            res.json({
+                                                "status":400,
+                                                "message":"Something went wrong"
+                                            });
+                                        }
+                                    });
+
+
                                 });
+
+
+
+
+
                             }
                         });
                     }else{
@@ -352,11 +436,16 @@ module.exports = function (app,cli,mail) {
                 }
 
             });
+
+
+
+
             app.post('/useroperation',passport.authenticate('jwt',{session:false}),function(req,res){
                 if(!validator.isEmpty(req.body.id) && !validator.isEmpty(req.body.vOperation)){
                     cli.blue("inside");
                     console.log("Inside");
                     if(req.user.length > 0 ){
+
                         if(req.body.vOperation == 'view'){
                             cli.blue("view call");
                             queries.getUserById({'id':req.body.id},function(error,rows){
@@ -399,7 +488,7 @@ module.exports = function (app,cli,mail) {
                             });
                         }else if(req.body.vOperation == 'status'){
                             if(!validator.isEmpty(req.body.eStatus+'')){
-                                queries.changeUserStatusById({'id':req.body.id,'status':req.body.eStatus},function(error,rows){
+                                queries.changeUserStatusById({'id':req.body.id,'eStatus':req.body.eStatus},function(error,rows){
                                     if(error) throw error;
                                     res.json({
                                         'status':200,
@@ -999,6 +1088,7 @@ module.exports = function (app,cli,mail) {
                console.log(req.body.vTitle);
                 req.checkBody("vTitle","Ttile must be required").notEmpty();
                 req.checkBody("vDescription","Description must be required").notEmpty();
+                req.checkBody("iUserId","PArent or Teacher must be required").notEmpty();
                 var validatorError = req.validationErrors();
                 req.getValidationResult().then(function(result) {
                     if (!result.isEmpty()) {
@@ -1008,9 +1098,9 @@ module.exports = function (app,cli,mail) {
                                 "Data":result.mapped()
                             });
                     }else{
-                            queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:0},function(errOne,rowsOne){
+                            queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:0,iUserId:req.body.iUserId},function(errOne,rowsOne){
                                 var iRoundOneExamId  = rowsOne.insertId;
-                                queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:iRoundOneExamId},function(errTwo,rowsTwo){
+                                queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:iRoundOneExamId,iUserId:req.body.iUserId},function(errTwo,rowsTwo){
                                     var iRoundTwoExamId  = rowsTwo.insertId;
                                     queries.insert_exam_schedule({"iExamId":iRoundOneExamId},function(err,resultOne){
                                         var iRoundOneScheduleId = resultOne.insertId;
@@ -1040,10 +1130,395 @@ module.exports = function (app,cli,mail) {
 
           });
 
-            /**
-             * Generate Exam Close
-             */
+          /**
+            * Generate Exam Close
+            */
 
+    /**
+     *  Data Table With Server Side Rendering Start
+     */
+    app.post('/user_statistics',function(req,res){
+        var obj = {
+            'vTitle': req.body.search.value, //Search Apply for default search text box
+        };
+        queries.ls_exam_count(obj, function(err, record) {
+            var iTotalRecords = parseInt(record[0].iTotalRecords);
+            var iDisplayLength = parseInt(req.body.length);
+            iDisplayLength = iDisplayLength < 0 ? iTotalRecords : iDisplayLength;
+            var iDisplayStart = parseInt(req.body.start);
+            var end = iDisplayStart + iDisplayLength;
+            end = end > iTotalRecords ? iTotalRecords : end;
+            var obj = {
+                'limit': end,
+                'offset': iDisplayStart,
+                'vTitle': req.body.search.value,
+                'sort':getSorting(req.body)
+            };
+            queries.ls_exam_select(obj, function(err, exams) {
+                if (err) return err;
+                var i = 0;
+                var records = {};
+                records['draw'] = req.body.draw;
+                records['recordsTotal'] = iTotalRecords;
+                records['recordsFiltered'] = iTotalRecords;
+                records['data'] = [];
+                for (var key in exams) {
+                    // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
+                    var operation = '<button ng-click="viewOperation('+exams[i].iExamId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
+                    records['data'][i] = {"iExamId":exams[i].iExamId,"vTitle":exams[i].vTitle,"eStatus":exams[i].eStatus,"vOperation":operation};
+                    i++;
+                }
+                res.json(records);
+            });
+        });
+    });
+
+
+    /**
+     * Exam result
+     */
+
+    app.post('/exam_result',passport.authenticate('jwt',{session:false}),function(req,res){
+        req.checkBody("iExamId","ExamId must be required").notEmpty();
+        req.getValidationResult().then(function(result) {
+            if (!result.isEmpty()) {
+                res.json({
+                    "status": 404,
+                    "message": "Please fill all required value",
+                    "Data":result.mapped()
+                });
+            }else{
+
+                queries.get_exam_details({'iExamId':req.body.iExamId},function(err,exams){
+                    if(err) throw err;
+                    queries.get_round_details({'iExamId':exams[0].iRoundOneId},function(errs,roundOne){
+                        if(errs) throw errs;
+                        queries.get_round_details({'iExamId':exams[0].iRoundTwoId},function(error,roundTwo){
+                            if(error) throw error;
+                            console.log("Exam Details");
+                            cli.yellow(JSON.stringify(exams));
+                            console.log("Round One");
+                            cli.yellow(JSON.stringify(roundOne));
+                            console.log("Round Two");
+                            cli.yellow(JSON.stringify(roundTwo));
+
+                            var RoundOneGraph = {
+                                "Right":[],
+                                "Wrong":[],
+                                "Users":[]
+                            };
+
+                            for(var i = 0; i < roundOne.length; i++){
+                                RoundOneGraph.Right.push(roundOne[i].iRightAnswers);
+                                RoundOneGraph.Wrong.push(roundOne[i].iWrongAnswers);
+                                RoundOneGraph.Users.push(roundOne[i].vFullName);
+                            }
+
+                            var RoundTwoGraph = {
+                                "Right":[],
+                                "Wrong":[],
+                                "Users":[]
+                            }
+
+                            ;
+                            for(var i = 0; i < roundTwo.length; i++){
+                                RoundTwoGraph.Right.push(roundTwo[i].iRightAnswers);
+                                RoundTwoGraph.Wrong.push(roundTwo[i].iWrongAnswers);
+                                RoundTwoGraph.Users.push(roundTwo[i].vFullName);
+                            }
+
+
+                            res.json({
+                                'status':200,
+                                'message':'Success',
+                                'data':{
+                                    "ExamDetails":exams[0],
+                                    "RoundOne":roundOne,
+                                    "Roundtwo":roundTwo,
+                                    "RoundOneGraph":RoundOneGraph,
+                                    "RoundTwoGraph":RoundTwoGraph
+                                }
+                            });
+
+                        });
+                    });
+                });
+
+            }
+        });
+    });
+
+
+    app.post('/exam_question',passport.authenticate('jwt',{session:false}),function(req,res){
+
+        req.checkBody("iUserId","UserId must be required").notEmpty();
+        req.checkBody("iParticipentId","iParticipentId must be required").notEmpty();
+        req.getValidationResult().then(function(result) {
+            if (!result.isEmpty()) {
+                res.json({
+                    "status": 404,
+                    "message": "Please fill all required value",
+                    "Data":result.mapped()
+                });
+            }else{
+                console.log(req.body);
+                queries.get_roundOne_question({"iParticipentId":req.body.iParticipentId},function(err,RoundOne){
+                    if(err) throw err;
+                    console.log("Get Round One Question");
+                    cli.yellow(JSON.stringify(RoundOne[0]));
+                    async.forEachOf(RoundOne,function(value,key,cb){
+
+
+                        queries.get_ans_by_Id({"iAnswerId":value.AnsGiven},function(errs,resultOne){
+                            if(errs) throw errs;
+                            queries.get_ans_by_Id({"iAnswerId":value.RightAns},function(errs,resultTwo){
+                                if(errs)
+                                RoundOne[key].AnsGiven = resultOne[0].vAnswer;
+                                RoundOne[key].RightAns = resultTwo[0].vAnswer;
+                            });
+                        });
+                        cb();
+                    },function(err){
+                        console.log("Call back call");
+                        console.log("Get Round One Question");
+                        cli.yellow(JSON.stringify(RoundOne[0]));
+
+
+                    });
+                });
+            }
+        });
+    });
+
+    //Client Module
+
+    app.post('/list_client',function(req,res){
+        cli.blue(JSON.stringify(req.body));
+        var obj = {
+            'vUserName': req.body.search.value, //Search Apply for default search text box
+            'vEmail': req.body.search.value //Search Apply for default search text box
+        };
+        queries.ls_client_count(obj, function(err, record) {
+            var iTotalRecords = parseInt(record[0].iTotalRecords);
+            var iDisplayLength = parseInt(req.body.length);
+            iDisplayLength = iDisplayLength < 0 ? iTotalRecords : iDisplayLength;
+            var iDisplayStart = parseInt(req.body.start);
+            var end = iDisplayStart + iDisplayLength;
+            end = end > iTotalRecords ? iTotalRecords : end;
+            var obj = {
+                'limit': end,
+                'offset': iDisplayStart,
+                'vFullName': req.body.search.value,
+                'vEmail': req.body.search.value,
+                'sort':getSorting(req.body)
+            };
+            queries.ls_client_select(obj, function(err, users) {
+                if (err) return err;
+                var i = 0;
+                var records = {};
+                records['draw'] = req.body.draw;
+                records['recordsTotal'] = iTotalRecords;
+                records['recordsFiltered'] = iTotalRecords;
+                records['data'] = [];
+                for (var key in users) {
+                    // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
+                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
+                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
+                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                    records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
+                    i++;
+                }
+                res.json(records);
+            });
+        });
+    });
+
+    app.post('/clientadd',passport.authenticate('jwt',{session:false}),function (req,res) {
+        if(req.user.length > 0){
+            cli.blue("Check Email");
+            cli.blue(validator.isEmail(req.body.vEmail));
+            if(!validator.isEmpty(req.body.vFullName) && validator.isEmail(req.body.vEmail)){
+                checkUser(req.body.vEmail,function(error,isActive){
+                    if(error) throw error;
+                    if(isActive.length > 0){
+                        res.json({
+                            "status":404,
+                            "message":"User already available"
+                        });
+                    }else{
+                        var vPassword = randomstring.generate(6);
+                        queries.addUser({"vUserType":"client","vFullName":req.body.vFullName,"vUserName":req.body.vEmail,"vEmail":req.body.vEmail,"vPassword":vPassword},function(err,rows){
+                            if(err) throw err;
+                            if(rows.affectedRows > 0){
+                                queries.addParent({"iUserId":rows.insertId},function(errors,row){
+                                    if(row.affectedRows > 0){
+
+                                        //Send Mail
+                                        var mailOptions = {
+                                            from: '"Pemdas" <info@pemdas.com>', // sender address
+                                            to: req.body.vEmail, // list of receivers
+                                            subject: 'Hello '+ req.body.vFullName, // Subject line
+                                            text: 'One time password  : ' + vPassword // plaintext body
+                                        };
+                                        mail.sendMail(mailOptions,function(err,info){
+                                            if(err){
+                                                cli.red("Mail not send");
+                                                console.log(err);
+                                            }else{
+                                                cli.yellow("Mail send");
+                                            }
+                                        });
+                                        //Send mail end
+
+
+                                        res.json({
+                                            "status":200,
+                                            "message":"User Insert Successfully."
+                                        });
+
+                                    }
+                                    else{
+                                        res.json({
+                                            "status":400,
+                                            "message":"Something went wrong"
+                                        });
+                                    }
+
+                                });
+                            }else{
+                                res.json({
+                                    "status":400,
+                                    "message":"Something went wrong"
+                                });
+                            }
+                        });
+                    }
+                });
+            }else{
+                res.json({
+                    "status":404,
+                    "message":"Please fill all required value"
+                });
+            }
+        }else{
+            res.json({
+                "status":404,
+                "message":'User not active'
+            })
+        }
+
+    });
+
+
+    app.post('/clientoperation',passport.authenticate('jwt',{session:false}),function(req,res){
+        if(!validator.isEmpty(req.body.id) && !validator.isEmpty(req.body.vOperation)){
+            cli.blue("inside");
+            console.log("Inside");
+            if(req.user.length > 0 ){
+
+                if(req.body.vOperation == 'view'){
+                    cli.blue("view call");
+                    queries.getUserById({'id':req.body.id},function(e,users){
+                        if(users.length > 0){
+                            var temp = {};
+                            var child = [];
+                            temp.ParentName = users[0].vFullName;
+                            temp.ParentEmail = users[0].vEmail;
+                            temp.ParentUserName = users[0].vUserName;
+                            queries.get_child_by_client_id({'id':req.body.id},function(error,rows){
+                                if(rows.length > 0 ){
+
+                                    for(var i=0; i< rows.length; i++){
+                                        child.push({
+                                            "ChildName":rows[i].ChildName,
+                                            "ChildEmail":rows[i].ChildEmail,
+                                            "ChildUserName":rows[i].ChildUserName
+                                        });
+                                    }
+
+                                }
+                                temp.child = child;
+                                res.json({
+                                    'status':200,
+                                    'message':'success',
+                                    'result':temp
+                                });
+                            });
+                        }else{
+                            res.json({
+                                'status':404,
+                                'message':'User Not Found',
+                            })
+                        }
+                    });
+
+
+
+
+                }else if(req.body.vOperation == 'edit'){
+                    if(!validator.isEmpty(req.body.vFullName)){
+                        cli.green("Edit call");
+                        cli.red(req.body.id);
+                        queries.updateUserById({'id':req.body.id,'vFullName':req.body.vFullName},function(err,rows){
+                            if(err) throw err;
+                            res.status(200).json({
+                                'message':'User update successfully'
+                            });
+                        });
+                    }else{
+                        res.json({
+                            "status":404,
+                            "message":"Please fill all required value"
+                        });
+                    }
+                }else if(req.body.vOperation == 'delete'){
+                    queries.deleteUserById({'id':req.body.id},function(error,rows){
+                        if(error) throw error;
+                        res.json({
+                            'status':200,
+                            'message':'User deleted successfully.'
+                        });
+                    });
+                }else if(req.body.vOperation == 'status'){
+                    if(!validator.isEmpty(req.body.eStatus+'')){
+                        queries.changeUserStatusById({'id':req.body.id,'eStatus':req.body.eStatus},function(error,rows){
+                            if(error) throw error;
+                            res.json({
+                                'status':200,
+                                'message':'User status change successfully'
+                            });
+                        });
+                    }else{
+                        res.json({
+                            "status":404,
+                            "message":"Please fill all required value"
+                        })
+                    }
+                } else{
+                    res.json({
+                        "status":404,
+                        "message":"Please fill all required value"
+                    })
+                }
+            }else{
+                res.json({
+                    "status":404,
+                    "message":"Something webnt wrong"
+                })
+            }
+
+        }else{
+
+            res.json({
+                "status":404,
+                "message":"Please fill all required value"
+            })
+
+        }
+
+    });
+
+    // End Client Module
 
 
 }

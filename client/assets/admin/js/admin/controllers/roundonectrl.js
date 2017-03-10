@@ -7,6 +7,7 @@ angular.module('main').controller('RoundOneCtrl',function ($scope,$http,$rootSco
     $scope.showTable = false;
     $scope.clock = true;
     $scope.showLoading = false;
+    var roundOnetimeOut = null;
     var clock;
     clock = $(".clock").FlipClock({
         clockFace: 'MinuteCounter',
@@ -14,6 +15,7 @@ angular.module('main').controller('RoundOneCtrl',function ($scope,$http,$rootSco
         callbacks: {
             stop: function() {
                 console.log("Stop call");
+                $state.go('admin.roundtwo');
             }
         }
     });
@@ -42,13 +44,11 @@ angular.module('main').controller('RoundOneCtrl',function ($scope,$http,$rootSco
                             */
                            console.log({"examUser":examUser,"mcqQuestion":mcqQuestion,"vsqQuestion":vsqQuestion,"RoundOne":RoundOne,"RoundTwo":RoundTwo});
                            mySocket.emit('startGame',{"examUser":examUser,"mcqQuestion":mcqQuestion,"vsqQuestion":vsqQuestion,"RoundOne":RoundOne,"RoundTwo":RoundTwo});
-                           mySocket.on('vRoundOneAns',function(data){
-                               console.log(data);
-                           });
+
                            /**
                             * Start Clock call
                             */
-                           setTimeout(function(){
+                            roundOnetimeOut = setTimeout(function(){
                                $scope.$apply(function(){
                                    $scope.showLoading = false;
                                    $scope.showTable = true;
@@ -63,6 +63,11 @@ angular.module('main').controller('RoundOneCtrl',function ($scope,$http,$rootSco
             });
         });
     }
+
+
+    mySocket.on('vRoundOneAns',function(data){
+        console.log(data);
+    });
 
     /**
      * Generate Question List
@@ -120,10 +125,10 @@ angular.module('main').controller('RoundOneCtrl',function ($scope,$http,$rootSco
             $scope.questionSelected[id] = eStatus;
             var changeQuestion= {};
             if(eStatus == 'y'){
-                changeQuestion = {
-                    'status':'enable',
-                    'iQuestion':id
-                }
+                    changeQuestion = {
+                        'status':'enable',
+                        'iQuestion':id
+                    }
                 $scope.examQuestion.push(id);
                 console.log($scope.questionSelected);
             }else{
@@ -138,13 +143,21 @@ angular.module('main').controller('RoundOneCtrl',function ($scope,$http,$rootSco
             mySocket.emit('ChangeRoundOneQuestion',changeQuestion);
      }
 
-     function getExamQuestionIndex(Id){
+     mySocket.on('RoundOneFinish',function(data){
+         console.log('RoundOneFinish call');
+         console.log(data);
+         if(data.status == 200){
+            clock.stop();
+             // $state.go('admin.roundtwo');
+         }
+     });
 
-         for(var i=0; i<$scope.examQuestion.length;i++){
+     function getExamQuestionIndex(Id){
+        for(var i=0; i<$scope.examQuestion.length;i++){
                 if($scope.examQuestion[i] === Id){
                     return i;
                 }
-         }
+        }
      }
 
 

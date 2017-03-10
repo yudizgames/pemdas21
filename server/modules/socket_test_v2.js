@@ -1,17 +1,28 @@
+/**
+ * Created by YudizAshish on 07/03/17.
+ */
 var cli = require("../../config/config").console;
 var queries = require("./queries");
 var async = require("async");
 var user = []; //List of OneLine User
 var examUser = []; //List of Exam User
+var teacher = [];
 var RoundFinishUser = 0;
 var roundOnetimeOut = null;
 var roundTwotimeOut = null;
-
+var Room = [];
+var _ = require('lodash');
 module.exports = function(app,io){
-    io.on('connection', function(socket){
 
+    io.on('connection', function(socket){
+        io.sockets.emit('listUser',{data:user});
+        /**
+         * First User Join Game And Show on admin/client panels
+         */
         socket.on('joinGame',function(data,fn){
-            queries.getUserById({'id':data.iUserId},function(err,rows){
+            cli.blue('joinGame call');
+            console.log(data);
+            queries.getChildById({'iUserId':data.iUserId},function(err,rows){
                 if(err) throw err;
                 user.push({
                     'socket':socket.id,
@@ -19,35 +30,75 @@ module.exports = function(app,io){
                     'vFullName':rows[0].vFullName,
                     'vUserName':rows[0].vUserName,
                     'vEmail':rows[0].vEmail,
-                    'isActive':false
+                    "iParentId":rows[0].iParentId,
+                    "iParentUserId":rows[0].iParentUserId,
+                    'isActive':false,
+                    'isSelectedByAdmin':false,
+                    'isSelectedByClient':false
                 });
                 //list of user send to angular application
+                cli.blue(JSON.stringify(user));
                 io.sockets.emit('listUser',{data:user});
             });
             fn({"message":"You are in watting state",'status':200,'socket':socket.id});
 
         });
-        io.sockets.emit('listUser',{data:user}); //Angularjs List of Active User.
 
-
-
-        socket.on('examUser',function(data){ //Angularjs
+        /**
+         * List of user selected by admin or client
+         */
+        socket.on('examUser',function(data,fn){ //Angularjs
             cli.red("examUser");
             cli.red("Exam User call");
-            examUser = data.data;
-            cli.blue(examUser);
+            cli.blue(JSON.stringify(data));
+            socket.join("Room_"+socket.id);
+            Room["Room_"+socket.id] = {
+                "socket":[],
+                "totaluser":0,
+                "RoundOneFinishUser":0,
+                "RoundTwoFinishUser":0
+            }
+            console.log(Room["Room_"+socket.id]);
+            fn({"message":"You are become a teacher",'status':200,'socket':socket.id,"Room":"Room_"+socket.id});
+            cli.yellow("users in room "+socket.id);
+            cli.yellow(JSON.stringify(io.sockets.adapter.rooms["Room_"+socket.id]));
+            for(var i=0;i<data.data.length;i++){
+                data.data[i].Room = "Room_"+socket.id;
+                data.data[i].TeacherSocket = socket.id;
+                data.data[i].vTeacherType = data.User.vUserType;
+                data.data[i].TeacherUserId = data.User.iUserId;
+                data.data[i].TeacherUserType = data.User.vUserType;
+            }
+            console.log(data.data);
+            teacher.push({"iUserId":data.User.iUserId,"vUserType":data.User.vUserType,"socket":socket.id});
             io.sockets.emit('examUser',data); //Unity
         });
 
+
+        /**
+         * Ready For Exam By Unity User
+         */
         socket.on('ReadyForExam',function(data,fn){ //Unity
             cli.red("ReadyForExam");
-            socket.join(data.room);
-            cli.red("ReadyForExam");
-            fn({"message":"Now you are in room, Wait for some moment",'status':200,'socket':socket.id,'room':data.room});
+            socket.join(data.Room+"");
+            Room[data.Room+""].socket.push(socket.id);
+            Room[data.Room+""].totaluser += 1;
+            cli.yellow("Total User On Room");
+            console.log(Room[data.Room+""]);
+            console.log(JSON.stringify(data));
+            console.log(JSON.stringify(data.Room));
+            cli.yellow(JSON.stringify(io.sockets.adapter.rooms[data.Room+""]));
+            fn({"message":"Now You are in Exam room, Wait for some moment",'status':200,'socket':socket.id,'room':'Exam_Room'});
         });
 
+        /**
+         * Start User Call By Angular Admin or client
+         */
 
         socket.on('startGame',function(startGameData){
+            cli.yellow("console.log");
+            console.log(JSON.stringify(startGameData));
+
             RoundFinishUser =  0;
             console.log('startGame');
             cli.red(JSON.stringify(startGameData));
@@ -116,11 +167,14 @@ module.exports = function(app,io){
                     },function(err){
                         cli.blue("Callback call");
                         console.log("call back call");
-                        cli.red(JSON.stringify(startGameData));
-                        io.sockets.in('Exam_Room').emit('startGame',{data:startGameData});
+                        cli.red(JSON.stringify(startGameData.Socket.Room));
+                        cli.yellow("users in room "+socket.id);
+                        cli.yellow(JSON.stringify(io.sockets.adapter.rooms["Room_"+socket.id]));
+                        // io.sockets.emit('startGame',{data:startGameData});
+                        io.sockets.in(startGameData.Socket.Room+"").emit('startGame',{data:startGameData});
                         roundOnetimeOut =  setTimeout(function(){
                             console.log("setTimeout call Round One");
-                            io.sockets.in('Exam_Room').emit('timeOverRoundOne',{data:"Time Finish"});
+                            io.sockets.in(startGameData.Socket.Room+"").emit('timeOverRoundOne',{data:"Time Finish",status:200});
                         },212130);
                     });
 
@@ -137,7 +191,7 @@ module.exports = function(app,io){
         socket.on('vRoundOneAns',function(data,fn){
             console.log("VAnswer is call from unity game");
             console.log(JSON.stringify(data));
-            //body.iQuestionId,body.iAnswerId
+
             queries.check_round_one_question_answer({"iQuestionId":data.iQuestionId,"iAnswerId":data.iAnswerId},function(err,res1){
                 var updatParticipant = {};
                 var participantQuestions = {};
@@ -174,7 +228,7 @@ module.exports = function(app,io){
                     fn({"message":"You are wrong",'status':200,'eStatus':false});
                 }
                 queries.insert_participant_questions(participantQuestions,function(err,res2){
-                   if(err) throw err;
+                    if(err) throw err;
                 });
                 queries.update_exam_participant(updatParticipant,function(err,res3){
                     if(err) throw err;
@@ -185,12 +239,14 @@ module.exports = function(app,io){
             io.sockets.emit('vRoundOneAns',data);
         });
 
+
         /**
          * Change Round One Question By Admin
          */
 
         socket.on('ChangeRoundOneQuestion',function(data){
-            console.log(data);
+            cli.yellow("Round One Question");
+            console.log(JSON.stringify(data.Room));
             var temp = {};
             if(data.status == 'enable'){
                 queries.get_mcq_by_Ids({"iQuestionId":data.iQuestion},function(err,rowsOne) {
@@ -212,35 +268,40 @@ module.exports = function(app,io){
                     }
                     console.log("Change Question");
                     cli.blue(JSON.stringify({data:temp,status:true}));
-                    io.sockets.in('Exam_Room').emit('ChangeRoundOneQuestion',{data:temp,status:true});
+                    io.sockets.in(data.Room+"").emit('ChangeRoundOneQuestion',{data:temp,status:true});
                 });
             }else{
-                io.sockets.in('Exam_Room').emit('ChangeRoundOneQuestion',{status:false,'iQuestionId':data.iQuestion});
+                io.sockets.in(data.Room+"").emit('ChangeRoundOneQuestion',{status:false,'iQuestionId':data.iQuestion});
             }
         });
 
-
         /**
-         * If Round One Question Finish
+         * If Round One Question Finish unity attemp emit
          */
 
         socket.on('RoundOneFinish',function(data,fn){
-           console.log("RoundOne Finish Call");
-           cli.yellow(JSON.stringify(data));
-           cli.yellow(JSON.stringify(examUser));
-           if(getIndexUser(socket.id) != null){
-                console.log("inside if" + RoundFinishUser);
-                RoundFinishUser += 1 ;
-               console.log("RoundOne Time Out Call");
-               cli.yellow(roundOnetimeOut);
-               cli.yellow(examUser.length);
-               cli.yellow(RoundFinishUser);
-                if(examUser.length == RoundFinishUser){
+            console.log("RoundOne Finish Call");
+            cli.yellow(JSON.stringify(data));
+            cli.yellow(JSON.stringify(Room[data.Room+""]));
+            console.log(socket.id);
+            console.log(_.indexOf(Room[data.Room+""].socket,socket.id));
+            if(_.indexOf(Room[data.Room+""].socket,socket.id) >= 0){
+                console.log("match");
+                cli.blue(JSON.stringify(Room[data.Room+""]));
+                Room[data.Room+""].RoundOneFinishUser += 1;
+                cli.red(JSON.stringify(Room[data.Room+""]));
+                cli.blue(Room[data.Room+""].RoundOneFinishUser == Room[data.Room+""].totaluser);
+                if(Room[data.Room+""].RoundOneFinishUser == Room[data.Room+""].totaluser){
+                    cli.red("**********************************************************");
+                    cli.red("Clear Time Out Call");
+                    cli.red("**********************************************************");
                     clearTimeout(roundOnetimeOut);
-                    io.sockets.emit('RoundOneFinish',{status:200,message:'All User Finish its exam'});
+                    io.sockets.in(data.Room+"").emit('RoundOneFinish',{status:200,message:'All User Finish its exam'});
                 }
-           }
-           fn({"message":"You are on watting stage for round two",'status':200});
+            }else{
+                console.log("not match");
+            }
+            fn({"message":"You are on watting stage for round two",'status':200});
         });
 
         /**
@@ -248,13 +309,14 @@ module.exports = function(app,io){
          */
 
         socket.on('RoundTwoStart',function(data){
-            io.sockets.in('Exam_Room').emit('RoundTwoStart',{status:200,message:'Rount Two Start'});
+            cli.blue(JSON.stringify(data));
+            console.log(JSON.stringify(data));
+                io.sockets.in(data.Room+"").emit('RoundTwoStart',{status:200,message:'Rount Two Start'});
             roundTwotimeOut = setTimeout(function(){
                 console.log("setTimeout call");
-                io.sockets.in('Exam_Room').emit('timeOverRoundTwo',{data:"Time Finish"});
-            },212130);
+                io.sockets.in(data.Room+"").emit('timeOverRoundTwo',{data:"Time Finish for Round Two"});
+            },191000);
         });
-
 
 
         /**
@@ -298,7 +360,7 @@ module.exports = function(app,io){
                         "iWrongAnswers":1,
                         "iParticipantId":data.iParticipantId
                     };
-                    fn({"message":"You are wrong",'status':200,'eStatus':false});
+                    fn({"message":"You are wrong","status":200,"eStatus":false});
                     io.sockets.emit('vRoundTwoAns',data);
                 }
                 queries.insert_participant_questions(participantQuestions,function(err,res2){
@@ -312,6 +374,7 @@ module.exports = function(app,io){
 
         });
 
+
         /**
          * Change Round Two Question By Admin
          */
@@ -320,27 +383,48 @@ module.exports = function(app,io){
             cli.blue(data.status);
             console.log(data);
             var temp = {};
-            if(data.status == 'enable'){
+            if(data.status == true){
                 queries.get_vsq_by_Ids({"iQuestionId":data.iQuestion},function(err,rowsOne) {
                     console.log(rowsOne);
-
                     temp = {
                         "iQuestionId": rowsOne[0].iQuestionId,
                         "vQuestion": rowsOne[0].vQuestion
                     };
                     console.log("Change Question");
                     cli.blue(JSON.stringify({data:temp,status:true}));
-                    io.sockets.in('Exam_Room').emit('ChangeRoundTwoQuestion',{data:temp,status:true});
+                    io.sockets.in(data.Room+"").emit('ChangeRoundTwoQuestion',{data:temp,status:true});
                 });
             }else{
                 console.log('disable');
-                io.sockets.in('Exam_Room').emit('ChangeRoundTwoQuestion',{status:false,'iQuestionId':data.iQuestion});
+                io.sockets.in(data.Room+"").emit('ChangeRoundTwoQuestion',{status:false,'iQuestionId':data.iQuestion});
             }
         });
 
+        /**
+         * If Round Two Question Finish unity attemp emit
+         */
 
+        socket.on('RoundTwoFinish',function(data,fn){
+            console.log("RoundTwo Finish Call");
+            cli.yellow(JSON.stringify(data));
+            cli.yellow(JSON.stringify(Room[data.Room+""]));
+            console.log(socket.id);
+            console.log(_.indexOf(Room[data.Room+""].socket,socket.id));
+            if(_.indexOf(Room[data.Room+""].socket,socket.id) >= 0){
+                Room[data.Room+""].RoundTwoFinishUser += 1;
+                if(Room[data.Room+""].RoundTwoFinishUser == Room[data.Room+""].totaluser){
+                    cli.red("**********************************************************");
+                    cli.red("Clear Time Out Call");
+                    cli.red("**********************************************************");
+                    clearTimeout(roundTwotimeOut);
+                    io.sockets.in(data.Room+"").emit('RoundTwoFinish',{status:200,message:'All User Finish its exam'});
+                }
+            }else{
+                console.log("not match");
+            }
+            fn({"message":"Finish Exam",'status':200});
+        });
 
-        //Disconnected Logic
         socket.on('disconnect',function (data){
             cli.red("disconnect "+socket.id);
             cli.red(getIndexUser(socket.id));
@@ -353,16 +437,21 @@ module.exports = function(app,io){
                 //list of user send to angular application
                 io.sockets.emit('listUser',{data:user});
             }else{
-                console.log("Admin Disconnected");
-                io.sockets.emit("AdminDisconnected",{"status":404,"message":"Admin not found"});
+                // console.log("Admin Disconnected");
+                // io.sockets.emit("AdminDisconnected",{"status":404,"message":"Admin not found"});
             }
             cli.green(JSON.stringify(user));
-            cli.blue(JSON.stringify(examUser));
         });
+
+
 
 
     });
 };
+
+
+
+
 
 function getIndexUser(socketId){
     cli.blue("user lenght"+user.length);

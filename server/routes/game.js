@@ -33,7 +33,7 @@ module.exports = function (app,cli) {
 
                 if(rows[0].eStatus == 'y'){
                     var hash = md5(rows[0].iUserId + Math.random() + Date.now());
-                    var payload = { 'token':hash,'device':req.body.eDeviceType};
+                    var payload = { 'token':hash,'device':req.body.eDeviceType,'vUserType':rows[0].vUserType};
                     var token = jwt.sign(payload,"pemdas");
                     queries.setTocket({
                         'token': hash,
@@ -110,6 +110,45 @@ module.exports = function (app,cli) {
                 'message': 'User does not exists'
             });
         }
+    });
+
+    app.post('/ws/v1/game_details',passport.authenticate('jwt',{session:false}),function(req,res){
+        req.checkBody("iRoundOneId","iRoundOneId must be required").notEmpty();
+        req.checkBody("iRoundTwoId","iRoundTwoId must be required").notEmpty();
+        req.getValidationResult().then(function(result) {
+            if (!result.isEmpty()) {
+                res.json({
+                    "status": 404,
+                    "message": "Please fill all required value",
+                    "Data":result.mapped()
+                });
+            }else{
+                queries.get_round_details({'iExamId':req.body.iRoundOneId},function(errs,roundOne){
+                        if(errs) throw errs;
+                    queries.get_round_details({'iExamId':req.body.iRoundOneId},function(errs,roundTwo){
+                        if(errs) throw errs;
+                        console.log("Round One Details");
+                        cli.yellow(JSON.stringify(roundOne));
+                        console.log("Round Two Details");
+                        cli.yellow(JSON.stringify(roundTwo));
+
+                        res.json({
+                            'status':200,
+                            'message':'Success',
+                            'data':{
+                                "iTotalQuestion":roundOne[0].iTotalQuestion + roundTwo[0].iTotalQuestion,
+                                "iRightAnswers":roundOne[0].iRightAnswers + roundTwo[0].iRightAnswers,
+                                "iWrongAnswer":roundOne[0].iWrongAnswers + roundTwo[0].iWrongAnswers,
+                            }
+                        });
+
+
+                    });
+
+                });
+
+            }
+        });
     });
 
 

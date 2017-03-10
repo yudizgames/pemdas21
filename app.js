@@ -41,8 +41,8 @@ var smtpConfig = {
     port: 465,
     secure: true, // use SSL
     auth: {
-        user: 'chetan.yadav@yudiz.com',
-        pass: 'yudiz108'
+        user: 'ashish@ping2world.com',
+        pass: 'ashish123$'
     }
 };
 var mail = nodemailer.createTransport(smtpConfig);
@@ -66,7 +66,8 @@ app.use(express.static(path.join(__dirname, 'node_modules')));
 
 require("./server/routes/web")(app,cli,mail);
 // require("./server/modules/socket_test")(app,app.io);
-require("./server/modules/socket_test_v1")(app,app.io);
+// require("./server/modules/socket_test_v1")(app,app.io);
+require("./server/modules/socket_test_v2")(app,app.io);
 
 //Running Code for Application Socket
 // app.io.on('connection', function(socket){
