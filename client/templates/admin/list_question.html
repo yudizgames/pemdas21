@@ -1,65 +1,33 @@
-<!-- BEGIN PAGE BREADCRUMB -->
-<ul class="page-breadcrumb breadcrumb">
-    <li>
-        <a href="#dashboard.html">Dashboard</a><i class="fa fa-circle"></i>
-    </li>
-    <li class="active">
-        Manage Questions
-    </li>
-</ul>
-<!-- END PAGE BREADCRUMB -->
-<!-- User datatables -->
-<div class="row">
-    <div class="col-md-12">
-        <div class="portlet light">
-            <div class="portlet-title">
-                <div class="actions">
-                    <a href="javascript:;" ui-sref="admin.questionform({action:'Add'})" title="Add User" class="btn btn-circle btn-default btnEdit">
-                        <i class="fa fa-plus"></i>
-                        <span class="hidden-480">Add Question</span>
-                    </a>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>QUESTION</h2>
+        <div class="body">
+            <ol class="breadcrumb">
+                <li> <a ui-sref="admin.dashboard"> <i class="material-icons">home</i> Home </a> </li>
+                <li class="active"> <i class="material-icons">library_books</i> List of Question</li>
+            </ol>
+        </div>
+    </div>
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Question List</h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);" ui-sref="admin.formquestion({action:'Add'})" title="Add User">Add New Question</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-
-            <div class="portlet-body">
-                <div class="table-container">
-                    <table class="table table-striped table-bordered" datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstanceQuestion">
-                    </table>
-
-                    <!--<table id="example" datatable="ng"  class="table table-striped table-bordered" cellspacing="0" width="100%">-->
-                        <!--<thead>-->
-                        <!--<tr>-->
-                            <!--<th>ID</th>-->
-                            <!--<th>Mode</th>-->
-                            <!--<th>Type</th>-->
-                            <!--<th>Question</th>-->
-                            <!--<th>Answer</th>-->
-                            <!--<th>Status</th>-->
-                            <!--<th>Operation</th>-->
-                        <!--</tr>-->
-                        <!--</thead>-->
-                        <!--<tbody>-->
-                        <!--<tr ng-repeat="q in ::questions">-->
-                            <!--<td>{{ q.iQuestionId }}</td>-->
-                            <!--<td>{{ q.vModeName}}</td>-->
-                                <!--<td>{{ q.eType }}</td>-->
-                            <!--<td>{{ q.vQuestion }}</td>-->
-                            <!--<td>{{ q.vAnswer }}</td>-->
-                            <!--&lt;!&ndash;<td><input type="checkbox" ng-model="person.eStatus" bootstrap-switch class="switch-small" /></td>&ndash;&gt;-->
-                            <!--<td><input bs-switch ng-model="q.eStatus" class="switch-small" type="checkbox" ng-true-value="'y'"-->
-                                       <!--ng-false-value="'n'" ng-change="qOperation(q.iQuestionId,'status',q.eStatus)"></td>-->
-                            <!--<td>-->
-                                <!--<button ng-click="qOperation(q.iQuestionId,'view')" title="View"  class="btn btn-success btn-xs">View</button>-->
-                                <!--<button ng-click="qOperation(q.iQuestionId,'edit')" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>-->
-                                <!--<button ng-click="qOperation(q.iQuestionId,'delete')" title="Delete" class="btn btn-danger btn-xs">Delete</button>-->
-                            <!--</td>-->
-                        <!--</tr>-->
-                        <!--</tbody>-->
-                    <!--</table>-->
+                <div class="body">
+                    <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
+                    <table style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstanceQuestion">
                 </div>
             </div>
         </div>
-
-        {{listUser}} {{count}}
     </div>
+
 </div>

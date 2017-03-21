@@ -166,7 +166,10 @@ var Users = {
     },
     //   *@   //
     getUserById:function(body,cb){
-      db.query("SELECT * FROM tbl_users WHERE iUserId = ? AND eStatus != 'd'",[body.id],cb);
+      db.query("SELECT * FROM tbl_users  WHERE tbl_users.iUserId = ? AND tbl_users.eStatus != 'd'",[body.id],cb);
+    },
+    getUserFroById:function(body,cb){
+        db.query("SELECT * FROM tbl_users JOIN tbl_parent ON tbl_users.iUserId = tbl_parent.iUserId WHERE tbl_users.iUserId = ? AND tbl_users.eStatus != 'd'",[body.id],cb);
     },
     deleteUserById:function(body,cb){
         db.query("UPDATE tbl_users SET eStatus = ? WHERE iUserId = ?",['d',body.id],cb);
@@ -445,7 +448,7 @@ var Users = {
             " WHERE p.iUserId = ? AND parent.eStatus != 'd' AND child.eStatus != 'd'",[body.id],cb);
     },
     addParent:function(body,cb){
-        db.query("INSERT INTO tbl_parent ( iUserId) VALUES ( '?')",[body.iUserId],cb);
+        db.query("INSERT INTO tbl_parent ( iUserId,vParentType) VALUES (?,?)",[body.iUserId,body.vParentType],cb);
     },
     getParentId:function(body,cb){
         db.query("SELECT iParentId from tbl_parent WHERE iUserId = ?",[body.iUserId],cb);

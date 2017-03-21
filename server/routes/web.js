@@ -238,6 +238,7 @@ module.exports = function (app,cli,mail) {
                 cli.yellow(JSON.stringify(req.user));
 
                 queries.getUserById({"id":req.user[0].iUserId},function(error,users){
+                    cli.blue(JSON.stringify(users));
                     var obj = {
                         'vUserName': req.body.search.value, //Search Apply for default search text box
                         'vEmail': req.body.search.value,//Search Apply for default search text box
@@ -247,7 +248,7 @@ module.exports = function (app,cli,mail) {
 
                     if(users[0].vUserType == 'client' )
                     {
-
+                        cli.yellow("*************************************************************");
                         queries.ls_user_count(obj, function(err, record) {
                             var iTotalRecords = parseInt(record[0].iTotalRecords);
                             var iDisplayLength = parseInt(req.body.length);
@@ -273,9 +274,9 @@ module.exports = function (app,cli,mail) {
                                 records['data'] = [];
                                 for (var key in users) {
                                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"> <i class="fa fa-pencil" aria-hidden="true"></i>Edit</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>';
                                     records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
                                     i++;
                                 }
@@ -286,6 +287,8 @@ module.exports = function (app,cli,mail) {
 
 
                     }else{
+
+                        cli.red("*************************************************************");
 
                         queries.ls_user_count(obj, function(err, record) {
                             var iTotalRecords = parseInt(record[0].iTotalRecords);
@@ -312,9 +315,9 @@ module.exports = function (app,cli,mail) {
                                 records['data'] = [];
                                 for (var key in users) {
                                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>';
+                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"> <i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>';
                                     records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
                                     i++;
                                 }
@@ -448,7 +451,7 @@ module.exports = function (app,cli,mail) {
 
                         if(req.body.vOperation == 'view'){
                             cli.blue("view call");
-                            queries.getUserById({'id':req.body.id},function(error,rows){
+                            queries.getUserFroById({'id':req.body.id},function(error,rows){
                                 if(rows.length > 0){
                                     res.json({
                                         'status':200,
@@ -582,9 +585,9 @@ module.exports = function (app,cli,mail) {
                         records['recordsFiltered'] = iTotalRecords;
                         records['data'] = [];
                         for(i=0;i<question.length;i++){
-                            var operation = '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
-                            operation+= '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
-                            operation+= '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                            var operation = '<button style="color: #ffffff;" ng-click="qOperation('+question[i].iQuestionId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
+                            operation+= '<button style="color: #ffffff;" ng-click="qOperation('+question[i].iQuestionId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</button>';
+                            operation+= '<button style="color: #ffffff;" ng-click="qOperation('+question[i].iQuestionId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"><i class="fa fa-trash-o" aria-hidden="true"></i>  Delete</button>';
                             records['data'][i] = {"iQuestionId":question[i].iQuestionId,
                                                   "vModeName":question[i].vModeName,
                                                   "eType":question[i].eType,
@@ -1164,7 +1167,7 @@ module.exports = function (app,cli,mail) {
                 records['data'] = [];
                 for (var key in exams) {
                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                    var operation = '<button ng-click="viewOperation('+exams[i].iExamId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
+                    var operation = '<button ng-click="viewOperation('+exams[i].iExamId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"> <i class="fa fa-eye" aria-hidden="true"></i> View</button>';
                     records['data'][i] = {"iExamId":exams[i].iExamId,"vTitle":exams[i].vTitle,"eStatus":exams[i].eStatus,"vOperation":operation};
                     i++;
                 }
@@ -1322,9 +1325,9 @@ module.exports = function (app,cli,mail) {
                 records['data'] = [];
                 for (var key in users) {
                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs">View</button>';
-                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs">Edit</button>';
-                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
+                    var operation = '<button style="color: #ffffff;" ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
+                    operation+= '<button style="color: #ffffff;" ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"> <i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>';
+                    operation+= '<button style="color: #ffffff;" ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"> <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>';
                     records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
                     i++;
                 }
@@ -1335,9 +1338,9 @@ module.exports = function (app,cli,mail) {
 
     app.post('/clientadd',passport.authenticate('jwt',{session:false}),function (req,res) {
         if(req.user.length > 0){
-            cli.blue("Check Email");
-            cli.blue(validator.isEmail(req.body.vEmail));
-            if(!validator.isEmpty(req.body.vFullName) && validator.isEmail(req.body.vEmail)){
+            cli.blue("Check Email");cli.blue(JSON.stringify(req.body));
+            cli.blue(!validator.isEmpty(req.body.vParentType));
+            if(!validator.isEmpty(req.body.vFullName) && validator.isEmail(req.body.vEmail) && !validator.isEmpty(req.body.vParentType)){
                 checkUser(req.body.vEmail,function(error,isActive){
                     if(error) throw error;
                     if(isActive.length > 0){
@@ -1350,7 +1353,7 @@ module.exports = function (app,cli,mail) {
                         queries.addUser({"vUserType":"client","vFullName":req.body.vFullName,"vUserName":req.body.vEmail,"vEmail":req.body.vEmail,"vPassword":vPassword},function(err,rows){
                             if(err) throw err;
                             if(rows.affectedRows > 0){
-                                queries.addParent({"iUserId":rows.insertId},function(errors,row){
+                                queries.addParent({"iUserId":rows.insertId,"vParentType":req.body.vParentType},function(errors,row){
                                     if(row.affectedRows > 0){
 
                                         //Send Mail
@@ -1418,13 +1421,14 @@ module.exports = function (app,cli,mail) {
 
                 if(req.body.vOperation == 'view'){
                     cli.blue("view call");
-                    queries.getUserById({'id':req.body.id},function(e,users){
+                    queries.getUserFroById({'id':req.body.id},function(e,users){
                         if(users.length > 0){
                             var temp = {};
                             var child = [];
                             temp.ParentName = users[0].vFullName;
                             temp.ParentEmail = users[0].vEmail;
                             temp.ParentUserName = users[0].vUserName;
+                            temp.ParentType = users[0].vParentType;
                             queries.get_child_by_client_id({'id':req.body.id},function(error,rows){
                                 if(rows.length > 0 ){
 

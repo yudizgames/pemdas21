@@ -1,10 +1,19 @@
 'use strict';
-var pemdas = angular.module('Pemdas',[
-  // load your modules here
-    "main", // starting with the main module
+var pemdas = angular.module('Pemdas',['ui.router',
+    // 'datatables',
+    'ui.bootstrap',
+    'ngAnimate',
+    'oc.lazyLoad',
+    'LocalForageModule',
+    'toastr',
+    'ngResource',
+    // 'frapontillo.bootstrap-switch',
+//  // load your modules here
+    "admin", // starting with the main module
     "client"
 ]);
 pemdas.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyLoadProvider,$localForageProvider,toastrConfig,$qProvider){
+    console.log("config call");
     /**
      * $qProvider add because in angularjs -v 1.5.9 and ui-router -v 0.2.18 Transmission error when state change
      * i user some whenre $state.go to $state.transitionTo
@@ -17,7 +26,7 @@ pemdas.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLa
     $stateProvider.state('login',{
         url:'/',
         templateUrl:'templates/login.html',
-        data : { pageTitle: 'Login',bodyClass:'login'},
+        data : { pageTitle: 'Login',bodyClass:'login-page authentication'},
         controller:'LoginCtrl',
         resolve: {
             depends: ['$ocLazyLoad',function($ocLazyLoad){
@@ -25,8 +34,14 @@ pemdas.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLa
                     name: 'main',
                     insertBefore: '#ng_load_plugins_before', // load the above css files before
                     files: [
-                        'assets/admin/pages/css/login.css',
-                        'assets/admin/js/loginctrl.js',
+                        'assets/css/main.css',
+                        'assets/css/login.css',
+                        'assets/css/themes/all-themes.css',
+                        'assets/bundles/libscripts.bundle.js',
+                        'assets/bundles/vendorscripts.bundle.js',
+                        'assets/bundles/mainscripts.bundle.js',
+                        'assets/js/pages/examples/sign-in.js',
+                        'loginctrl.js',
                     ]
                 });
             }]
@@ -61,7 +76,6 @@ pemdas.run(function($state,$rootScope,$http,$localForage){
         var currentState = toState.name;
         if(currentState){
             console.log(currentState);
-
             $localForage.getItem('UserInfo').then(function(data){
                 if(data != null){
                     console.log(data);

@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>CUSTOMER DETAILS</h2>
+        <div class="body">
+            <ol class="breadcrumb">
+                <li> <a ui-sref="admin.dashboard"> <i class="material-icons">home</i> Home </a> </li>
+                <li> <a ui-sref="admin.customer"> <i class="zmdi zmdi-account"></i>Customer List</a></li>
+                <li class="active"> <i class="material-icons">library_books</i>Customer Details</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Details</h2>
+                </div>
+                <div class="body">
+                    <strong>Full Name</strong>
+                    <p>{{profile.ParentName}}</p>
+                    <strong>Customer Type</strong>
+                    <p>{{profile.ParentType}}</p>
+                    <strong>Email ID</strong>
+                    <p>{{profile.ParentEmail}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>List of Users</h2>
+                </div>
+                <div class="body">
+                    <div ng-repeat="c in child" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box-4 hover-zoom-effect">
+                            <div class="icon"> <i class="zmdi zmdi-account col-blue"></i> </div>
+                            <div class="content">
+                                <div class="text"><b>{{c.ChildName}}</b></div>
+                                <div class="text">{{c.ChildEmail}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
