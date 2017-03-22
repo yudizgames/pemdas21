@@ -51,7 +51,14 @@ angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootSc
 
     function actionsHtml(data, type, full, meta) {
         $scope.questionStatus[data.iQuestionId] = data.eStatus;
-        var temp = '<input bs-switch ng-model="questionStatus['+data.iQuestionId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="qOperation('+data.iQuestionId+',&apos;status&apos;,questionStatus['+data.iQuestionId+'])">';
+        var temp = '<div class="switch">' +
+            '<label>' +
+            '<input type="checkbox" ng-model="questionStatus['+data.iQuestionId+']" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="qOperation('+data.iQuestionId+',&apos;status&apos;,questionStatus['+data.iQuestionId+'])"> '+
+            '<span class="lever"></span></label>'+
+            '</div>';
+
+
+        // var temp = '<input bs-switch ng-model="questionStatus['+data.iQuestionId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="qOperation('+data.iQuestionId+',&apos;status&apos;,questionStatus['+data.iQuestionId+'])">';
         return temp;
     }
 

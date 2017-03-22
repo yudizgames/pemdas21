@@ -252,35 +252,35 @@ app.run(function(){
 app.controller('AppCtrl', function ($scope) {
     console.log("App Controller call");
 });
-app.directive('bootstrapSwitch', [
-    function() {
-        return {
-            restrict: 'A',
-            require: '?ngModel',
-            link: function(scope, element, attrs, ngModel) {
-                element.bootstrapSwitch();
-
-                element.on('switchChange.bootstrapSwitch', function(event, state) {
-                    if (ngModel) {
-                        scope.$apply(function() {
-                            ngModel.$setViewValue(state);
-                        });
-                    }
-                });
-
-                scope.$watch(attrs.ngModel, function(newValue, oldValue) {
-                    if (newValue){
-                        console.log("True");
-                        element.bootstrapSwitch('state', true, true);
-                    } else {
-                        console.log("False");
-                        element.bootstrapSwitch('state', false, true);
-                    }
-                });
-            }
-        };
-    }
-]);
+// app.directive('bootstrapSwitch', [
+//     function() {
+//         return {
+//             restrict: 'A',
+//             require: '?ngModel',
+//             link: function(scope, element, attrs, ngModel) {
+//                 element.bootstrapSwitch();
+//
+//                 element.on('switchChange.bootstrapSwitch', function(event, state) {
+//                     if (ngModel) {
+//                         scope.$apply(function() {
+//                             ngModel.$setViewValue(state);
+//                         });
+//                     }
+//                 });
+//
+//                 scope.$watch(attrs.ngModel, function(newValue, oldValue) {
+//                     if (newValue){
+//                         console.log("True");
+//                         element.bootstrapSwitch('state', true, true);
+//                     } else {
+//                         console.log("False");
+//                         element.bootstrapSwitch('state', false, true);
+//                     }
+//                 });
+//             }
+//         };
+//     }
+// ]);
 
 app.directive('a',
     function() {
@@ -294,7 +294,7 @@ app.directive('a',
                 }
             }
         };
-    });
+});
 
 
 

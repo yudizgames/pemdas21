@@ -62,7 +62,7 @@
                         <div class="form-group">
 
                             <div class="form-line">
-                                <input type="text" value="" class="form-control" name="vQuestion" id="vQuestion"  ng-model="question.vQuestion" required>
+                                <input type="text" value="" class="form-control" name="vQuestion" id="vQuestion"  placeholder="Please Enter Question" ng-model="question.vQuestion" required>
                             </div>
 
                             <div ng-messages="form_question.vQuestion.$error && form_question.vQuestion.$dirty" ng-show="form_question.vQuestion.$error && form_question.vQuestion.$dirty" role="alert" class="text-danger">
@@ -135,7 +135,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-primary waves-effect" data-ng-disabled="form_question.$invalid"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_question.$invalid"><i class="fa fa-check"></i> Submit</button>
 
                     </form>
                 </div>

@@ -115,7 +115,15 @@ angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$r
 
     function actionsHtml(data, type, full, meta) {
         $scope.userStatus[data.iUserId] = data.eStatus;
-        var temp = '<input bs-switch ng-model="userStatus['+data.iUserId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange('+data.iUserId+',userStatus['+data.iUserId+'])">';
+        var temp = '<div class="switch">' +
+            '<label>' +
+            '<input type="checkbox" ng-model="userStatus['+data.iUserId+']" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange('+data.iUserId+',userStatus['+data.iUserId+'])"> '+
+            '<span class="lever"></span></label>'+
+            '</div>';
+
+            //<input bs-switch ng-model="userStatus['+data.iUserId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange('+data.iUserId+',userStatus['+data.iUserId+'])">
+
+
         return temp;
     }
 

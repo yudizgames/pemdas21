@@ -585,9 +585,9 @@ module.exports = function (app,cli,mail) {
                         records['recordsFiltered'] = iTotalRecords;
                         records['data'] = [];
                         for(i=0;i<question.length;i++){
-                            var operation = '<button style="color: #ffffff;" ng-click="qOperation('+question[i].iQuestionId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
-                            operation+= '<button style="color: #ffffff;" ng-click="qOperation('+question[i].iQuestionId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</button>';
-                            operation+= '<button style="color: #ffffff;" ng-click="qOperation('+question[i].iQuestionId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"><i class="fa fa-trash-o" aria-hidden="true"></i>  Delete</button>';
+                            var operation = '<button style="color: #ffffff; margin-right: 10px;" ng-click="qOperation('+question[i].iQuestionId+',&quot;view&quot;)" title="View"  class="btn btn-raised btn-xs bg-light-blue waves-effect">View</button>';
+                            operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="qOperation('+question[i].iQuestionId+',&quot;edit&quot;)" title="Edit"  class="btn btn-raised btn-xs bg-orange waves-effect">Edit</button>';
+                            operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="qOperation('+question[i].iQuestionId+',&quot;delete&quot;)" title="Delete"  class="btn btn-raised btn-xs bg-red waves-effect">Delete</button>';
                             records['data'][i] = {"iQuestionId":question[i].iQuestionId,
                                                   "vModeName":question[i].vModeName,
                                                   "eType":question[i].eType,
@@ -1325,9 +1325,9 @@ module.exports = function (app,cli,mail) {
                 records['data'] = [];
                 for (var key in users) {
                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                    var operation = '<button style="color: #ffffff;" ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
-                    operation+= '<button style="color: #ffffff;" ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"> <i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>';
-                    operation+= '<button style="color: #ffffff;" ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"> <i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>';
+                    var operation = '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-raised btn-xs bg-light-blue waves-effect">View</button>';
+                    operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-raised btn-xs bg-orange waves-effect">Edit</button>';
+                    operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-raised btn-xs bg-red waves-effect">Delete</button>';
                     records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
                     i++;
                 }
