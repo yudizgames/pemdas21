@@ -46,6 +46,54 @@ pemdas.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLa
                 });
             }]
         }
+    })
+    $stateProvider.state('signup',{
+        url:'/signup',
+        templateUrl:'templates/signup.html',
+        data : { pageTitle: 'Login',bodyClass:'login-page authentication'},
+        controller:'SignupCtrl',
+        resolve: {
+            depends: ['$ocLazyLoad',function($ocLazyLoad){
+                return $ocLazyLoad.load({
+                    name: 'main',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before
+                    files: [
+                        'assets/css/main.css',
+                        'assets/css/login.css',
+                        'assets/css/themes/all-themes.css',
+                        'assets/bundles/libscripts.bundle.js',
+                        'assets/bundles/vendorscripts.bundle.js',
+                        'assets/bundles/mainscripts.bundle.js',
+                        'assets/js/pages/examples/sign-in.js',
+                        'signupctrl.js',
+                    ]
+                });
+            }]
+        }
+    })
+    $stateProvider.state('fpass',{
+        url:'/fpass',
+        templateUrl:'templates/fpass.html',
+        data : { pageTitle: 'Login',bodyClass:'login-page authentication'},
+        controller:'FpassCtrl',
+        resolve: {
+            depends: ['$ocLazyLoad',function($ocLazyLoad){
+                return $ocLazyLoad.load({
+                    name: 'main',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before
+                    files: [
+                        'assets/css/main.css',
+                        'assets/css/login.css',
+                        'assets/css/themes/all-themes.css',
+                        'assets/bundles/libscripts.bundle.js',
+                        'assets/bundles/vendorscripts.bundle.js',
+                        'assets/bundles/mainscripts.bundle.js',
+                        'assets/js/pages/examples/sign-in.js',
+                        'fpassctrl.js',
+                    ]
+                });
+            }]
+        }
     });
 
     $locationProvider.hashPrefix('');
@@ -77,6 +125,7 @@ pemdas.run(function($state,$rootScope,$http,$localForage){
         if(currentState){
             console.log(currentState);
             $localForage.getItem('UserInfo').then(function(data){
+                console.log("Local Forage Call");
                 if(data != null){
                     console.log(data);
                     if(data.vUserType == 'super_admin' && data.status == 200){
@@ -93,19 +142,29 @@ pemdas.run(function($state,$rootScope,$http,$localForage){
                     else if(data.vUserType == 'client' && data.status == 200){
                         console.log('inside client');
                         var notAllowed = ['login','admin','client','admin.dashboard'];
+                        $http.defaults.headers.common.Authorization = 'JWT '+data.token;
+                        $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
+                            console.log("Ajax Header Set");
+                            jqXHR.setRequestHeader('Authorization',  'JWT '+data.token);
+                        });
                         if(notAllowed.indexOf(currentState) > -1){
                             $state.transitionTo('client.dashboard');
                         }
-                        $http.defaults.headers.common.Authorization = 'JWT '+data.token;
-                        $(document).ajaxSend(function(event, jqXHR, ajaxOptions) {
-                            jqXHR.setRequestHeader('Authorization',  'JWT '+data.token);
-                        });
+
                     }
                     else{
                         $state.transitionTo("login");
                     }
                 }else{
-                    $state.transitionTo('login');
+
+                    if(currentState == 'signup'){
+                        $state.transitionTo('signup');
+                    }else if(currentState == 'fpass'){
+                        $state.transitionTo('fpass');
+                    }else{
+                        $state.transitionTo('login');
+                    }
+
                 }
             });
         }

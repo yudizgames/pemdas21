@@ -1,0 +1,63 @@
+<div class="container">
+    <div class="card-top"></div>
+    <div class="card">
+        <h1 class="title"><span>PEMDAS Application</span>Login <div class="msg">Sign in to start your session</div></h1>
+        <div class="col-md-12">
+            <form class="login-form" name="form_login" ng-submit="doSignUp()">
+                    <div class="input-group">
+
+                        <span>Please Chooese Profile</span><br>
+                        <input ng-model="user.vUserType" type="radio" name="vParentType" id="Parent" ng-click="showMsg('parent')" class="with-gap" ng-value="'Parent'" required>
+                        <label for="Parent">Parent</label>
+                        <input ng-model="user.vUserType" type="radio" name="vParentType" id="Teacher" ng-click="showMsg('teacher')" class="with-gap" ng-value="'Teacher'" required>
+                        <label  for="Teacher" class="m-l-20">Teacher</label>
+                        <span ng-show="form_login.vParentType.$dirty && form_login.vParentType.$error.required" class="help-block text-danger">Please select any one.</span>
+
+                    </div>
+
+                    <div class="input-group">
+                        <span>Shall I call you</span><br>
+                        <input ng-model="user.Respect" type="radio" name="gender" id="male" class="with-gap" ng-value="'Sir.'" required>
+                        <label for="male">Sir.</label>
+                        <input ng-model="user.Respect" type="radio" name="gender" id="female" class="with-gap" ng-value="'Ma\'am.'" required>
+                        <label for="female" class="m-l-20">Ma'am.</label>
+                        <span ng-show="form_login.gender.$dirty && form_login.gender.$error.required" class="help-block text-danger">Please select any one.</span>
+                    </div>
+
+
+
+                    <div class="input-group"> <span class="input-group-addon"> <i class="material-icons">email</i> </span>
+                        <div class="form-line">
+                            <input class="form-control placeholder-no-fix" type="email" autocomplete="off" placeholder="Email" name="vEmail" data-ng-model="user.vEmail"  required />
+                            <span ng-show="form_login.vEmail.$dirty && form_login.vEmail.$error.required" class="help-block text-danger">Email is required</span>
+                            <span ng-show="form_login.vEmail.$dirty && form_login.vEmail.$error.email" class="help-block text-danger">Please enter valid email</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group"> <span class="input-group-addon"> <i class="zmdi zmdi-account"></i> </span>
+                        <div class="form-line">
+                            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Full Name" name="vPassword" ng-model="user.vFullName" required />
+                            <span ng-show="form_login.vFullName.$dirty && form_login.vFullName.$error.required" class="help-block text-danger">Password is required</span>
+                        </div>
+                    </div>
+
+
+
+
+                <div>
+                    <!-- <div class="">
+                        <input type="checkbox" name="rememberme" id="rememberme" class="filled-in chk-col-pink">
+                        <label for="rememberme">Remember Me</label>
+                    </div> -->
+                    <div class="text-center">
+                        <button type="submit" style="color: #ffffff;" class="btn btn-success uppercase" data-ng-disabled="form_login.$invalid">Signup</button>
+                        <!--<a href="sign-up.html" class="btn btn-raised waves-effect" type="submit">SIGN UP</a>-->
+                    </div>
+                    <div class="m-t-10 m-b--5 align-center">
+                        <a ui-sref="login">You already have a membership?</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,11 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2>CUSTOMER DETAILS</h2>
+        <h2>USER DETAILS</h2>
         <div class="body">
             <ol class="breadcrumb">
-                <li> <a ui-sref="admin.dashboard"> <i class="material-icons">home</i> Home </a> </li>
-                <li> <a ui-sref="admin.customer"> <i class="zmdi zmdi-account"></i>Customer List</a></li>
-                <li class="active"> <i class="material-icons">library_books</i>Customer {{form_action}}</li>
+                <li> <a ui-sref="client.dashboard"> <i class="material-icons">home</i> Home </a> </li>
+                <li> <a ui-sref="client.users"> <i class="zmdi zmdi-account"></i>User List</a></li>
+                <li class="active"> <i class="material-icons">library_books</i>User {{form_action}}</li>
             </ol>
         </div>
     </div>
@@ -40,7 +40,6 @@
 
                             <div class="form-line" >
                                 <input  type="email" placeholder="Email" value="" class="form-control" name="vEmail" id="vEmail" ng-readonly="{{form_action == 'Edit' ? true : false}}" required ng-model="user.vEmail">
-
                             </div>
                             <div ng-messages="form_user.vEmail.$error && form_user.vEmail.$dirty" ng-show="form_user.vEmail.$error && form_user.vEmail.$dirty" role="alert" class="text-danger">
                                 <div ng-message="required" ng-show="form_user.vEmail.$dirty && form_user.vEmail.$error.required">Email is required.</div>
@@ -48,19 +47,8 @@
                             </div>
                             <!--<div class="help-info">Enter Valid Email Address Like : john@gmail.com</div>-->
                         </div>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <p>Select Customer Type</p>
-                                <select name="vParentType" placeholder="Select Customer Type" class="form-control" id="vParentType" ng-model="user.vParentType" required>
-                                    <option ng-repeat="option in vParentType" value="{{option.value}}">{{option.text}}</option>
-                                </select>
-                                <div ng-messages="form_user.vParentType.$error && form_user.vParentType.$dirty" ng-show="form_user.vParentType.$error && form_user.vParentType.$dirty" role="alert" class="text-danger">
-                                    <div ng-message="required" ng-show="form_user.vParentType.$dirty && form_user.vParentType.$error.required">Cleint type is required.</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
 
+                        <div class="form-group">
                             <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_user.$invalid"><i class="fa fa-check"></i> Submit</button>
                         </div>
                     </form>

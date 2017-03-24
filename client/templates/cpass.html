@@ -1,0 +1,74 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>CHANGE PASSWORD</h2>
+        <div class="body">
+            <ol class="breadcrumb">
+                <li> <a ui-sref="{{URL}}"> <i class="material-icons">home</i> Home </a> </li>
+                <li class="active"> <i class="material-icons">library_books</i>Change Password</li>
+            </ol>
+        </div>
+    </div>
+    <!-- Basic Validation -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Change Password</h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);">Action</a></li>
+                                <li><a href="javascript:void(0);">Another action</a></li>
+                                <li><a href="javascript:void(0);">Something else here</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body">
+                    <form name="form_cpass" id="form_cpass" novalidate ng-submit="submitCPass()">
+
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="password" value="" class="form-control" name="oPassword" minlength="6" id="oPassword" required ng-model="pass.oPassword" placeholder="Old Password">
+                            </div>
+                            <div ng-messages="form_cpass.oPassword.$error && form_cpass.oPassword.$dirty" ng-show="form_cpass.oPassword.$error && form_cpass.oPassword.$dirty" role="alert" class="text-danger">
+                                <div ng-message="required" ng-show="form_cpass.oPassword.$error.required">Old password is required</div>
+                                <div ng-message="minlength" ng-show="form_cpass.oPassword.$error.minlength">Minimum 6 character is required</div>
+                            </div>
+                            <!--<div class="help-info">Enter Full Name</div>-->
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="password" value="" class="form-control" name="nPassword" minlength="6" id="nPassword" required ng-model="pass.nPassword" placeholder="New Password">
+                            </div>
+                            <div ng-messages="form_cpass.nPassword.$error && form_cpass.nPassword.$dirty" ng-show="form_cpass.nPassword.$error && form_cpass.nPassword.$dirty" role="alert" class="text-danger">
+                                <div ng-message="required" ng-show="form_cpass.nPassword.$error.required">New password is required</div>
+                                <div ng-message="minlength" ng-show="form_cpass.nPassword.$error.minlength">Minimum 6 character is required</div>
+                            </div>
+                            <!--<div class="help-info">Enter Full Name</div>-->
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="password" value="" class="form-control" name="cPassword" minlength="6" id="cPassword" required ng-model="cPassword" ng-match="pass.nPassword" placeholder="Re-Enter Password">
+                            </div>
+
+                            <div ng-messages="form_cpass.cPassword.$error && form_cpass.cPassword.$dirty" ng-show="form_cpass.cPassword.$error && form_cpass.cPassword.$dirty" role="alert" class="text-danger">
+                                <div ng-message="required" ng-show="form_cpass.cPassword.$error.required">Confirm password is required</div>
+                                <div ng-message="match" ng-show="form_cpass.cPassword.$error.match">Must match to new password</div>
+                            </div>
+                            <!--<div class="help-info">Enter Full Name</div>-->
+                        </div>
+
+
+                        <div class="form-group">
+                            <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_cpass.$invalid"><i class="fa fa-check"></i> Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Validation -->
+</div>

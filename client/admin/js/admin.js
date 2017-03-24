@@ -67,6 +67,38 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                 }]
             }
     })
+    .state('admin.cpass',{
+            url:'/cpass',
+            params:{
+                id:null,
+                action:null,
+                data:null
+            },
+            templateUrl:'templates/cpass.html',
+            data :{ pageTitle:'Change Password',bodyClass:'theme-blush' },
+            controller:'ChangePassCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'main',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            "assets/plugins/jquery-steps/jquery.steps.js",
+                            "assets/plugins/sweetalert/sweetalert.min.js",
+                            "assets/js/pages/forms/form-validation.js",
+                            'admin/js/controllers/admin_cpass.js'
+                        ]
+                    });
+                }]
+            }
+    })
     .state('admin.customer',{
             url:'/customer',
             templateUrl:'templates/admin/list_customer.html',

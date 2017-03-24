@@ -8,20 +8,19 @@ var passport = require("passport");
 var randomstring = require("randomstring");
 var JWTStrategy = require('../../config/passport-auth'); //passport-jwt Authorization Strategy
 var async = require("async");
+var dateFormat = require("dateformat");
 
 passport.use(JWTStrategy);
 module.exports = function (app,cli,mail) {
-	cli.green("Connection database");
-        cli.blue("Web API Call");
-        app.get('/', function (req, res) {
+    cli.green("Connection database");
+    cli.blue("Web API Call");
+    app.get('/', function (req, res) {
             console.log("Login Page request");
             console.log("lgoin page call"+req);
             res.render('index');
         });
-        // app.get('/*', function(req, res) {
-        //     res.sendfile('index'); // load the single view file (angular will handle the page changes on the front-end)
-        // });
-        app.post('/login',function(req,res){
+
+    app.post('/login',function(req,res){
                 var body = req.body;
                 var $status = 404;
                 var $message = "Something webnt wrong";
@@ -55,7 +54,85 @@ module.exports = function (app,cli,mail) {
                 });
             });
 
-            app.post('/logout',passport.authenticate('jwt',{session:false}),function (req,res) {
+    app.post('/signup',function(req,res){
+
+            req.checkBody("vEmail","Email must be required").notEmpty().isEmail();
+            req.checkBody("vFullName","Full Name must be required").notEmpty();
+            req.checkBody("vParentType","Parent Type or Teacher must be required").notEmpty();
+            var validatorError = req.validationErrors();
+            req.getValidationResult().then(function(result) {
+                if (!result.isEmpty()) {
+                    res.json({
+                        "status": 404,
+                        "message": "Please fill all required value",
+                        "Data":result.mapped()
+                    });
+                }else{
+
+                    var vPassword = randomstring.generate(6);
+
+                    queries.checkEmail(req.body,function(err,resultOne){
+
+                        if(resultOne.length){
+                            res.json({
+                                "status":404,
+                                "message":'Email Address Available'
+                            });
+                        }else{
+
+                            queries.addUser({"vUserType":"client","vFullName":req.body.vFullName,"vUserName":req.body.vEmail,"vEmail":req.body.vEmail,"vPassword":vPassword},function(err,rows){
+                                if(err) throw err;
+                                if(rows.affectedRows > 0){
+                                    queries.addParent({"iUserId":rows.insertId,"vParentType":req.body.vParentType},function(errors,row){
+                                        if(row.affectedRows > 0){
+
+                                            //Send Mail
+                                            var mailOptions = {
+                                                from: '"Pemdas" <info@pemdas.com>', // sender address
+                                                to: req.body.vEmail, // list of receivers
+                                                subject: 'Hello '+ req.body.vFullName, // Subject line
+                                                text: 'One time password  : ' + vPassword // plaintext body
+                                            };
+                                            mail.sendMail(mailOptions,function(err,info){
+                                                if(err){
+                                                    cli.red("Mail not send");
+                                                    console.log(err);
+                                                }else{
+                                                    cli.yellow("Mail send");
+                                                }
+                                            });
+                                            //Send mail end
+
+
+                                            res.json({
+                                                "status":200,
+                                                "message":"User Insert Successfully."
+                                            });
+
+                                        }
+                                        else{
+                                            res.json({
+                                                "status":400,
+                                                "message":"Something went wrong"
+                                            });
+                                        }
+
+                                    });
+                                }else{
+                                    res.json({
+                                        "status":400,
+                                        "message":"Something went wrong"
+                                    });
+                                }
+                            });
+                        }
+
+                    });
+                }
+            });
+        });
+
+    app.post('/logout',passport.authenticate('jwt',{session:false}),function (req,res) {
                 if(req.user.length > 0 ){
                     queries.logOut({
                         "iDeviceId":req.user[0].iDeviceId
@@ -74,42 +151,42 @@ module.exports = function (app,cli,mail) {
                 }
             })
 
-            app.post('/cpass',passport.authenticate('jwt',{session:false}),function(req,res){
+    app.post('/cpass',passport.authenticate('jwt',{session:false}),function(req,res){
 
-                if(req.user.length > 0 ){
-                        var postData = {
-                            "iUserId":req.user[0].iUserId,
-                            "vNewPassword":req.body.vNewPassword,
-                            "vOldPassword":req.body.vOldPassword
-                        }
-                        queries.checkPassword(postData,function(error,user){
+            if(req.user.length > 0 ){
+                var postData = {
+                    "iUserId":req.user[0].iUserId,
+                    "vNewPassword":req.body.vNewPassword,
+                    "vOldPassword":req.body.vOldPassword
+                }
+                queries.checkPassword(postData,function(error,user){
 
-                            if(user.length > 0){ cli.green("Password Check");
-                                queries.changePassword(postData,function(error,rows){
-                                    cli.green("Password Change");
-                                    if (error) throw error;
-                                    res.json({
-                                        'status':200,
-                                       'message':'Password Change Successfully.'
-                                    });
-                                })
-                            }else{
-                                res.json({
-                                    'status':400,
-                                    'message': 'Old password does not match.'
-                                })
-                            }
+                    if(user.length > 0){ cli.green("Password Check");
+                        queries.changePassword(postData,function(error,rows){
+                            cli.green("Password Change");
+                            if (error) throw error;
+                            res.json({
+                                'status':200,
+                                'message':'Password Change Successfully.'
+                            });
                         })
                     }else{
-                    res.json({
-                       'status':404,
-                       'message':'Unauthorized'
-                    });
-                }
+                        res.json({
+                            'status':400,
+                            'message': 'Old password does not match.'
+                        })
+                    }
+                })
+            }else{
+                res.json({
+                    'status':404,
+                    'message':'Unauthorized'
+                });
+            }
 
-            });
+        });
 
-            app.post('/fpass',function(req,res){
+    app.post('/fpass',function(req,res){
                 if(validator.isEmail(req.body.vEmail) && !validator.isEmpty(req.body.vEmail)){
                     queries.checkEmail(req.body,function(err,resultOne){
                         cli.green("Check This one");
@@ -134,6 +211,7 @@ module.exports = function (app,cli,mail) {
                                     }
                                 });
                                 res.status(200).json({
+                                    'status':200,
                                     'message':"Otp has been send Successfully, check mail"
                                 })
                             })
@@ -153,7 +231,7 @@ module.exports = function (app,cli,mail) {
                 }
             });
 
-            app.post('/settings',passport.authenticate('jwt',{session:false}),function(req,res){
+    app.post('/settings',passport.authenticate('jwt',{session:false}),function(req,res){
                 cli.blue("Setting call");
                 if(req.user.length > 0){
                     queries.getSettings(req,function(error,rows){
@@ -171,7 +249,7 @@ module.exports = function (app,cli,mail) {
                 }
             });
 
-            app.post('/settingspost',passport.authenticate('jwt',{session:false}),function(req,res){
+    app.post('/settingspost',passport.authenticate('jwt',{session:false}),function(req,res){
                 cli.blue("Setting call");
                 if(req.user.length > 0){
                     cli.blue("PAth");
@@ -224,15 +302,11 @@ module.exports = function (app,cli,mail) {
                 }
             });
 
-
-
-
-
-            //User Module
-            /**
-             *  Data Table With Server Side Rendering Start
-             */
-            app.post('/user_list',passport.authenticate('jwt',{session:false}),function(req,res){
+    //User Module
+    /**
+     *  Data Table With Server Side Rendering Start
+     */
+    app.post('/user_list',passport.authenticate('jwt',{session:false}),function(req,res){
 
 
                 cli.yellow(JSON.stringify(req.user));
@@ -274,11 +348,12 @@ module.exports = function (app,cli,mail) {
                                 records['data'] = [];
                                 for (var key in users) {
                                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"> <i class="fa fa-pencil" aria-hidden="true"></i>Edit</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>';
+                                    var operation = '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-raised btn-xs bg-light-blue waves-effect">View</button>';
+                                    operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-raised btn-xs bg-orange waves-effect">Edit</button>';
+                                    operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-raised btn-xs bg-red waves-effect">Delete</button>';
                                     records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
                                     i++;
+
                                 }
                                 res.json(records);
                             });
@@ -315,9 +390,9 @@ module.exports = function (app,cli,mail) {
                                 records['data'] = [];
                                 for (var key in users) {
                                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
-                                    var operation = '<button ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"><i class="fa fa-eye" aria-hidden="true"></i> View</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-warning  btn-xs"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>';
-                                    operation+= '<button ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs"> <i class="fa fa-trash-o" aria-hidden="true"></i>Delete</button>';
+                                    var operation = '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;view&quot;)" title="View"  class="btn btn-raised btn-xs bg-light-blue waves-effect">View</button>';
+                                    operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;edit&quot;)" title="Edit"  class="btn btn-raised btn-xs bg-orange waves-effect">Edit</button>';
+                                    operation+= '<button style="color: #ffffff; margin-right: 10px;" ng-click="userOperation('+users[i].iUserId+',&quot;delete&quot;)" title="Delete"  class="btn btn-raised btn-xs bg-red waves-effect">Delete</button>';
                                     records['data'][i] = {"iUserId":users[i].iUserId,"vFullName":users[i].vFullName,"vEmail":users[i].vEmail,"eStatus":users[i].eStatus,"vOperation":operation,"vUserType":users[i].vUserType};
                                     i++;
                                 }
@@ -334,9 +409,9 @@ module.exports = function (app,cli,mail) {
 
 
             });
-            /**
-             *  Data Table With Server Side Rendering End
-             */
+    /**
+     *  Data Table With Server Side Rendering End
+     */
 
 
     /**
@@ -440,32 +515,59 @@ module.exports = function (app,cli,mail) {
 
             });
 
-
-
-
-            app.post('/useroperation',passport.authenticate('jwt',{session:false}),function(req,res){
+    app.post('/useroperation',passport.authenticate('jwt',{session:false}),function(req,res){
                 if(!validator.isEmpty(req.body.id) && !validator.isEmpty(req.body.vOperation)){
                     cli.blue("inside");
                     console.log("Inside");
                     if(req.user.length > 0 ){
 
                         if(req.body.vOperation == 'view'){
-                            cli.blue("view call");
-                            queries.getUserFroById({'id':req.body.id},function(error,rows){
-                                if(rows.length > 0){
-                                    res.json({
-                                        'status':200,
-                                        'message':'success',
-                                        'result':rows
+
+
+                            queries.getUserById({"id":req.user[0].iUserId},function(error,users){
+
+                                cli.blue("view call");
+
+                                if(users[0].vUserType == 'client' ){
+
+                                    queries.getUserFroByIdForClient({'id':req.body.id},function(error,rows){
+                                        if(rows.length > 0){
+                                            res.json({
+                                                'status':200,
+                                                'message':'success',
+                                                'result':rows
+                                            });
+                                        }else{
+                                            res.json({
+                                                'status':404,
+                                                'message':'User Not Found',
+                                            })
+                                        }
                                     });
+
                                 }else{
-                                    res.json({
-                                        'status':404,
-                                        'message':'User Not Found',
-                                    })
+
+                                    queries.getUserFroById({'id':req.body.id},function(error,rows){
+                                        if(rows.length > 0){
+                                            res.json({
+                                                'status':200,
+                                                'message':'success',
+                                                'result':rows
+                                            });
+                                        }else{
+                                            res.json({
+                                                'status':404,
+                                                'message':'User Not Found',
+                                            })
+                                        }
+                                    });
+
                                 }
+
                             });
+
                         }else if(req.body.vOperation == 'edit'){
+
                             if(!validator.isEmpty(req.body.vFullName)){
                                 cli.green("Edit call");
                                 cli.red(req.body.id);
@@ -481,6 +583,8 @@ module.exports = function (app,cli,mail) {
                                     "message":"Please fill all required value"
                                 });
                             }
+
+
                         }else if(req.body.vOperation == 'delete'){
                             queries.deleteUserById({'id':req.body.id},function(error,rows){
                                 if(error) throw error;
@@ -528,14 +632,12 @@ module.exports = function (app,cli,mail) {
 
             });
 
-            // User Module End
-
-
-            //Question Module Start
-            /**
-             * Getting List of Questions
-             */
-            app.post('/question',passport.authenticate('jwt',{session:false}),function(req,res){
+    // User Module End
+    //Question Module Start
+    /**
+     * Getting List of Questions
+     */
+    app.post('/question',passport.authenticate('jwt',{session:false}),function(req,res){
                 cli.blue("Its Work users");
                 if(req.user.length > 0){
                     queries.listQuestion(req,function(error,rows){
@@ -551,12 +653,9 @@ module.exports = function (app,cli,mail) {
                         "message":"Something went wrong"
                     })
                 }
-            });
+    });
 
-            
-
-
-            app.post('/list_q',function (req,res) {
+    app.post('/list_q',function (req,res) {
                 var obj = {
                     'vModeName':req.body.search.value,
                     'eType':req.body.search.value
@@ -602,87 +701,88 @@ module.exports = function (app,cli,mail) {
                 });
             });
 
-            /**
-             *  Question Operation View,Status,Delete
-             */
-            app.post('/questionoperation',passport.authenticate('jwt',{session:false}),function(req,res){
-                cli.blue("Its Work users");
-                if(req.user.length > 0){
-                    if(!validator.isEmpty(req.body.vOperation) && !validator.isEmpty(req.body.iQuestionId)){
-                        if(req.body.vOperation == 'status'){
-                            queries.statusQuestion({"iQuestionId":req.body.iQuestionId,"eStatus":req.body.eStatus},function(err,rows){
-                                if(err) throw err;
-                                if(rows.affectedRows > 0){
-                                    res.json({
-                                        'status':200,
-                                        'message':'Question status change successfully'
-                                    });
-                                }else{
-                                    res.json({
-                                        "status":404,
-                                        "message":"Something went wrong"
-                                    })
-                                }
-                            });
-                        }else if(req.body.vOperation == 'view'){
-                            queries.viewQuestion({"iQuestionId":req.body.iQuestionId},function(err,rows){
-                                if(err) throw  err;
-                                if(rows.length > 0){
-                                    res.json({
-                                        'status':200,
-                                        'message':'success',
-                                        'result':rows
-                                    })
-                                }else{
-                                    res.json({
-                                        "status":404,
-                                        "message":"Something went wrong"
-                                    });
-                                }
-                            });
-                        }else if(req.body.vOperation == 'delete'){
-                            queries.deleteQuestion({"iQuestionId":req.body.iQuestionId},function(err,rows){
-                                if(err) throw err;
-                                if(rows.affectedRows > 0){
-                                    res.json({
-                                        'status':200,
-                                        'message':'Question deleted successfully.'
-                                    });
-                                }else{
-                                    res.json({
-                                        "status":404,
-                                        "message":"Something went wrong"
-                                    });
-                                }
+    /**
+     *  Question Operation View,Status,Delete
+     */
+    app.post('/questionoperation',passport.authenticate('jwt',{session:false}),function(req,res){
+        cli.blue("Its Work users");
+        if(req.user.length > 0){
+            if(!validator.isEmpty(req.body.vOperation) && !validator.isEmpty(req.body.iQuestionId)){
+                if(req.body.vOperation == 'status'){
+                    queries.statusQuestion({"iQuestionId":req.body.iQuestionId,"eStatus":req.body.eStatus},function(err,rows){
+                        if(err) throw err;
+                        if(rows.affectedRows > 0){
+                            res.json({
+                                'status':200,
+                                'message':'Question status change successfully'
                             });
                         }else{
                             res.json({
                                 "status":404,
-                                "message":"Please fill all required value"
+                                "message":"Something went wrong"
+                            })
+                        }
+                    });
+                }else if(req.body.vOperation == 'view'){
+                    queries.viewQuestion({"iQuestionId":req.body.iQuestionId},function(err,rows){
+                        if(err) throw  err;
+                        if(rows.length > 0){
+                            res.json({
+                                'status':200,
+                                'message':'success',
+                                'result':rows
+                            })
+                        }else{
+                            res.json({
+                                "status":404,
+                                "message":"Something went wrong"
                             });
                         }
-
-                    }else{
-                        res.json({
-                            "status":404,
-                            "message":"Please fill all required value"
-                        })
-                    }
+                    });
+                }else if(req.body.vOperation == 'delete'){
+                    queries.deleteQuestion({"iQuestionId":req.body.iQuestionId},function(err,rows){
+                        if(err) throw err;
+                        if(rows.affectedRows > 0){
+                            res.json({
+                                'status':200,
+                                'message':'Question deleted successfully.'
+                            });
+                        }else{
+                            res.json({
+                                "status":404,
+                                "message":"Something went wrong"
+                            });
+                        }
+                    });
                 }else{
                     res.json({
                         "status":404,
-                        "message":"Something went wrong"
-                    })
+                        "message":"Please fill all required value"
+                    });
                 }
-            });
-            /**
-             *  Question Operation View,Status,Delete Emd
-             */
 
-            /**
-             * BEGIN Question Edit Operation
-             */
-            app.post('/questionedit',passport.authenticate('jwt',{session:false}),function(req,res){
+            }else{
+                res.json({
+                    "status":404,
+                    "message":"Please fill all required value"
+                })
+            }
+        }else{
+            res.json({
+                "status":404,
+                "message":"Something went wrong"
+            })
+        }
+    });
+    /**
+     *  Question Operation View,Status,Delete Emd
+     */
+
+    /**
+     * BEGIN Question Edit Operation
+     */
+
+    app.post('/questionedit',passport.authenticate('jwt',{session:false}),function(req,res){
                 if(req.user.length > 0){
                     if(!validator.isEmpty(req.body.question.eType)){
                         if(req.body.question.eType == "MCQ"){
@@ -806,15 +906,15 @@ module.exports = function (app,cli,mail) {
                 }
             });
 
-            /**
-             * END Question Edit Operation
-             */
+    /**
+     * END Question Edit Operation
+     */
 
 
-            /**
-             * BEGIN Question Add Operataion
-             */
-            app.post('/questionadd',passport.authenticate('jwt',{session:false}),function(req,res){
+     /**
+     * BEGIN Question Add Operataion
+     */
+     app.post('/questionadd',passport.authenticate('jwt',{session:false}),function(req,res){
                 if(req.user.length > 0){
                     if(!validator.isEmpty(req.body.question.eType)){
                         if(req.body.question.eType == "MCQ"){
@@ -962,18 +1062,18 @@ module.exports = function (app,cli,mail) {
                 }
             });
 
+    /**
+     * END Question Add Operataion
+     */
 
 
-            /**
-             * END Question Add Operataion
-             */
             
 
-            /**
-             * BEGIN List Mcq question
-             */
+    /**
+     * BEGIN List Mcq question
+     */
             
-             app.post('/list_mcq',function (req,res) {
+     app.post('/list_mcq',function (req,res) {
                 var obj = {
                     'vModeName':req.body.search.value,
                     'eType':req.body.search.value
@@ -1019,17 +1119,16 @@ module.exports = function (app,cli,mail) {
                 });
             });
 
+    /**
+     * END List Mcq question
+     */
 
-            /**
-             * END List Mcq question
-             */
+    /**
+     * BEGIN List Vsq question
+     */
 
 
-        /**
-         * BEGIN List Vsq question
-         */
-
-        app.post('/list_vsq',function (req,res) {
+     app.post('/list_vsq',function (req,res) {
             var obj = {
                 'vModeName':req.body.search.value,
                 'eType':req.body.search.value
@@ -1075,16 +1174,15 @@ module.exports = function (app,cli,mail) {
             });
         });
 
+    /**
+     * END List Vcq question
+     */
 
-        /**
-         * END List Vcq question
-         */
+     /**
+     * Generate Exam Start
+     */
 
-         /**
-          * Generate Exam Start
-          */
-
-          app.post('/generate_exam',passport.authenticate('jwt',{session:false}),function(req,res){
+     app.post('/generate_exam',passport.authenticate('jwt',{session:false}),function(req,res){
                /***
                 * vTitle,vDescription
                 */
@@ -1108,6 +1206,8 @@ module.exports = function (app,cli,mail) {
                                     queries.insert_exam_schedule({"iExamId":iRoundOneExamId},function(err,resultOne){
                                         var iRoundOneScheduleId = resultOne.insertId;
                                         queries.insert_exam_schedule({"iExamId":iRoundTwoExamId},function(err,resultTwo){
+
+
                                             var iRoundTwoScheduleId = resultTwo.insertId;
                                             cli.yellow("response")
                                             res.json({
@@ -1124,6 +1224,9 @@ module.exports = function (app,cli,mail) {
                                                     }
                                                 }
                                             })
+
+
+
                                         });
                                     });
                                 });
@@ -1133,14 +1236,15 @@ module.exports = function (app,cli,mail) {
 
           });
 
-          /**
-            * Generate Exam Close
-            */
+     /**
+     * Generate Exam Close
+     */
 
     /**
      *  Data Table With Server Side Rendering Start
+     *  For New Module
      */
-    app.post('/user_statistics',function(req,res){
+    app.post('/list_exam',function(req,res){
         var obj = {
             'vTitle': req.body.search.value, //Search Apply for default search text box
         };
@@ -1168,14 +1272,13 @@ module.exports = function (app,cli,mail) {
                 for (var key in exams) {
                     // var status = '<input bs-switch ng-model="'+users[i].eStatus+'" value="'+users[i].eStatus+'" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange(&apos;'+users[i].eStatus+'&apos;,'+users[i].iUserId+')">';
                     var operation = '<button ng-click="viewOperation('+exams[i].iExamId+',&quot;view&quot;)" title="View"  class="btn btn-success btn-xs"> <i class="fa fa-eye" aria-hidden="true"></i> View</button>';
-                    records['data'][i] = {"iExamId":exams[i].iExamId,"vTitle":exams[i].vTitle,"eStatus":exams[i].eStatus,"vOperation":operation};
+                    records['data'][i] = {"iExamId":exams[i].iExamId,"vTitle":exams[i].vTitle,'vDescription':exams[i].vDescription,"eStatus":exams[i].eStatus,"vOperation":operation};
                     i++;
                 }
                 res.json(records);
             });
         });
     });
-
 
     /**
      * Exam result
@@ -1349,6 +1452,7 @@ module.exports = function (app,cli,mail) {
                             "message":"User already available"
                         });
                     }else{
+
                         var vPassword = randomstring.generate(6);
                         queries.addUser({"vUserType":"client","vFullName":req.body.vFullName,"vUserName":req.body.vEmail,"vEmail":req.body.vEmail,"vPassword":vPassword},function(err,rows){
                             if(err) throw err;
@@ -1395,6 +1499,7 @@ module.exports = function (app,cli,mail) {
                                 });
                             }
                         });
+
                     }
                 });
             }else{
@@ -1523,6 +1628,103 @@ module.exports = function (app,cli,mail) {
     });
 
     // End Client Module
+
+
+
+    app.post('/exam_generate',passport.authenticate('jwt',{session:false}),function(req,res){
+        cli.blue(req.user);
+        if(req.user.length > 0){
+
+            req.checkBody("iRoundOneQuestion","Question must be required").notEmpty();
+            req.checkBody("iRoundTwoQuestion","Question must be required").notEmpty();
+            req.checkBody("vTitle","Title must be required").notEmpty();
+            req.checkBody("vDescription","Description must be required").notEmpty();
+            var validatorError = req.validationErrors();
+            req.getValidationResult().then(function(result) {
+                if (!result.isEmpty()) {
+                    res.json({
+                        "status": 404,
+                        "message": "Please fill all required value",
+                        "Data":result.mapped()
+                    });
+                }else{
+                    queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:0,iUserId:req.user[0].iUserId},function(errOne,rowsOne){
+                        var iRoundOneExamId  = rowsOne.insertId;
+                        queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:iRoundOneExamId,iUserId:req.user[0].iUserId},function(errTwo,rowsTwo){
+                            var iRoundTwoExamId  = rowsTwo.insertId;
+                            queries.insert_exam_schedule({"iExamId":iRoundOneExamId},function(err,resultOne){
+                                var iRoundOneScheduleId = resultOne.insertId;
+                                queries.insert_exam_schedule({"iExamId":iRoundTwoExamId},function(err,resultTwo){
+                                    var iRoundTwoScheduleId = resultTwo.insertId;
+
+                                    queries.get_child_by_client_id({'id':req.user[0].iUserId},function(error,childs){
+                                        var tbl_exam_participant = [];
+                                        for(var i = 0; i < childs.length ; i++ ){
+                                            var temp = [
+                                                iRoundOneScheduleId,
+                                                childs[i].ChildUserId,
+                                                0,0,0,'n',dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")+""
+                                            ];
+                                            var tempOne = [
+                                                iRoundTwoScheduleId,
+                                                childs[i].ChildUserId,
+                                                0,0,0,'n',dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")+""
+                                            ];
+                                            tbl_exam_participant.push(temp);
+                                            tbl_exam_participant.push(tempOne);
+                                        }
+
+                                        queries.insert_exam_participant(tbl_exam_participant,function(errorThree,resultThree){
+                                            if(errorThree) throw errorThree;
+
+                                            var tbl_exam_question = [];
+
+                                            for(var i=0; i<req.body.iRoundOneQuestion.length ;i++){
+                                                var temp = [
+                                                    iRoundOneScheduleId,
+                                                    iRoundOneExamId,
+                                                    req.body.iRoundOneQuestion[i]
+                                                ]
+                                                tbl_exam_question.push(temp);
+                                            }
+                                            for(var i=0; i<req.body.iRoundTwoQuestion.length ;i++){
+                                                var temp = [
+                                                    iRoundTwoScheduleId,
+                                                    iRoundTwoExamId,
+                                                    req.body.iRoundTwoQuestion[i]
+                                                ]
+                                                tbl_exam_question.push(temp);
+                                            }
+
+                                            queries.insert_exam_question(tbl_exam_question,function(errorFour,resultFour){
+                                                if(errorFour) throw errorFour;
+
+                                                res.json({
+                                                    'status':200,
+                                                    'message':'Success',
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+
+                }
+
+            });
+
+        }else{
+            res.json({
+                "status":404,
+                "message":'User not active'
+            })
+        }
+    });
+
+
+
 
 
 }

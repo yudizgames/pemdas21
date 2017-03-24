@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="card-top"></div>
+    <div class="card">
+        <h1 class="title"><span>PEMDAS</span>Forgot Password? <div class="msg">Enter your e-mail address below to reset your password.</div></h1>
+        <div class="col-md-12">
+            <form class="login-form" name="form_login" ng-submit="forgotPass(form_login)">
+                <div class="input-group"> <span class="input-group-addon"> <i class="zmdi zmdi-email"></i> </span>
+                    <div class="form-line">
+                        <input class="form-control placeholder-no-fix" type="email" autocomplete="off" placeholder="Email" name="vEmail" data-ng-model="vEmail"  required />
+                        <span ng-show="form_login.vEmail.$dirty && form_login.vEmail.$error.required" class="help-block text-danger">Email is required</span>
+                        <span ng-show="form_login.vEmail.$dirty && form_login.vEmail.$error.email" class="help-block text-danger">Please enter valid email</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <button type="submit" style="color: #ffffff;" class="btn btn-success uppercase" data-ng-disabled="form_login.$invalid">RESET MY PASSWORD</button>
+                    </div>
+                    <div class="col-xs-12 text-center"> <a ui-sref="login">Sign In!</a> </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

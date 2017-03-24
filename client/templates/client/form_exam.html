@@ -1,0 +1,213 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>EXAM DETAILS</h2>
+        {{RoundOneShow}} {{RoundTwoShow}}
+        <div class="body">
+            <ol class="breadcrumb">
+                <li> <a ui-sref="client.dashboard"> <i class="material-icons">home</i> Home </a> </li>
+                <li> <a ui-sref="client.exam"> <i class="zmdi zmdi-account"></i>Exams List</a></li>
+                <li class="active"> <i class="material-icons">library_books</i>Exam {{form_action}}</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <!-- Basic Validation -->
+    <div class="row clearfix" ng-show="ExamDetails">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>EXAM {{form_action}}</h2>
+                    <ul class="header-dropdown m-r--5">
+                        <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);">Action</a></li>
+                                <li><a href="javascript:void(0);">Another action</a></li>
+                                <li><a href="javascript:void(0);">Something else here</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body">
+                    <form name="form_user" id="form_user" novalidate ng-submit="submitExamDetails()">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="text" placeholder="Title" value="" class="form-control" name="vTitle" id="vTitle" required ng-model="examdata.vTitle">
+                            </div>
+                            <div ng-messages="form_user.vTitle.$error && form_user.vTitle.$dirty" ng-show="form_user.vTitle.$error && form_user.vTitle.$dirty" role="alert" class="text-danger">
+                                <div ng-message="required" ng-show="form_user.vFullName.$error.required">Title is required</div>
+                            </div>
+                            <!--<div class="help-info">Enter Full Name</div>-->
+                        </div>
+                        <div class="form-group form-float">
+
+                            <div class="form-line" >
+                                <input  type="text" placeholder="Exam Description" value="" class="form-control" name="vDescription" id="vDescription" required ng-model="examdata.vDescription">
+                            </div>
+                            <div ng-messages="form_user.vDescription.$error && form_user.vDescription.$dirty" ng-show="form_user.vDescription.$error && form_user.vDescription.$dirty" role="alert" class="text-danger">
+                                <div ng-message="required" ng-show="form_user.vDescription.$dirty && form_user.vDescription.$error.required">Exan description is required.</div>
+                            </div>
+                            <!--<div class="help-info">Enter Valid Email Address Like : john@gmail.com</div>-->
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_user.$invalid"><i class="fa fa-check"></i> Next</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Validation -->
+
+
+    <!-- Basic Examples -->
+    <div class="row clearfix" ng-if="RoundOneShow" ng-init="RoundOnefn()">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2 class="header-subject">Round One Question List</h2>
+                    <ul class="header-dropdown m-r--5" style="margin-top: -20px;">
+                        <li class="dropdown"> <a data-ng-disabled="examQuestionROne.length > 0 ? false : true" href="javascript:void(0);" ng-click="SelectedROneQuestion()" class="btn btn-raised btn-sm btn-primary waves-effect" role="button"> Next </a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="body">
+                    <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
+                    <table id="datatableone" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable dt-options="dtOptionsROne" dt-columns="dtColumnsROne" dt-instance="dtInstanceQuestionROne"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row clearfix" ng-if="RoundTwoShow" ng-init="RoundTwofn()">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2 class="header-subject">Round Two Question List</h2>
+                    <ul class="header-dropdown m-r--5" style="margin-top: -20px;">
+                        <li class="dropdown"> <a data-ng-disabled="vsqExamQuestion.length > 0 ? false : true" href="javascript:void(0);" ng-click="vsqQuestion()" class="btn btn-raised btn-sm btn-primary waves-effect" role="button"> Next </a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="body" >
+                    <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
+                    <table id="datatabletwo" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable dt-options="dtOptionsRTwo" dt-columns="dtColumnsRTwo" dt-instance="dtInstanceQuestionRTwo"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<!--<div class="container-fluid">-->
+    <!--<div class="block-header">-->
+        <!--<h2>EXAM DETAILS</h2>-->
+        <!--<div class="body">-->
+            <!--<ol class="breadcrumb">-->
+                <!--<li> <a ui-sref="client.dashboard"> <i class="material-icons">home</i> Home </a> </li>-->
+                <!--<li> <a ui-sref="client.exam"> <i class="zmdi zmdi-account"></i>Exams List</a></li>-->
+                <!--<li class="active"> <i class="material-icons">library_books</i>Exam {{form_action}}</li>-->
+            <!--</ol>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; Basic Validation &ndash;&gt;-->
+    <!--<div class="row clearfix" ng-if="ExamDetails">-->
+        <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--<div class="card">-->
+                <!--<div class="header">-->
+                    <!--<h2>EXAM {{form_action}}</h2>-->
+                    <!--<ul class="header-dropdown m-r&#45;&#45;5">-->
+                        <!--<li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>-->
+                            <!--<ul class="dropdown-menu pull-right">-->
+                                <!--<li><a href="javascript:void(0);">Action</a></li>-->
+                                <!--<li><a href="javascript:void(0);">Another action</a></li>-->
+                                <!--<li><a href="javascript:void(0);">Something else here</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+                <!--<div class="body">-->
+                    <!--<form name="form_user" id="form_user" novalidate ng-submit="submitExamDetails()">-->
+                        <!--<div class="form-group">-->
+                            <!--<div class="form-line">-->
+                                <!--<input type="text" placeholder="Title" value="" class="form-control" name="vTitle" id="vTitle" required ng-model="exam.vTitle">-->
+                            <!--</div>-->
+                            <!--<div ng-messages="form_user.vTitle.$error && form_user.vTitle.$dirty" ng-show="form_user.vTitle.$error && form_user.vTitle.$dirty" role="alert" class="text-danger">-->
+                                <!--<div ng-message="required" ng-show="form_user.vFullName.$error.required">Title is required</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<div class="help-info">Enter Full Name</div>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--<div class="form-group form-float">-->
+
+                            <!--<div class="form-line" >-->
+                                <!--<input  type="text" placeholder="Exam Description" value="" class="form-control" name="vDescription" id="vDescription" required ng-model="exam.vDescription">-->
+                            <!--</div>-->
+                            <!--<div ng-messages="form_user.vDescription.$error && form_user.vDescription.$dirty" ng-show="form_user.vDescription.$error && form_user.vDescription.$dirty" role="alert" class="text-danger">-->
+                                <!--<div ng-message="required" ng-show="form_user.vDescription.$dirty && form_user.vDescription.$error.required">Exan description is required.</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<div class="help-info">Enter Valid Email Address Like : john@gmail.com</div>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_user.$invalid"><i class="fa fa-check"></i> Next</button>-->
+                        <!--</div>-->
+                    <!--</form>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; #END# Basic Validation &ndash;&gt;-->
+
+    <!--&lt;!&ndash; #BEGIN# Round One Question Select &ndash;&gt;-->
+    <!--<div class="row clearfix">-->
+        <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--<div class="card">-->
+                <!--<div class="header">-->
+                    <!--<h2>Exams List</h2>-->
+                    <!--<ul class="header-dropdown m-r&#45;&#45;5">-->
+                        <!--<li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>-->
+                            <!--<ul class="dropdown-menu pull-right">-->
+                                <!--<li><a href="javascript:void(0);" ui-sref="client.formexam({action:'Add'})" title="Add User">Add New Exasm</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+                <!--<div class="body">-->
+                    <!--&lt;!&ndash; <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> &ndash;&gt;-->
+                    <!--<table style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstanceQuestion">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; #EDN# Round One Question Select   &ndash;&gt;-->
+
+
+
+    <!--&lt;!&ndash; #BEGIN# Round One Question Select &ndash;&gt;-->
+    <!--<div class="row clearfix" ng-if="RoundTwo">-->
+        <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--<div class="card">-->
+                <!--<div class="header">-->
+                    <!--<h2>Exams List</h2>-->
+                    <!--<ul class="header-dropdown m-r&#45;&#45;5">-->
+                        <!--<li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>-->
+                            <!--<ul class="dropdown-menu pull-right">-->
+                                <!--<li><a href="javascript:void(0);" ui-sref="client.formexam({action:'Add'})" title="Add User">Add New Exasm</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+                <!--<div class="body">-->
+                    <!--&lt;!&ndash; <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> &ndash;&gt;-->
+                    <!--<table style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable="" dt-options="dtOptionsRoundTwo" dt-columns="dtColumnsRoundTwo" dt-instance="dtInstanceRoundTwoQuestion">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; #EDN# Round One Question Select   &ndash;&gt;-->
+
+<!--</div>-->

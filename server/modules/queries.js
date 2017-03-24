@@ -36,7 +36,7 @@ var Users = {
         db.query("UPDATE tbl_users SET vPassword = ? WHERE iUserId = ?",[md5(body.vNewPassword),body.iUserId],cb);
     },
     checkEmail:function(body,cb){
-        db.query("SELECT * FROM tbl_users WHERE vEmail = ? AND eStatus = ?",[body.vEmail,'y'],cb);
+        db.query("SELECT * FROM tbl_users WHERE vEmail = ?",[body.vEmail],cb);
     },
     forgotPass:function(body,cb){
         db.query("UPDATE tbl_users SET vPassword = ? WHERE vEmail = ?",[md5(body.vNewPassword),body.vEmail],cb);
@@ -170,6 +170,9 @@ var Users = {
     },
     getUserFroById:function(body,cb){
         db.query("SELECT * FROM tbl_users JOIN tbl_parent ON tbl_users.iUserId = tbl_parent.iUserId WHERE tbl_users.iUserId = ? AND tbl_users.eStatus != 'd'",[body.id],cb);
+    },
+    getUserFroByIdForClient:function(body,cb){
+        db.query("SELECT * FROM tbl_users WHERE tbl_users.iUserId = ? AND tbl_users.eStatus != 'd'",[body.id],cb);
     },
     deleteUserById:function(body,cb){
         db.query("UPDATE tbl_users SET eStatus = ? WHERE iUserId = ?",['d',body.id],cb);
@@ -330,7 +333,10 @@ var Users = {
         db.query("INSERT INTO tbl_exam_schedule (iExamId,dExamDate,iWinnerId,dCreatedDate) VALUES (?,?,?,?)",[body.iExamId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),0,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
     },
     insert_exam_participant:function(body,cb){
-        db.query("INSERT INTO tbl_exam_participant (iScheduleId,iUserId,iTotalQuestion,iRightAnswers,iWrongAnswers,eStatus,dCreatedDate) VALUES (?,?,?,?,?,?,?)",[body.iScheduleId,body.iUserId,0,0,0,"y",dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
+        db.query("INSERT INTO tbl_exam_participant (iScheduleId,iUserId,iTotalQuestion,iRightAnswers,iWrongAnswers,eStatus,dCreatedDate) VALUES ? ",[body],cb);
+    },
+    insert_exam_question:function(body,cb){
+        db.query("INSERT INTO tbl_exam_question (iExamId,iScheduleId,iQuestionId) VALUES ? ",[body],cb);
     },
     check_round_one_question_answer:function(body,cb){
         db.query("SELECT COUNT(*) as rowCount FROM tbl_questions WHERE iQuestionId = ? AND iAnswerId = ? AND eStatus != 'd'",[body.iQuestionId,body.iAnswerId],cb);
@@ -369,7 +375,7 @@ var Users = {
             aWhere.push('%'+body.vTitle+'%');
         }
         if(typeof body.sort != 'undefined' && body.sort != "") {sort = body.sort};
-        db.query("SELECT iExamId, vTitle ,eStatus FROM tbl_exams WHERE eStatus != ? AND iParentId = ? "+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset+", "+body.limit,aWhere,cb);
+        db.query("SELECT iExamId, vTitle , vDescription ,eStatus FROM tbl_exams WHERE eStatus != ? AND iParentId = ? "+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset+", "+body.limit,aWhere,cb);
     },
     get_exam_details:function (body,cb) {
         db.query("SELECT parent.vtitle,parent.vDescription,parent.iExamId as iRoundOneId, child.iExamId as iRoundTwoId FROM tbl_exams as parent JOIN tbl_exams as child ON child.iParentId = parent.iExamId WHERE parent.iExamId = ?",[body.iExamId],cb);
@@ -441,7 +447,7 @@ var Users = {
         db.query("SELECT iUserId, vFullName, vUserName, vEmail ,eStatus ,vUserType FROM tbl_users WHERE vUserType = ? AND eStatus != ? "+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset+", "+body.limit,aWhere,cb);
     },
     get_child_by_client_id:function(body,cb){
-        db.query("SELECT child.vFullName as ChildName, child.vEmail as ChildEmail, child.vUserName as ChildUserName, parent.vUserName, parent.vFullName as ParentName, parent.vEmail as ParentEmail FROM tbl_child as c" +
+        db.query("SELECT child.iUserId as ChildUserId, child.vFullName as ChildName, child.vEmail as ChildEmail, child.vUserName as ChildUserName, parent.vUserName, parent.vFullName as ParentName, parent.vEmail as ParentEmail FROM tbl_child as c" +
             " JOIN tbl_parent as p ON p.iParentId = c.iParentId" +
             " JOIN tbl_users as parent ON p.iUserId = parent.iUserId" +
             " JOIN tbl_users as child ON child.iUserId = c.iUserId" +
