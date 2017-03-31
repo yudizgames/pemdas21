@@ -1,7 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>EXAM DETAILS</h2>
-        {{RoundOneShow}} {{RoundTwoShow}}
         <div class="body">
             <ol class="breadcrumb">
                 <li> <a ui-sref="client.dashboard"> <i class="material-icons">home</i> Home </a> </li>
@@ -18,15 +17,15 @@
             <div class="card">
                 <div class="header">
                     <h2>EXAM {{form_action}}</h2>
-                    <ul class="header-dropdown m-r--5">
-                        <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="javascript:void(0);">Action</a></li>
-                                <li><a href="javascript:void(0);">Another action</a></li>
-                                <li><a href="javascript:void(0);">Something else here</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <!--<ul class="header-dropdown m-r&#45;&#45;5">-->
+                        <!--<li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="material-icons">more_vert</i> </a>-->
+                            <!--<ul class="dropdown-menu pull-right">-->
+                                <!--<li><a href="javascript:void(0);">Action</a></li>-->
+                                <!--<li><a href="javascript:void(0);">Another action</a></li>-->
+                                <!--<li><a href="javascript:void(0);">Something else here</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                    <!--</ul>-->
                 </div>
                 <div class="body">
                     <form name="form_user" id="form_user" novalidate ng-submit="submitExamDetails()">
@@ -39,19 +38,62 @@
                             </div>
                             <!--<div class="help-info">Enter Full Name</div>-->
                         </div>
-                        <div class="form-group form-float">
+                        <div class="form-group">
 
                             <div class="form-line" >
                                 <input  type="text" placeholder="Exam Description" value="" class="form-control" name="vDescription" id="vDescription" required ng-model="examdata.vDescription">
                             </div>
                             <div ng-messages="form_user.vDescription.$error && form_user.vDescription.$dirty" ng-show="form_user.vDescription.$error && form_user.vDescription.$dirty" role="alert" class="text-danger">
-                                <div ng-message="required" ng-show="form_user.vDescription.$dirty && form_user.vDescription.$error.required">Exan description is required.</div>
+                                <div ng-message="required" ng-show="form_user.vDescription.$dirty && form_user.vDescription.$error.required">Exam description is required.</div>
                             </div>
                             <!--<div class="help-info">Enter Valid Email Address Like : john@gmail.com</div>-->
                         </div>
+
+
+                        <div class="form-group" ng-if="form_action == 'Add' ? true : false">
+                            <div class="form-line">
+                                <h2 class="card-inside-title" style="border-bottom: none;">Select Exam User</h2>
+                                <div class = "form-line">
+                                    <div class="demo-switch">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-3" ng-repeat="u in exam_users track by $index">
+                                                <div class="demo-switch-title">{{u.vFullName}}</div>
+                                                <div class="switch">
+                                                    <label>
+                                                        <input type="checkbox" ng-model="exam_users[$index].eAvailable"  ng-true-value="'y'" ng-false-value="'n'" ng-disabled="exam_users[$index].iExamId > 0 ? true : false">
+                                                        <span class="lever"></span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="form_action == 'Edit' ? true : false">
+                            <div class="form-line">
+                                <h2 class="card-inside-title" style="border-bottom: none;">Select Exam User</h2>
+                                <div class = "form-line">
+                                    <div class="demo-switch">
+                                        <div class="row clearfix">
+                                            <div class="col-sm-3" ng-repeat="u in exam_users track by $index">
+                                                <div class="demo-switch-title">{{u.vFullName}}</div>
+                                                <div class="switch">
+                                                    <label>
+                                                        <input type="checkbox" ng-model="exam_users[$index].eAvailable"  ng-true-value="'y'" ng-false-value="'n'" ng-disabled="exam_users[$index].iExamId == iExamId || exam_users[$index].iExamId == 0 ? false : true">
+                                                        <span class="lever"></span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_user.$invalid"><i class="fa fa-check"></i> Next</button>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -88,7 +130,7 @@
                 <div class="header">
                     <h2 class="header-subject">Round Two Question List</h2>
                     <ul class="header-dropdown m-r--5" style="margin-top: -20px;">
-                        <li class="dropdown"> <a data-ng-disabled="vsqExamQuestion.length > 0 ? false : true" href="javascript:void(0);" ng-click="vsqQuestion()" class="btn btn-raised btn-sm btn-primary waves-effect" role="button"> Next </a></li>
+                        <li class="dropdown"> <a data-ng-disabled="vsqExamQuestion.length > 0 ? false : true" href="javascript:void(0);" ng-click="vsqQuestion()" class="btn btn-raised btn-sm btn-primary waves-effect" role="button"> Generate Exam </a></li>
                     </ul>
                 </div>
                 <div class="clearfix"></div>

@@ -81,7 +81,7 @@ angular.module('client').controller('ClientPlayersCtrl',function ($scope,$rootSc
             $scope.dtColumns = [
                 //here We will add .withOption('name','column_name') for send column name to the server
                 //here we will add .newColumn('column_name','Title for column name')
-                DTColumnBuilder.newColumn("iUserId", "User ID").withOption('name', 'iUserId'),
+                // DTColumnBuilder.newColumn("iUserId", "User ID").withOption('name', 'iUserId'),
                 DTColumnBuilder.newColumn("vFullName", "User Name").withOption('name', 'vFullName'),
                 DTColumnBuilder.newColumn("vEmail", "Email").withOption('name', 'vEmail'),
                 DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(actionsHtml),

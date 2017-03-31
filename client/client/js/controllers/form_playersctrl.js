@@ -35,7 +35,6 @@ angular.module('client').controller('PlayerFormCtrl',function ($scope,$rootScope
                 $rootScope.hideLoad = true;
                 console.log("Error");
                 console.log(err);
-                $state.go('client.users');
                 toastr.error(res.data.message,"Error");
             });
 
@@ -53,8 +52,12 @@ angular.module('client').controller('PlayerFormCtrl',function ($scope,$rootScope
                 $rootScope.hideLoad = true;
                 console.log("Success call");
                 console.log(res);
-                $state.go('client.users');
-                toastr.success(res.data.message,"Successs");
+                if(res.data.status == 200){
+                    toastr.success(res.data.message,"Successs");
+                    $state.go('client.users');
+                }else{
+                    toastr.error(res.data.message,"Error");
+                }
             },function(err){
                 $rootScope.hideLoad = true;
                 console.log("Error");

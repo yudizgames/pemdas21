@@ -10,16 +10,16 @@ angular.module('admin').controller('AdminCtrl',function ($scope,$http,$rootScope
         $rootScope.vUserName = data.vUserName;
     });
 
-    $http({
-        method:'get',
-        url:'/ws/v1/profile',
-        dataType:'json',
-    }).then(function(res){
-        $scope.profile =  res.data.profile;
-    },function(err){
-        console.log("Error");
-        console.log(err);
-    });
+    // $http({
+    //     method:'get',
+    //     url:'/ws/v1/profile',
+    //     dataType:'json',
+    // }).then(function(res){
+    //     $scope.profile =  res.data.profile;
+    // },function(err){
+    //     console.log("Error");
+    //     console.log(err);
+    // });
 
     $scope.logout = function(){
         console.log("Log out call");

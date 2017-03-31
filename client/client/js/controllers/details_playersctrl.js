@@ -20,4 +20,19 @@ angular.module('client').controller('PlayerDetailsCtrl',function ($scope,$rootSc
         console.log("Error");
         console.log(err);
     });
+
+    $http({
+        method:'post',
+        url:'/statistics_by_user',
+        dataType:'json',
+        data:{iUserId:$stateParams.id}
+    }).then(function(res){
+        console.log("Success call");
+        console.log(res);
+        $scope.data = res.data;
+    },function(err){
+        console.log("Error");
+        console.log(err);
+    });
+
 });

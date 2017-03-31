@@ -17,6 +17,7 @@ angular.module('admin').controller('CustomerFormCtrl',function ($scope,$rootScop
         $rootScope.hideLoad = false;
         console.log($scope.user);
 
+        var submitData = {};
         //Check Insert or Update User
         if($scope.form_action == 'Edit'){
             submitData = {
@@ -35,11 +36,13 @@ angular.module('admin').controller('CustomerFormCtrl',function ($scope,$rootScop
                 console.log("Success call");
                 console.log(res);
                 toastr.success(res.data.message,"Successs");
+                $state.go('admin.customer');
             },function(err){
                 $rootScope.hideLoad = true;
                 console.log("Error");
                 console.log(err);
                 toastr.error(res.data.message,"Error");
+                $state.go('admin.customer');
             });
 
         }else{
@@ -59,11 +62,13 @@ angular.module('admin').controller('CustomerFormCtrl',function ($scope,$rootScop
                 console.log("Success call");
                 console.log(res);
                 toastr.success(res.data.message,"Successs");
+                $state.go('admin.customer');
             },function(err){
                 $rootScope.hideLoad = true;
                 console.log("Error");
                 console.log(err);
                 toastr.error(res.data.message,"Error");
+                $state.go('admin.customer');
             });
         }
 

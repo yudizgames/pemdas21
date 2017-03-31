@@ -11,6 +11,7 @@ var app = angular.module('admin',['ui.router',
     'datatables',
     'ngResource',
     'frapontillo.bootstrap-switch',
+    'infinite-scroll',
 ]);
 app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyLoadProvider,$localForageProvider,toastrConfig,$qProvider){
     $urlRouterProvider.otherwise('/admin/dashboard');

@@ -22,7 +22,7 @@ angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootSc
     }
 
     $scope.dtColumns = [
-        DTColumnBuilder.newColumn("iQuestionId", "Question Id").withOption('name', 'iQuestionId'),
+        // DTColumnBuilder.newColumn("iQuestionId", "Question Id").withOption('name', 'iQuestionId'),
         DTColumnBuilder.newColumn("vModeName", "Difficulty level").withOption('name', 'vModeName'),
         DTColumnBuilder.newColumn("eType", "Type").withOption('name', 'eType'),
         DTColumnBuilder.newColumn("vQuestion", "Question").withOption('name', 'vQuestion'),

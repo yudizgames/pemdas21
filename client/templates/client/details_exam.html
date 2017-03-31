@@ -1,0 +1,101 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>EXAM DETAILS</h2>
+        <div class="body">
+            <ol class="breadcrumb">
+                <li> <a ui-sref="client.dashboard"> <i class="material-icons">home</i> Home </a> </li>
+                <li> <a ui-sref="client.exam"> <i class="zmdi zmdi-account"></i>Exam List</a></li>
+                <li class="active"> <i class="material-icons">library_books</i>Exam Details</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Exam Details</h2>
+                </div>
+                <div class="body">
+                    <strong>Title</strong>
+                    <p>{{Exam[0].vTitle}}</p>
+                    <strong>Description</strong>
+                    <p>{{Exam[0].vDescription}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>List of Exam Users</h2>
+                </div>
+                <div class="body">
+                    <div ng-repeat="u in Users" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box-4 hover-zoom-effect">
+                            <div class="icon"> <i class="zmdi zmdi-account col-blue"></i> </div>
+                            <div class="content">
+                                <div class="text"><b>{{u.vFullName}}</b></div>
+                                <div class="text">{{u.vEmail}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>List of Round One Question</h2>
+                </div>
+                <div class="body">
+                    <div class="form-group">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <td>Question</td>
+                                    <td>Option</td>
+                                    <td>Option</td>
+                                    <td>Option</td>
+                                    <td>Option</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="One in RoundOne">
+                                    <td>{{One.Question.vQuestion}}</td>
+                                    <td>{{One.Answers[0].vAnswer}}    <span ng-show="(One.Answers[0].iAnswerId == One.Question.vAns) ? true : false" class="label label-info">Answer</span></td>
+                                    <td>{{One.Answers[1].vAnswer}}    <span ng-show="(One.Answers[1].iAnswerId == One.Question.vAns) ? true : false" class="label label-info">Answer</span></td>
+                                    <td>{{One.Answers[2].vAnswer}}    <span ng-show="(One.Answers[2].iAnswerId == One.Question.vAns) ? true : false" class="label label-info">Answer</span></td>
+                                    <td>{{One.Answers[3].vAnswer}}    <span ng-show="(One.Answers[3].iAnswerId == One.Question.vAns) ? true : false" class="label label-info">Answer</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>List of Round Two Question</h2>
+                </div>
+                <div class="body">
+                    <div class="form-group">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <td>Question</td>
+                                    <td>Ans</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="Two in RoundTwo">
+                                    <td>{{Two.vQuestion}}</td>
+                                    <td>{{Two.vAns}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

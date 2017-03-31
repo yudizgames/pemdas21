@@ -27,7 +27,7 @@ angular.module('Pemdas').controller('LoginCtrl',function ($scope,$http,$localFor
                     });
                 });
             }else{
-                toastr.error('Your credentials are gone', 'Error');
+                toastr.error('Please Check your email/password', 'Error');
             }
             console.log("Success call");
         },function(err){

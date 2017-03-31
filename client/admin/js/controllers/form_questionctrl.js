@@ -2,7 +2,9 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
     console.log("Question  Form Controller call");
     if($stateParams.id == null){
         $scope.form_action = 'Add';
-    }else{
+    }
+    else
+    {
         $rootScope.hideLoad = false;
         $scope.form_action = $stateParams.action;
         var postData = {
@@ -24,6 +26,7 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                 eType:res.data.result[0].eType,
                 vQuestion:res.data.result[0].vQuestion,
                 vModeName:res.data.result[0].vModeName,
+                eTypeQuestion:res.data.result[0].eTypeQuestion
             }
 
             if(res.data.result[0].eType == "MCQ"){
@@ -79,7 +82,8 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         vQuestion:$scope.question.vQuestion,
                         eType:$scope.question.eType,
                         vModeName:$scope.question.vModeName,
-                        iAnswerId:gettingAnsId($scope.question.vOptionAns,$scope.question)
+                        iAnswerId:gettingAnsId($scope.question.vOptionAns,$scope.question),
+                        eTypeQuestion:$scope.question.eTypeQuestion
                     },
                     options:[
                         {
@@ -107,7 +111,8 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         vQuestion:$scope.question.vQuestion,
                         eType:$scope.question.eType,
                         vModeName:$scope.question.vModeName,
-                        iAnswerId:$scope.question.vAnsVsq.iAnswerId
+                        iAnswerId:$scope.question.vAnsVsq.iAnswerId,
+                        eTypeQuestion:$scope.question.eTypeQuestion
                     },
                     options:[
                         {
@@ -126,11 +131,14 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                 $rootScope.hideLoad = true;
                 if(res.data.status == 200){
                     toastr.success(res.data.message,"Successs");
+                    $state.go("admin.question");
                 }else{
                     toastr.error(res.data.message,"Error");
+                    $state.go("admin.question");
                 }
             },function(err){
                 $rootScope.hideLoad = true;
+                $state.go("admin.question");
                 console.log(err);
             });
         }else{
@@ -142,6 +150,7 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         eType:$scope.question.eType,
                         vQuestion:$scope.question.vQuestion,
                         vModeName:$scope.question.vModeName,
+                        eTypeQuestion:$scope.question.eTypeQuestion
                     },
                     options:[
                         {
@@ -170,6 +179,7 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         eType:$scope.question.eType,
                         vQuestion:$scope.question.vQuestion,
                         vModeName:$scope.question.vModeName,
+                        eTypeQuestion:$scope.question.eTypeQuestion
                     },
                     options:[
                         {
@@ -190,11 +200,14 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                 console.log(res);
                 if(res.data.status == 200){
                     toastr.success(res.data.message,"Successs");
+                    $state.go("admin.question");
                 }else{
                     toastr.error(res.data.message,"Error");
+                    $state.go("admin.question");
                 }
             },function(err){
                 $rootScope.hideLoad = true;
+                $state.go("admin.question");
                 console.log(err);
             });
 

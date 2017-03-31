@@ -11,7 +11,7 @@ var dateFormat = require("dateformat"); //dateFormat(new Date(),"yyyy-mm-dd HH:m
 var Users = {
     //   *@   //
     getUser:function(body,callback){
-        return db.query("SELECT *  FROM `tbl_users` WHERE `vEmail` = ? AND `vPassword` = ? AND `eStatus` != 'd'",[body.vEmail,md5(body.vPassword)],callback);
+        return db.query("SELECT *  FROM `tbl_users` WHERE `vEmail` = ? AND `vPassword` = ? AND `eStatus` = 'y'",[body.vEmail,md5(body.vPassword)],callback);
     },
     setTocket:function(body,callback){
         console.log("setTocken call");
@@ -19,7 +19,7 @@ var Users = {
     },
     authenticate: function(body, cb){
         console.log("authentications call");
-        db.query("SELECT u.iUserId,d.iDeviceId FROM tbl_users as u INNER JOIN tbl_user_devices as d ON (d.iUserId = u.iUserId) WHERE d.vAuthToken = ? AND u.eStatus = ? AND d.eDeviceType = ? AND u.vUserType = ?",[body.token,'y',body.device,body.vUserType],cb);
+        db.query("SELECT u.iUserId,d.iDeviceId,u.vUserType FROM tbl_users as u INNER JOIN tbl_user_devices as d ON (d.iUserId = u.iUserId) WHERE d.vAuthToken = ? AND u.eStatus = ? AND d.eDeviceType = ? AND u.vUserType = ?",[body.token,'y',body.device,body.vUserType],cb);
     },
     //   *@   //
     logOut:function (body,cb) {
@@ -175,7 +175,7 @@ var Users = {
         db.query("SELECT * FROM tbl_users WHERE tbl_users.iUserId = ? AND tbl_users.eStatus != 'd'",[body.id],cb);
     },
     deleteUserById:function(body,cb){
-        db.query("UPDATE tbl_users SET eStatus = ? WHERE iUserId = ?",['d',body.id],cb);
+        db.query("DELETE FROM tbl_users WHERE iUserId = ?",[body.id],cb);
     },
     changeUserStatusById:function(body,cb){
         console.log("User Status");
@@ -226,7 +226,7 @@ var Users = {
         db.query("SELECT tbl_questions.*,tbl_answers.vAnswer FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus != 'd' "+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit,aWhere,cb);
     },
     viewQuestion:function(body,cb){
-        db.query("SELECT tbl_answers.iAnswerId,tbl_questions.vModeName,tbl_questions.eType,tbl_questions.vQuestion,tbl_questions.dUpdatedDate,tbl_answers.vAnswer,tbl_questions.eStatus,IF(tbl_questions.iAnswerId = tbl_answers.iAnswerId,'y','n') as vRightAns FROM tbl_questions JOIN tbl_answers ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.eStatus != 'd' AND tbl_questions.iQuestionId = ?  ORDER BY vRightAns DESC",body.iQuestionId,cb);
+        db.query("SELECT tbl_answers.iAnswerId,tbl_questions.vModeName,tbl_questions.eTypeQuestion,tbl_questions.eType,tbl_questions.vQuestion,tbl_questions.dUpdatedDate,tbl_answers.vAnswer,tbl_questions.eStatus,IF(tbl_questions.iAnswerId = tbl_answers.iAnswerId,'y','n') as vRightAns FROM tbl_questions JOIN tbl_answers ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.eStatus != 'd' AND tbl_questions.iQuestionId = ?  ORDER BY vRightAns DESC",body.iQuestionId,cb);
     },
     statusQuestion:function(body,cb){
         db.query("UPDATE tbl_questions SET eStatus = ? WHERE iQuestionId = ?",[body.eStatus,body.iQuestionId],cb);
@@ -239,10 +239,10 @@ var Users = {
         db.query("UPDATE tbl_answers SET vAnswer = ? ,dUpdatedDate = ?  WHERE iAnswerId= ?",[body.vAnswer,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iAnswerId],cb);
     },
     updateQuestion:function(body,cb){
-        db.query("UPDATE tbl_questions SET vModeName = ? ,eType = ? ,vQuestion = ?, iAnswerId = ?, dUpdatedDate = ? WHERE iQuestionId = ?",[body.vModeName,body.eType,body.vQuestion,body.iAnswerId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iQuestionId],cb);
+        db.query("UPDATE tbl_questions SET eTypeQuestion = ?, vModeName = ? ,eType = ? ,vQuestion = ?, iAnswerId = ?, dUpdatedDate = ? WHERE iQuestionId = ?",[body.eTypeQuestion,body.vModeName,body.eType,body.vQuestion,body.iAnswerId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iQuestionId],cb);
     },
     insertQuestion:function(body,cb){
-        db.query("INSERT INTO tbl_questions (vModeName,eType,vQuestion,iAnswerId,eStatus) VALUES (?,?,?,?,?)",[body.vModeName,body.eType,body.vQuestion,'0','n'],cb);
+        db.query("INSERT INTO tbl_questions (vModeName,eType,eTypeQuestion,vQuestion,iAnswerId,eStatus) VALUES (?,?,?,?,?,?)",[body.vModeName,body.eType,body.eTypeQuestion,body.vQuestion,'0','n'],cb);
     },
     insertAnswer:function(body,cb){
         db.query("INSERT INTO tbl_answers (iQuestionId,vAnswer) VALUES (?,?)",[body.iQuestionId,body.vAnswer],cb);
@@ -321,10 +321,10 @@ var Users = {
         db.query("SELECT tbl_questions.*,tbl_answers.vAnswer, 'n' as eSelected FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus != 'd' AND tbl_questions.eType = 'VSQ'"+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit,aWhere,cb);
     },
     get_mcq_by_Ids:function(body,cb){
-        db.query("SELECT tbl_questions.iQuestionId,tbl_questions.vQuestion, tbl_answers.vAnswer, tbl_answers.iAnswerId FROM tbl_answers JOIN tbl_questions ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.iQuestionId IN (?)",[body.iQuestionId],cb)
+        db.query("SELECT tbl_questions.iQuestionId,tbl_questions.iAnswerId as Ans,tbl_questions.vQuestion, tbl_answers.vAnswer, tbl_answers.iAnswerId FROM tbl_answers JOIN tbl_questions ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.iQuestionId IN (?)",[body.iQuestionId],cb)
     },
     get_vsq_by_Ids:function(body,cb){
-        db.query("SELECT iQuestionId,vQuestion FROM tbl_questions WHERE iQuestionId IN (?)",[body.iQuestionId],cb)
+        db.query("SELECT tbl_questions.iQuestionId,tbl_questions.vQuestion,tbl_answers.vAnswer as Ans FROM tbl_questions JOIN tbl_answers ON tbl_questions.iQuestionId = tbl_answers.iQuestionId WHERE tbl_questions.iQuestionId IN (?)",[body.iQuestionId],cb)
     },
     insert_exam:function(body,cb){
         db.query("INSERT INTO tbl_exams (iUserId,vTitle,vDescription,eStatus,dCreatedDate,iParentId) VALUES (?,?,?,?,?,?)",[body.iUserId,body.vTitle,body.vDescription,"y",dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iParentId],cb);
@@ -333,7 +333,7 @@ var Users = {
         db.query("INSERT INTO tbl_exam_schedule (iExamId,dExamDate,iWinnerId,dCreatedDate) VALUES (?,?,?,?)",[body.iExamId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),0,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
     },
     insert_exam_participant:function(body,cb){
-        db.query("INSERT INTO tbl_exam_participant (iScheduleId,iUserId,iTotalQuestion,iRightAnswers,iWrongAnswers,eStatus,dCreatedDate) VALUES ? ",[body],cb);
+        db.query("INSERT INTO tbl_exam_participant (iScheduleId,iUserId,dCreatedDate,iParentParticipentId) VALUES (?,?,?,?) ",[body.iScheduleId,body.iUserId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iParentParticipentId],cb);
     },
     insert_exam_question:function(body,cb){
         db.query("INSERT INTO tbl_exam_question (iExamId,iScheduleId,iQuestionId) VALUES ? ",[body],cb);
@@ -354,17 +354,17 @@ var Users = {
     //Statiscs
     ls_exam_count: function(body, cb){
         var kWhere = "";
-        var vWhere = ['d',0];
+        var vWhere = ['d',0,body.iUserId];
         if(typeof body.vTitle != 'undefined' && body.vTitle != "")
         {
             kWhere += ' AND vTitle LIKE ?';
             vWhere.push('%'+body.vTitle+'%');
         }
-        db.query("SELECT COUNT(*) as iTotalRecords FROM tbl_exams WHERE eStatus != ? AND iParentId = ?  "+kWhere,vWhere,cb);
+        db.query("SELECT COUNT(*) as iTotalRecords FROM tbl_exams WHERE eStatus != ? AND iParentId = ? AND iUserId = ? "+kWhere,vWhere,cb);
     },
     ls_exam_select: function(body, cb){
         var sWhere = "";
-        var aWhere = ['d',0];
+        var aWhere = ['d',0,body.iUserId];
         var sort = "";
         /**
          * Column Search Depending on Table
@@ -375,10 +375,10 @@ var Users = {
             aWhere.push('%'+body.vTitle+'%');
         }
         if(typeof body.sort != 'undefined' && body.sort != "") {sort = body.sort};
-        db.query("SELECT iExamId, vTitle , vDescription ,eStatus FROM tbl_exams WHERE eStatus != ? AND iParentId = ? "+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset+", "+body.limit,aWhere,cb);
+        db.query("SELECT iExamId, vTitle , vDescription ,eStatus FROM tbl_exams WHERE eStatus != ? AND iParentId = ? AND iUserId = ? "+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset+", "+body.limit,aWhere,cb);
     },
     get_exam_details:function (body,cb) {
-        db.query("SELECT parent.vtitle,parent.vDescription,parent.iExamId as iRoundOneId, child.iExamId as iRoundTwoId FROM tbl_exams as parent JOIN tbl_exams as child ON child.iParentId = parent.iExamId WHERE parent.iExamId = ?",[body.iExamId],cb);
+        db.query("SELECT parent.vTitle,parent.vDescription,parent.iExamId as iRoundOneId, child.iExamId as iRoundTwoId FROM tbl_exams as parent JOIN tbl_exams as child ON child.iParentId = parent.iExamId WHERE parent.iExamId = ? AND parent.eStatus = 'y' ",[body.iExamId],cb);
     },
     get_round_details:function(body,cb){
         db.query("SELECT"+
@@ -474,8 +474,115 @@ var Users = {
             " JOIN tbl_child ON tbl_users.iUserId = tbl_child.iUserId" +
             " JOIN tbl_parent ON tbl_child.iParentId = tbl_parent.iParentId" +
             " WHERE tbl_users.iUserId = ?",[body.iUserId],cb);
-    }
+    },
+    addExamUser:function(body,cb){
+        db.query("INSERT INTO tbl_exam_users (iExamId, iScheduleId, iParentId, iUserId, eAvailable) VALUES (?,?,?,?,?)",[0,0,body.iParentId,body.iUserId,'n'],cb);
+    },
+    getExamUser:function(body,cb){
+        db.query("SELECT tbl_exam_users.*,tbl_users.vFullName FROM tbl_exam_users JOIN tbl_users ON tbl_users.iUserId = tbl_exam_users.iUserId WHERE iParentId = ?",[body.iParentId],cb);
+    },
+    updateExamUser:function(body,cb){
+        db.query("UPDATE tbl_exam_users SET iExamId = ? , iScheduleId = ? , eAvailable = ?  WHERE iExamUserId = ?",[body.iExamId,body.iScheduleId,body.eAvailable,body.iExamUserId],cb);
+    },
+    get_exam_edit_question:function(body,cb){
+        db.query("SELECT * FROM tbl_exam_question WHERE iExamId = ?  OR iExamId = ?",[body.iRoundOneId, body.iRoundTwoId],cb);
+    },
+    update_tbl_exams:function(body){
+        db.query("UPDATE tbl_exams SET vTitle = ? , vDescription = ?, dUpdatedDate = ?  WHERE iExamId = ?",[body.vTitle,body.vDescription,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iExamId]);
+    },
+    delete_tbl_exam_question:function(body,cb){
+        db.query("DELETE FROM tbl_exam_question WHERE iExamId = ?",[body.iExamId],cb);
+    },
+    //*
+    check_exam_available:function(body,cb){
+        db.query("SELECT * FROM tbl_exam_users WHERE iUserId = ? AND iScheduleId > 0 AND iExamId > 0 AND eAvailable = 'y' ",[body.iUserId],cb);
+    },
+    get_question:function(body,cb){
+        db.query("SELECT * FROM tbl_exam_question WHERE iExamId IN (?)",[body.iExamId],cb);
+    },
+    get_exam_users_by_examid:function(body,cb){
+        db.query("SELECT * FROM tbl_exam_users JOIN tbl_users ON tbl_users.iUserId = tbl_exam_users.iUserId WHERE tbl_exam_users.iExamId = ? AND tbl_users.eStatus = 'y'",[body.iExamId],cb);
+    },
+    tbl_exams_status:function(body,cb){
+        db.query("UPDATE tbl_exams set eStatus = ? WHERE iExamId = ?",[body.eStatus,body.iExamId],cb);
+    },
+    deleteExamUser:function(body,cb){
+        db.query("UPDATE tbl_exam_users SET iExamId = 0, iScheduleId = 0, eAvailable = 'n' WHERE iExamId = ?",[body.iExamId],cb);
+    },
+    list_users:function(body,cb){
+        db.query("SELECT * FROM tbl_users WHERE vUserType = 'client' AND eStatus != 'd'  LIMIT ? OFFSET ?",[body.limit,body.offset],cb);
+    },
+    total_users:function(body,cb){
+        db.query("SELECT count(*) as TotalUser FROM tbl_users WHERE vUserType = 'client' AND eStatus != ? ",['d'],cb);
+    },
 
+    /**
+     * Dashboard Query
+     */
+    get_count_users_under_customer:function(body,cb){
+        db.query("SELECT COUNT(*) as TotalGameUser " +
+            "FROM tbl_child  " +
+            "JOIN tbl_parent ON tbl_parent.iParentId = tbl_child.iParentId " +
+            "JOIN tbl_users ON tbl_users.iUserId = tbl_child.iUserId " +
+            "WHERE tbl_users.eStatus != 'd' AND " +
+            "tbl_parent.iUserId = ?",[body.iUserId],cb);
+    },
+    get_total_exam_generated:function(body,cb){
+        db.query("SELECT COUNT(*) TotalExam FROM tbl_exams WHERE iUserId = ? AND iParentId = 0",[body.iUserId],cb);
+    },
+    get_total_users_for_admin:function(body,cb){
+        db.query("SELECT COUNT(*) as TotalUser FROM tbl_users " +
+            "JOIN tbl_parent ON tbl_parent.iUserId = tbl_users.iUserId " +
+            "WHERE tbl_users.vUserType='client' AND tbl_users.eStatus != 'd' AND tbl_parent.vParentType = ?",[body.vParentType],cb);
+    },
+    get_total_game_users_for_admin_parent:function(body,cb){
+        db.query("SELECT COUNT(*) as TotalGameUser FROM tbl_users WHERE vUserType='user' AND eStatus != 'd'",cb);
+    },
+    get_total_exams:function(body,cb){
+        db.query("SELECT COUNT(*) as TotalExam FROM tbl_exams WHERE eStatus != 'd' AND iParentId = 0",[],cb);
+    },
+    /**
+     * Statistics Module
+     */
+    //Admin
+    state_get_all_exam:function(body,cb){
+        db.query("SELECT " +
+            "tbl_exams.vTitle, " +
+            "tbl_exams.vDescription, " +
+
+            "tbl_exams.iParentId as ROneExamId, " +
+            "RoundOne.iParticipantId as ROneParticipantId, " +
+            "RoundOne.iTotalQuestion as ROneTotalQuestion, " +
+            "RoundOne.iWrongAnswers as ROneWrongAnswers, " +
+            "RoundOne.iRightAnswers as ROneRightAnswers, " +
+
+            "tbl_exams.iExamId as RTwoExamId, " +
+            "RoundTwo.iParticipantId as RTwoParticipantId, " +
+            "RoundTwo.iTotalQuestion as RTwoTotalQuestion, " +
+            "RoundTwo.iRightAnswers as RTwoRightAnswers, " +
+            "RoundTwo.iWrongAnswers as RTwoWrongAnswers, " +
+            "RoundOne.dCreatedDate as ExamDate " +
+
+            "FROM tbl_exam_participant as RoundOne " +
+            "JOIN tbl_exam_participant as RoundTwo ON RoundTwo.iParentParticipentId = RoundOne.iParticipantId " +
+            "JOIN tbl_exam_schedule ON tbl_exam_schedule.iScheduleId = RoundTwo.iScheduleId " +
+            "JOIN tbl_exams ON tbl_exams.iExamId = tbl_exam_schedule.iExamId " +
+            "WHERE RoundOne.iUserId = ?",[body.iUserId],cb);
+    },
+    /**
+     * Statistics Module End
+     */
+    get_exam_final_result:function(body,cb){
+        db.query("SELECT " +
+            "RoundOne.iTotalQuestion + RoundTwo.iTotalQuestion as TotalQuestion, " +
+            "RoundOne.iRightAnswers as ROneRightAnswers, " +
+            "RoundOne.iWrongAnswers as ROneWrongAnswers, " +
+            "RoundTwo.iRightAnswers as RTwoRightAnswers, " +
+            "RoundTwo.iWrongAnswers as RTwoWrongAnswers " +
+            "FROM tbl_exam_participant as RoundOne " +
+            "JOIN tbl_exam_participant as RoundTwo ON RoundTwo.iParentParticipentId = RoundOne.iParticipantId " +
+            "WHERE RoundOne.iParticipantId = ?",[body.iParticipantId],cb);
+    }
 };
 module.exports = Users;
 

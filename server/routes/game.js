@@ -66,18 +66,46 @@ module.exports = function (app,cli) {
     });
 
     app.get('/ws/v1/profile',passport.authenticate('jwt',{session:false}),function(req,res){
-        if (req.user.length > 0) {
-            queries.getUserById({'id':req.user[0].iUserId}, function(err, record) {
-                if (err) throw err;
-                res.status(200).json({
-                    'profile': record[0],
-                    'message': 'Success'
+        cli.yellow("*******************************************************************");
+        cli.yellow("***********************************************Profile Call*");
+
+        cli.blue(JSON.stringify(req.user));
+
+        if(req.user[0].vUserType == "client"){
+
+            if (req.user.length > 0) {
+                queries.getUserFroById({'id':req.user[0].iUserId}, function(err, record) {
+                    cli.yellow("Get Client User Dataasdfasdfasdfasdfasdfasdfadsfadsf");
+                    console.log(record[0]);
+                    if (err) throw err;
+                    res.status(200).json({
+                        'profile': record[0],
+                        'message': 'Success'
+                    });
                 });
-            });
-        } else {
-            res.status(404).json({
-                'message': 'User does not exists'
-            });
+            } else {
+                res.status(404).json({
+                    'message': 'User does not exists'
+                });
+            }
+
+
+        }else{
+
+            if (req.user.length > 0) {
+                queries.getUserById({'id':req.user[0].iUserId}, function(err, record) {
+                    if (err) throw err;
+                    res.status(200).json({
+                        'profile': record[0],
+                        'message': 'Success'
+                    });
+                });
+            } else {
+                res.status(404).json({
+                    'message': 'User does not exists'
+                });
+            }
+
         }
     });
 
@@ -151,6 +179,289 @@ module.exports = function (app,cli) {
         });
     });
 
+    app.get('/ws/v1/check_exam',passport.authenticate('jwt',{session:false}),function(req,res){
+        if(req.user.length > 0){
+            queries.check_exam_available({iUserId:req.user[0].iUserId},function(errOne,resOne){
+                if(errOne) throw  errOne;
+                if(resOne.length > 0 ){
+                    queries.get_exam_details({iExamId:resOne[0].iExamId},function(errTwo,resTwo){
+                        if(errTwo) throw errTwo;
+                        console.log(resTwo);
+                        if(resTwo.length > 0){
+                            queries.get_question({iExamId:[resTwo[0].iRoundOneId,resTwo[0].iRoundTwoId]},function(errThree,resThree){
+                                if(errThree) throw errThree;
+                                console.log(resThree);
+
+                                var RoundOneQuestion = [];
+                                var RoundTwoQuestion = [];
+                                var RoundOne = {};
+                                var RoundTwo = {};
+
+                                var mcq = [];
+                                var vsq = [];
+
+                                for(var i =0; i<resThree.length;i++){
+                                    if(resThree[i].iExamId == resTwo[0].iRoundOneId){
+                                        RoundOne.iExamId = resThree[i].iExamId;
+                                        RoundOne.iScheduleId = resThree[i].iScheduleId;
+                                        mcq.push(resThree[i].iQuestionId);
+                                    }else if(resThree[i].iExamId == resTwo[0].iRoundTwoId){
+                                        RoundTwo.iExamId = resThree[i].iExamId;
+                                        RoundTwo.iScheduleId = resThree[i].iScheduleId;
+                                        vsq.push(resThree[i].iQuestionId);
+                                    }
+                                }
+                                queries.get_mcq_by_Ids({"iQuestionId":mcq},function(err,rowsOne) {
+                                    var i = 0;
+                                    while (i < rowsOne.length) {
+                                        var temp = {};
+                                        temp.Question = {
+                                            "iQuestionId": rowsOne[i].iQuestionId,
+                                            "vQuestion": rowsOne[i].vQuestion
+                                        };
+                                        temp.Answers = [];
+                                        for (var j = 0; j < 4; j++) {
+                                            temp.Answers.push({
+                                                "iAnswerId": rowsOne[i].iAnswerId,
+                                                "vAnswer": rowsOne[i].vAnswer
+                                            });
+                                            i++;
+                                        }
+                                        RoundOneQuestion.push(temp);
+                                    }
+                                    console.log("Exam Paper");
+                                    cli.blue(JSON.stringify(RoundOneQuestion));
+
+                                    /**
+                                     * Generate Round Two Question
+                                     */
+                                    queries.get_vsq_by_Ids({"iQuestionId":vsq},function(ersr,rowsTwo) {
+                                        if(ersr) throw ersr;
+                                        var j = 0
+                                        while(j< rowsTwo.length){
+                                            RoundTwoQuestion.push({
+                                                "iQuestionId": rowsTwo[j].iQuestionId,
+                                                "vQuestion": rowsTwo[j].vQuestion
+                                            });
+                                            j++;
+                                        }
+                                        cli.yellow("Exam Data for");
+                                        cli.red("RoundOne Question");
+                                        console.log(RoundOneQuestion);
+                                        cli.red("RoundTwo Question");
+                                        console.log(RoundTwoQuestion);
+                                        cli.red("Round One Details");
+                                        console.log(RoundOne);
+                                        cli.red("Round Two Details");
+                                        console.log(RoundTwo);
+
+                                        queries.insert_exam_participant({iScheduleId:RoundOne.iScheduleId,iUserId:req.user[0].iUserId,iParentParticipentId:0},function (errFour,resFour) {
+                                            if(errFour) throw errFour;
+                                            queries.insert_exam_participant({iScheduleId:RoundTwo.iScheduleId,iUserId:req.user[0].iUserId,iParentParticipentId: resFour.insertId},function (errFive,resFive) {
+                                                if(errFive) throw  errFive;
+                                                RoundOne.iParticipantId = resFour.insertId;
+                                                RoundTwo.iParticipantId = resFive.insertId;
+                                                res.status(200).json({
+                                                    'status':200,
+                                                    'data':{
+                                                        'RoundOneQuestion':RoundOneQuestion,
+                                                        'RoundTwoQuestion':RoundTwoQuestion,
+                                                        'RoundOne':RoundOne,
+                                                        'RoundTwo':RoundTwo,
+                                                        'User':{'iUserId':req.user[0].iUserId}
+                                                    }
+                                                });
+
+                                            });
+                                        });
+                                    });
+                                });
+
+                            });
+
+                        } else{
+                            res.status(404).json({
+                                'status':404,
+                                'message':"Exam Not Available For You"
+                            })
+                        }
+                    });
+                }else{
+                    res.status(404).json({
+                        'status':404,
+                        'message':"Exam Not Available For You"
+                    })
+                }
+            });
+        }else{
+            res.status(401).json({
+                'status':401,
+                'message':'User does not exists'
+            })
+        }
+    });
+
+    app.post('/ws/v1/ans',passport.authenticate('jwt',{session:false}),function(req,res){
+        if(req.user.length > 0){
+            req.checkBody("iRound","Round Number Must be required").notEmpty();
+            req.checkBody("iQuestionId","QuestionId Must Be Required").notEmpty();
+            req.checkBody("iParticipantId","Participent Id Must Be Required").notEmpty();
+            req.checkBody("iAnswerId","AnswerId Must Be Required").notEmpty();
+            req.checkBody("vAnswer","Answer Must Be Required").notEmpty();
+            req.getValidationResult().then(function(result) {
+                if (!result.isEmpty()) {
+                    res.json({
+                        "status": 404,
+                        "message": "Please fill all required value",
+                        "Data":result.mapped()
+                    });
+                }else{
+                    if(req.body.iRound == 1){
+                        queries.check_round_one_question_answer({"iQuestionId":req.body.iQuestionId,"iAnswerId":req.body.iAnswerId},function(err,res1){
+                            var updatParticipant = {};
+                            var participantQuestions = {};
+                            if(res1[0].rowCount > 0){
+                                participantQuestions = {
+                                    "iParticipantId":req.body.iParticipantId,
+                                    "iQuestionId":req.body.iQuestionId,
+                                    "iAnswerId":req.body.iAnswerId,
+                                    "vAnswer":'null',
+                                    "eCheck":"right",
+                                    "eStatus":"y"
+                                };
+                                updatParticipant = {
+                                    "iRightAnswers":1,
+                                    "iWrongAnswers":0,
+                                    "iParticipantId":req.body.iParticipantId
+                                }
+
+                                res.json({
+                                    'status':200,
+                                    'message':'Success',
+                                    'eStatus':true
+                                });
+
+                            }else{
+                                participantQuestions = {
+                                    "iParticipantId":req.body.iParticipantId,
+                                    "iQuestionId":req.body.iQuestionId,
+                                    "iAnswerId":req.body.iAnswerId,
+                                    "vAnswer":'null',
+                                    "eCheck":"wrong",
+                                    "eStatus":"y"
+                                };
+                                updatParticipant = {
+                                    "iRightAnswers":0,
+                                    "iWrongAnswers":1,
+                                    "iParticipantId":req.body.iParticipantId
+                                };
+                                res.json({
+                                    'status':200,
+                                    'message':'Success',
+                                    'eStatus':false
+                                });
+                            }
+
+                            queries.insert_participant_questions(participantQuestions,function(err,res2){
+                                if(err) throw err;
+                            });
+                            queries.update_exam_participant(updatParticipant,function(err,res3){
+                                if(err) throw err;
+                            });
+                        });
+                    }else if(req.body.iRound == 2){
+                        queries.check_round_two_question_answer({"iQuestionId":req.body.iQuestionId,"vAnswer":req.body.vAnswer},function(err,res2){
+                            var participantQuestions = {};
+                            var updatParticipant = {};
+                            if(res2[0].rowCount > 0){
+                                participantQuestions = {
+                                    "iParticipantId":req.body.iParticipantId,
+                                    "iQuestionId":req.body.iQuestionId,
+                                    "iAnswerId":0,
+                                    "vAnswer":req.body.vAnswer,
+                                    "eCheck":"right",
+                                    "eStatus":"y"
+                                };
+                                updatParticipant = {
+                                    "iRightAnswers":1,
+                                    "iWrongAnswers":0,
+                                    "iParticipantId":req.body.iParticipantId
+                                }
+
+                                res.json({
+                                    'status':200,
+                                    'message':'Success',
+                                    'eStatus':true
+                                });
+
+                            }else{
+                                participantQuestions = {
+                                    "iParticipantId":req.body.iParticipantId,
+                                    "iQuestionId":req.body.iQuestionId,
+                                    "iAnswerId":0,
+                                    "vAnswer":req.body.vAnswer,
+                                    "eCheck":"wrong",
+                                    "eStatus":"y"
+                                };
+                                updatParticipant = {
+                                    "iRightAnswers":0,
+                                    "iWrongAnswers":1,
+                                    "iParticipantId":req.body.iParticipantId
+                                };
+
+                                res.json({
+                                    'status':200,
+                                    'message':'Success',
+                                    'eStatus':false
+                                });
+                            }
+                            queries.insert_participant_questions(participantQuestions,function(err,res2){
+                                if(err) throw err;
+                            });
+                            queries.update_exam_participant(updatParticipant,function(err,res3){
+                                if(err) throw err;
+                            });
+
+                        });
+                    }
+                }
+            });
+        }else{
+            res.status(401).json({
+                'status':401,
+                'message':'User does not exists'
+            })
+        }
+    });
+
+    app.post('/ws/v1/final_result',passport.authenticate('jwt',{session:false}),function(req,res){
+        if(req.user.length > 0){
+            req.checkBody("iRoneParticipantId","Round One  Participent Id Must Be Required").notEmpty();
+            req.checkBody("iRtwoParticipantId","Round One  Participent Id Must Be Required").notEmpty();
+            req.getValidationResult().then(function(result) {
+                if (!result.isEmpty()) {
+                    res.json({
+                        "status": 404,
+                        "message": "Please fill all required value",
+                        "Data":result.mapped()
+                    });
+                }else{
+                    queries.get_exam_final_result({iParticipantId:req.body.iRoneParticipantId},function(errOne,resOne){
+                        if(errOne) throw errOne;
+                        res.status(200).json({
+                            "status":200,
+                            "data":resOne[0]
+                        });
+                    });
+                }
+            });
+        }else{
+            res.status(401).json({
+                'status':401,
+                'message':'User does not exists'
+            })
+        }
+    });
 
 
 }

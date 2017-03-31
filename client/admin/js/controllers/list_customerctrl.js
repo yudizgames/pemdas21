@@ -2,37 +2,33 @@
  * Created by YudizAshish on 21/03/17.
  */
 'use strict';
-angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$resource,$http,$state,toastr,DTOptionsBuilder,DTColumnDefBuilder,DTColumnBuilder,$compile) {
+angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$resource,$http,$state,toastr) {
     console.log("Cleints controller call");
-    //Status Store for every user
-    $scope.userStatus = [];
-    //Status change event fire
-    $scope.dtInstanceUser = {};
-    listUser();
-    $scope.onUserStatusChange = function(id,status){
-        $rootScope.hideLoad = false;  //Loading Stop For Network Operation Start
-        $http({
-            method:'post',
-            url:'/clientoperation',
-            data:{
-                'id':id,
-                'vOperation':'status',
-                'eStatus':status
-            }
-        }).then(function(res){
-            console.log($rootScope.hideLoad);
-            $rootScope.hideLoad = true; //Loading Stop For Network Operation Success
-            toastr.success(res.data.message,"Successs");
-            console.log(res);
-        },function(err){
-            console.log($rootScope.hideLoad);
-            $rootScope.hideLoad = true;  //Loading Stop For Network Operation Error
-            console.log("error call");
-            console.log(err);
-        })
+    $scope.users = [];
+    $scope.iTotalUser = 0;
+    $scope.loadMore = function(){
+        if($scope.iTotalUser > $scope.users.length || $scope.iTotalUser == 0){
+            $http({
+                url:'/total_users',
+                method:'post',
+                data:{offset:$scope.users.length,limit:10}
+            }).then(function(res){
+                $scope.iTotalUser = res.data.TotalUsers;
+                for(var i = 0; i< res.data.Users.length;i++){
+                    $scope.users.push(res.data.Users[i]);
+                    console.log($scope.users);
+                }
+                if($scope.users.length == iTotalUser){
+                    $scope.disable = true;
+                }
+                console.log("Success Call");
+                console.log(res);
+            },function(err){
+                console.log(err);
+            });
+        }
     }
 
-    //User Operation event fire
     $scope.userOperation = function(iUserId,OperationType){
         console.log("Operation Type");
         console.log(iUserId);
@@ -52,7 +48,7 @@ angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$r
                 data:postData
             }).then(function(res){
                 toastr.success(res.data.message,"Successs");
-                $scope.dtInstanceUser.reloadData();
+            $scope.users.splice(findIndex($scope.users,iUserId),1);
                 console.log("Success call");
                 console.log(res);
             },function(err){
@@ -66,70 +62,36 @@ angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$r
 
     }
 
-
-
-    /**
-     * BEGIN Data Table Integration
-     */
-
-
-    function listUser(){
-        $scope.dtColumns = [
-            //here We will add .withOption('name','column_name') for send column name to the server
-            //here we will add .newColumn('column_name','Title for column name')
-            DTColumnBuilder.newColumn("iUserId", "User ID").withOption('name', 'iUserId'),
-            DTColumnBuilder.newColumn("vFullName", "Full Name").withOption('name', 'vFullName'),
-            DTColumnBuilder.newColumn("vEmail", "Email").withOption('name', 'vEmail'),
-            DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(actionsHtml),
-            // DTColumnBuilder.newColumn("Status",'Status').withOption('name','Status').notSortable(),
-            DTColumnBuilder.newColumn("vOperation",'Operation').withOption('name','vOperation').notSortable(),
-            // DTColumnBuilder.newColumn('foo','foo').withOption('name', 'foo').notVisible()
-            DTColumnBuilder.newColumn("vUserType", "User Type").withOption('name', 'vUserType').notVisible(),
-        ];
-
-        // $scope.dtColumnDefs = [
-        //     DTColumnDefBuilder.newColumnDef(0).withOption('sContentPadding', 'mmm')
-        // ];
-
-        $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
-            dataSrc: "data",
-            url: "/list_client",
-            type: 'POST',
-            dataType:'json',
-            data:function(d){
-
-                $scope.userStatus = [];
-                console.log("data call");
+    $scope.onUserStatusChange = function(id,status){
+        console.log(id,status);
+        $http({
+            method:'post',
+            url:'/clientoperation',
+            data:{
+                'id':id,
+                'vOperation':'status',
+                'eStatus':status
             }
-        }).withOption('processing', true) //for show progress bar
-            .withOption('serverSide', true) // for server side processing
-            .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
-            .withDisplayLength(10) // Page size
-            .withOption('aaSorting',[0,'desc'])
-            .withDataProp('data.inner')
-            .withOption('createdRow',function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
-                $compile(nRow)($scope);
-            });
+        }).then(function(res){
+            toastr.success(res.data.message,"Successs");
+            console.log(res);
+        },function(err){
+            console.log($rootScope.hideLoad);
+            $rootScope.hideLoad = true;  //Loading Stop For Network Operation Error
+            console.log("error call");
+            console.log(err);
+        });
     }
 
-
-    function actionsHtml(data, type, full, meta) {
-        $scope.userStatus[data.iUserId] = data.eStatus;
-        var temp = '<div class="switch">' +
-            '<label>' +
-            '<input type="checkbox" ng-model="userStatus['+data.iUserId+']" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange('+data.iUserId+',userStatus['+data.iUserId+'])"> '+
-            '<span class="lever"></span></label>'+
-            '</div>';
-
-            //<input bs-switch ng-model="userStatus['+data.iUserId+']" class="switch-small" type="checkbox" ng-true-value="&apos;y&apos;" ng-false-value="&apos;n&apos;" ng-change="onUserStatusChange('+data.iUserId+',userStatus['+data.iUserId+'])">
-
-
-        return temp;
+    function findIndex(array,value){
+        console.log("index call");
+        for(var i =0; i<array.length;i++){
+            if(array[i].iUserId == value){
+                console.log(i);
+                return i;
+            }
+        }
     }
-
-    /**
-     * END Data Table Integration
-     */
 
 });
 
