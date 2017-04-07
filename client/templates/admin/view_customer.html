@@ -33,11 +33,13 @@
                 <div class="body">
                     <div ng-repeat="c in child" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                         <div class="info-box-4 hover-zoom-effect">
-                            <div class="icon"> <i class="zmdi zmdi-account col-blue"></i> </div>
-                            <div class="content">
-                                <div class="text"><b>{{c.ChildName}}</b></div>
-                                <div class="text">{{c.ChildEmail}}</div>
-                            </div>
+                            <a ui-sref="admin.viewusers({'id':c.ChildId})">
+                                <div class="icon"> <i class="zmdi zmdi-account col-blue"></i> </div>
+                                <div class="content">
+                                    <div class="text"><b>{{c.ChildName}}</b></div>
+                                    <div class="text">{{c.ChildEmail}}</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>

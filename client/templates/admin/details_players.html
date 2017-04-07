@@ -3,8 +3,8 @@
         <h2>USER DETAILS</h2>
         <div class="body">
             <ol class="breadcrumb">
-                <li> <a ui-sref="client.dashboard"> <i class="material-icons">home</i> Home </a> </li>
-                <li> <a ui-sref="client.users"> <i class="zmdi zmdi-account"></i>Users List</a></li>
+                <li> <a ui-sref="admin.dashboard"> <i class="material-icons">home</i> Home </a> </li>
+                <li> <a ui-sref="admin.customer"> <i class="zmdi zmdi-account"></i>Customer List</a></li>
                 <li> <i class="material-icons">library_books</i>User Details</li>
             </ol>
         </div>
@@ -57,7 +57,7 @@
                                 <td>{{e.RTwoWrongAnswers}}</td>
                                 <td>{{e.ExamDate | date:"MM/dd/yyyy"}}</td>
                                 <td><button type="button" class="btn btn-raised btn-xs bg-light-blue waves-effect"
-                                            ui-sref="client.userresult({ROneParticipantId:e.ROneParticipantId,RTwoParticipantId:e.RTwoParticipantId,'iUserId':iUserId})">
+                                            ui-sref="admin.userresult({ROneParticipantId:e.ROneParticipantId,RTwoParticipantId:e.RTwoParticipantId,'iUserId':iUserId})">
                                     Details
                                     </button>
                                 </td>

@@ -1,0 +1,85 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>USER DETAILS</h2>
+        <div class="body">
+            <ol class="breadcrumb">
+                <li> <a ui-sref="admin.dashboard"> <i class="material-icons">home</i> Home </a> </li>
+                <li> <a ui-sref="admin.users"> <i class="zmdi zmdi-account"></i>Users List</a></li>
+                <li> <a ui-sref="admin.viewusers({id:iUserId})"> <i class="material-icons">library_books</i>User Details </a></li>
+                <li> <i class="material-icons">library_books</i>User Exam Result Details</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Round One Exam Details</h2>
+                </div>
+                <div class="body">
+                    <div class="form-group">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <td>Question</td>
+                                <td>Dificulty Level</td>
+                                <td>Type</td>
+                                <td>Sub Type</td>
+                                <td>Actual Answer</td>
+                                <td>User Answer</td>
+                                <td>Check</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="e in resultOne">
+                                <td>{{e.vQuestion}}</td>
+                                <td>{{e.vModeName}}</td>
+                                <td>{{e.eType}}</td>
+                                <td>{{e.eTypeQuestion}}</td>
+                                <td>{{e.ActualAns}}</td>
+                                <td>{{e.GiveAns}}</td>
+                                <td><i ng-if="e.eCheck == 'wrong'" class="material-icons col-red">cancel</i> <i ng-if="e.eCheck == 'right'" class="material-icons col-green">check_circle</i> </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Round Two Exam Details</h2>
+                </div>
+                <div class="body">
+                    <div class="form-group">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <td>Question</td>
+                                <td>Dificulty Level</td>
+                                <td>Type</td>
+                                <td>Sub Type</td>
+                                <td>Actual Answer</td>
+                                <td>User Answer</td>
+                                <td>Check</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="e in resultTWo">
+                                <td>{{e.vQuestion}}</td>
+                                <td>{{e.vModeName}}</td>
+                                <td>{{e.eType}}</td>
+                                <td>{{e.eTypeQuestion}}</td>
+                                <td>{{e.ActualAns}}</td>
+                                <td>{{e.GiveAns}}</td>
+                                <td><i ng-if="e.eCheck == 'wrong'" class="material-icons col-red">cancel</i> <i ng-if="e.eCheck == 'right'" class="material-icons col-green">check_circle</i> </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

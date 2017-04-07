@@ -6,6 +6,7 @@ angular.module('client').controller('PlayerDetailsCtrl',function ($scope,$rootSc
         'id':$stateParams.id+'',
         'vOperation':'view'
     }
+    $scope.iUserId = $stateParams.id;
     $http({
         method:'post',
         url:'/useroperation',
@@ -29,7 +30,8 @@ angular.module('client').controller('PlayerDetailsCtrl',function ($scope,$rootSc
     }).then(function(res){
         console.log("Success call");
         console.log(res);
-        $scope.data = res.data;
+        $scope.data = res.data.tempResult;
+        $scoe.user = res.data.User[0];
     },function(err){
         console.log("Error");
         console.log(err);

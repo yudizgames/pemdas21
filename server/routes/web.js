@@ -530,20 +530,16 @@ module.exports = function (app,cli,mail) {
     });
 
     app.post('/useroperation',passport.authenticate('jwt',{session:false}),function(req,res){
+
         if(!validator.isEmpty(req.body.id) && !validator.isEmpty(req.body.vOperation)){
             cli.blue("inside");
             console.log("Inside");
             if(req.user.length > 0 ){
 
                 if(req.body.vOperation == 'view'){
-
-
                     queries.getUserById({"id":req.user[0].iUserId},function(error,users){
-
                         cli.blue("view call");
-
                         if(users[0].vUserType == 'client' ){
-
                             queries.getUserFroByIdForClient({'id':req.body.id},function(error,rows){
                                 if(rows.length > 0){
                                     res.json({
@@ -560,7 +556,6 @@ module.exports = function (app,cli,mail) {
                             });
 
                         }else{
-
                             queries.getUserFroById({'id':req.body.id},function(error,rows){
                                 if(rows.length > 0){
                                     res.json({
@@ -575,9 +570,7 @@ module.exports = function (app,cli,mail) {
                                     })
                                 }
                             });
-
                         }
-
                     });
 
                 }else if(req.body.vOperation == 'edit'){
@@ -1573,7 +1566,8 @@ module.exports = function (app,cli,mail) {
                                         child.push({
                                             "ChildName":rows[i].ChildName,
                                             "ChildEmail":rows[i].ChildEmail,
-                                            "ChildUserName":rows[i].ChildUserName
+                                            "ChildUserName":rows[i].ChildUserName,
+                                            "ChildId":rows[i].ChildUserId
                                         });
                                     }
 
@@ -1770,6 +1764,8 @@ module.exports = function (app,cli,mail) {
             req.checkBody("vTitle","Title must be required").notEmpty();
             req.checkBody("vDescription","Description must be required").notEmpty();
             req.checkBody("ExamUser","Must Be Select Exam User").notEmpty();
+            req.checkBody("eExamType","Exam Tyoe").notEmpty();
+            req.checkBody("eExamSubType","Question Type").notEmpty();
             var validatorError = req.validationErrors();
             req.getValidationResult().then(function(result) {
                 if (!result.isEmpty()) {
@@ -1779,9 +1775,9 @@ module.exports = function (app,cli,mail) {
                         "Data":result.mapped()
                     });
                 }else{
-                    queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:0,iUserId:req.user[0].iUserId},function(errOne,rowsOne){
+                    queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,eExamType:req.body.eExamType,eExamSubType:req.body.eExamSubType,iParentId:0,iUserId:req.user[0].iUserId},function(errOne,rowsOne){
                         var iRoundOneExamId  = rowsOne.insertId;
-                        queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iParentId:iRoundOneExamId,iUserId:req.user[0].iUserId},function(errTwo,rowsTwo){
+                        queries.insert_exam({vTitle:req.body.vTitle,vDescription:req.body.vDescription,eExamType:req.body.eExamType,eExamSubType:req.body.eExamSubType,iParentId:iRoundOneExamId,iUserId:req.user[0].iUserId},function(errTwo,rowsTwo){
                             var iRoundTwoExamId  = rowsTwo.insertId;
                             queries.insert_exam_schedule({"iExamId":iRoundOneExamId},function(err,resultOne){
                                 var iRoundOneScheduleId = resultOne.insertId;
@@ -1922,6 +1918,8 @@ module.exports = function (app,cli,mail) {
                             res.json({
                                 "status":200,
                                 "vTitle":result[0].vTitle,
+                                "eExamType":result[0].eExamType,
+                                "eExamSubType":result[0].eExamSubType,
                                 "vDescription":result[0].vDescription,
                                 "RoundOne":RoundOne,
                                 "RoundTwo":RoundTwo,
@@ -1958,6 +1956,8 @@ module.exports = function (app,cli,mail) {
             req.checkBody("iRoundTwoId","Round Two Exam Id Must ").notEmpty();
             req.checkBody("RoundOneScheduleId","Round One ScheduleId").notEmpty();
             req.checkBody("RoundTwoScheduleId","Round Two ScheduleId").notEmpty();
+            req.checkBody("eExamType","Exam Tyoe").notEmpty();
+            req.checkBody("eExamSubType","Question Type").notEmpty();
             console.log(JSON.stringify(req.body));
             req.getValidationResult().then(function(result) {
                 if (!result.isEmpty()) {
@@ -1968,8 +1968,8 @@ module.exports = function (app,cli,mail) {
                     });
                 }else{
                     //Update tbl_exams
-                    queries.update_tbl_exams({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iExamId:req.body.iRoundOneId});
-                    queries.update_tbl_exams({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iExamId:req.body.iRoundTwoId});
+                    queries.update_tbl_exams({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iExamId:req.body.iRoundOneId,eExamType:req.body.eExamType,eExamSubType:req.body.eExamSubType});
+                    queries.update_tbl_exams({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iExamId:req.body.iRoundTwoId,eExamType:req.body.eExamType,eExamSubType:req.body.eExamSubType});
 
                     //Delete Question
                     queries.delete_tbl_exam_question({iExamId:req.body.iRoundOneId},function(errOne,resOne){
@@ -2249,60 +2249,64 @@ module.exports = function (app,cli,mail) {
                 }else{
                     queries.state_get_all_exam({"iUserId":req.body.iUserId},function(errOne,resOne){
                         if(errOne) throw errOne;
-                        var result = {};
-                        var itempId = 0;
-                        var tempResult = [];
-                        cli.blue(JSON.stringify(resOne));
-                        for(var i = 0; i<resOne.length; i++){
-                            cli.blue(tempResult);
-                            if(resOne[i].ROneExamId == itempId){
-                                cli.red("if Call "+i);
-                                result.ExamAttempt.push({
-                                    ROneParticipantId:resOne[i].ROneParticipantId,
-                                    ROneRightAnswer:resOne[i].ROneRightAnswers,
-                                    ROneTotalQuestion:resOne[i].ROneTotalQuestion,
-                                    ROneWrongAnswers:resOne[i].ROneWrongAnswers,
-                                    ROneExamId:resOne[i].ROneExamId,
-                                    RTwoParticipantId:resOne[i].RTwoParticipantId,
-                                    RTwoRightAnswers:resOne[i].RTwoRightAnswers,
-                                    RTwoTotalQuestion:resOne[i].RTwoTotalQuestion,
-                                    RTwoWrongAnswers:resOne[i].RTwoWrongAnswers,
-                                    RTwoExamId:resOne[i].RTwoExamId,
-                                    ExamDate:resOne[i].ExamDate
-                                });
-                                i == resOne.length -1 ? tempResult.push(result) : "";
-                            }else{
-                                // result != null && itempId == 0 ? tempResult.push(result) : result = {};
-                                cli.red("else call "+i);
-                                if(itempId == 0){
-                                    result = {};
+
+                        queries.getUserById({"id":req.body.iUserId},function(errTwo,resTwo){
+                            var result = {};
+                            var itempId = 0;
+                            var tempResult = [];
+                            cli.blue(JSON.stringify(resOne));
+                            for(var i = 0; i<resOne.length; i++){
+                                cli.blue(tempResult);
+                                if(resOne[i].ROneExamId == itempId){
+                                    cli.red("if Call "+i);
+                                    result.ExamAttempt.push({
+                                        ROneParticipantId:resOne[i].ROneParticipantId,
+                                        ROneRightAnswer:resOne[i].ROneRightAnswers,
+                                        ROneTotalQuestion:resOne[i].ROneTotalQuestion,
+                                        ROneWrongAnswers:resOne[i].ROneWrongAnswers,
+                                        ROneExamId:resOne[i].ROneExamId,
+                                        RTwoParticipantId:resOne[i].RTwoParticipantId,
+                                        RTwoRightAnswers:resOne[i].RTwoRightAnswers,
+                                        RTwoTotalQuestion:resOne[i].RTwoTotalQuestion,
+                                        RTwoWrongAnswers:resOne[i].RTwoWrongAnswers,
+                                        RTwoExamId:resOne[i].RTwoExamId,
+                                        ExamDate:resOne[i].ExamDate
+                                    });
+                                    i == resOne.length -1 ? tempResult.push(result) : "";
                                 }else{
-                                    tempResult.push(result);
-                                    result = {};
+                                    // result != null && itempId == 0 ? tempResult.push(result) : result = {};
+                                    cli.red("else call "+i);
+                                    if(itempId == 0){
+                                        result = {};
+                                    }else{
+                                        tempResult.push(result);
+                                        result = {};
+                                    }
+                                    itempId = resOne[i].ROneExamId;
+                                    result.vTitle = resOne[i].vTitle;
+                                    result.vDescription = resOne[i].vDescription;
+                                    result.ExamAttempt == undefined ? result.ExamAttempt = [] : "";
+                                    result.ExamAttempt.push({
+                                        ROneParticipantId:resOne[i].ROneParticipantId,
+                                        ROneRightAnswer:resOne[i].ROneRightAnswers,
+                                        ROneTotalQuestion:resOne[i].ROneTotalQuestion,
+                                        ROneWrongAnswers:resOne[i].ROneWrongAnswers,
+                                        ROneExamId:resOne[i].ROneExamId,
+                                        RTwoParticipantId:resOne[i].RTwoParticipantId,
+                                        RTwoRightAnswers:resOne[i].RTwoRightAnswers,
+                                        RTwoTotalQuestion:resOne[i].RTwoTotalQuestion,
+                                        RTwoWrongAnswers:resOne[i].RTwoWrongAnswers,
+                                        RTwoExamId:resOne[i].RTwoExamId,
+                                        ExamDate:resOne[i].ExamDate
+                                    });
+                                    i == resOne.length -1 ? tempResult.push(result) : "";
+                                    cli.blue(JSON.stringify(tempResult));
                                 }
-                                itempId = resOne[i].ROneExamId;
-                                result.vTitle = resOne[i].vTitle;
-                                result.vDescription = resOne[i].vDescription;
-                                result.ExamAttempt == undefined ? result.ExamAttempt = [] : "";
-                                result.ExamAttempt.push({
-                                    ROneParticipantId:resOne[i].ROneParticipantId,
-                                    ROneRightAnswer:resOne[i].ROneRightAnswers,
-                                    ROneTotalQuestion:resOne[i].ROneTotalQuestion,
-                                    ROneWrongAnswers:resOne[i].ROneWrongAnswers,
-                                    ROneExamId:resOne[i].ROneExamId,
-                                    RTwoParticipantId:resOne[i].RTwoParticipantId,
-                                    RTwoRightAnswers:resOne[i].RTwoRightAnswers,
-                                    RTwoTotalQuestion:resOne[i].RTwoTotalQuestion,
-                                    RTwoWrongAnswers:resOne[i].RTwoWrongAnswers,
-                                    RTwoExamId:resOne[i].RTwoExamId,
-                                    ExamDate:resOne[i].ExamDate
-                                });
-                                i == resOne.length -1 ? tempResult.push(result) : "";
-                                cli.blue(JSON.stringify(tempResult));
                             }
-                        }
-                        console.log(tempResult);
-                        res.status(200).json(tempResult);
+                            console.log(tempResult);
+                            res.status(200).json({tempResult,"User":resTwo});
+
+                        });
                     });
                 }
             });
@@ -2369,6 +2373,51 @@ module.exports = function (app,cli,mail) {
             res.status(401).json({
                 "status":401,
                 "message":'Unothorize'
+            });
+        }
+    });
+
+
+    /**
+     * Details Result According to Exam
+     */
+
+    app.post('/detail_result',passport.authenticate('jwt',{session:false}),function (req,res) {
+        if(req.user.length > 0){
+            req.checkBody("ROneParticipantId","Participant required").notEmpty();
+            req.checkBody("RTwoParticipantId","Participant required").notEmpty();
+            req.getValidationResult().then(function(result) {
+                if(!result.isEmpty()){
+                    res.status(404).json({
+                        "message": "Please fill all required value",
+                        "Data":result.mapped()
+                    });
+                }else{
+                    queries.detail_result_round_one({iParticipantId:req.body.ROneParticipantId},function (errOne,resOne) {
+                        if(errOne) throw errOne;
+                        queries.detail_result_round_two({iParticipantId:req.body.RTwoParticipantId},function (errTwo,resTwo) {
+                            if (errTwo) throw errTwo;
+                            if(resOne.length > 0 && resTwo.length > 0){
+                                res.status(200).json({
+                                    "status":200,
+                                    "RoundOne":resOne,
+                                    "RoundTwo":resTwo,
+                                });
+                            }else{
+                                res.status(404).json({
+                                    "status":404,
+                                    "message":"Data Not Found"
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+
+        }else{
+            res.status(401).json({
+                "status":401,
+                "message":"Unothorize"
             });
         }
     });

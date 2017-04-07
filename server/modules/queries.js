@@ -320,6 +320,8 @@ var Users = {
         if(typeof body.sort != 'undefined' && body.sort != "") {sort = body.sort};
         db.query("SELECT tbl_questions.*,tbl_answers.vAnswer, 'n' as eSelected FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus != 'd' AND tbl_questions.eType = 'VSQ'"+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit,aWhere,cb);
     },
+
+
     get_mcq_by_Ids:function(body,cb){
         db.query("SELECT tbl_questions.iQuestionId,tbl_questions.iAnswerId as Ans,tbl_questions.vQuestion, tbl_answers.vAnswer, tbl_answers.iAnswerId FROM tbl_answers JOIN tbl_questions ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.iQuestionId IN (?)",[body.iQuestionId],cb)
     },
@@ -327,7 +329,7 @@ var Users = {
         db.query("SELECT tbl_questions.iQuestionId,tbl_questions.vQuestion,tbl_answers.vAnswer as Ans FROM tbl_questions JOIN tbl_answers ON tbl_questions.iQuestionId = tbl_answers.iQuestionId WHERE tbl_questions.iQuestionId IN (?)",[body.iQuestionId],cb)
     },
     insert_exam:function(body,cb){
-        db.query("INSERT INTO tbl_exams (iUserId,vTitle,vDescription,eStatus,dCreatedDate,iParentId) VALUES (?,?,?,?,?,?)",[body.iUserId,body.vTitle,body.vDescription,"y",dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iParentId],cb);
+        db.query("INSERT INTO tbl_exams (iUserId,vTitle,vDescription,eExamType,eExamSubType,eStatus,dCreatedDate,iParentId) VALUES (?,?,?,?,?,?)",[body.iUserId,body.vTitle,body.vDescription,body.eExamType,body.eExamSubType,"y",dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iParentId],cb);
     },
     insert_exam_schedule:function(body,cb){
         db.query("INSERT INTO tbl_exam_schedule (iExamId,dExamDate,iWinnerId,dCreatedDate) VALUES (?,?,?,?)",[body.iExamId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),0,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
@@ -378,7 +380,7 @@ var Users = {
         db.query("SELECT iExamId, vTitle , vDescription ,eStatus FROM tbl_exams WHERE eStatus != ? AND iParentId = ? AND iUserId = ? "+sWhere+" ORDER BY "+sort+" LIMIT "+body.offset+", "+body.limit,aWhere,cb);
     },
     get_exam_details:function (body,cb) {
-        db.query("SELECT parent.vTitle,parent.vDescription,parent.iExamId as iRoundOneId, child.iExamId as iRoundTwoId FROM tbl_exams as parent JOIN tbl_exams as child ON child.iParentId = parent.iExamId WHERE parent.iExamId = ? AND parent.eStatus = 'y' ",[body.iExamId],cb);
+        db.query("SELECT parent.vTitle,parent.vDescription,parent.eExamType,parent.eExamSubType,parent.iExamId as iRoundOneId, child.iExamId as iRoundTwoId FROM tbl_exams as parent JOIN tbl_exams as child ON child.iParentId = parent.iExamId WHERE parent.iExamId = ? AND parent.eStatus = 'y' ",[body.iExamId],cb);
     },
     get_round_details:function(body,cb){
         db.query("SELECT"+
@@ -488,7 +490,7 @@ var Users = {
         db.query("SELECT * FROM tbl_exam_question WHERE iExamId = ?  OR iExamId = ?",[body.iRoundOneId, body.iRoundTwoId],cb);
     },
     update_tbl_exams:function(body){
-        db.query("UPDATE tbl_exams SET vTitle = ? , vDescription = ?, dUpdatedDate = ?  WHERE iExamId = ?",[body.vTitle,body.vDescription,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iExamId]);
+        db.query("UPDATE tbl_exams SET vTitle = ? , vDescription = ?, dUpdatedDate = ?, eExamType = ?, eExamSubType = ?  WHERE iExamId = ?",[body.vTitle,body.vDescription,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.eExamType,body.eExamSubType,body.iExamId]);
     },
     delete_tbl_exam_question:function(body,cb){
         db.query("DELETE FROM tbl_exam_question WHERE iExamId = ?",[body.iExamId],cb);
@@ -510,7 +512,7 @@ var Users = {
         db.query("UPDATE tbl_exam_users SET iExamId = 0, iScheduleId = 0, eAvailable = 'n' WHERE iExamId = ?",[body.iExamId],cb);
     },
     list_users:function(body,cb){
-        db.query("SELECT * FROM tbl_users WHERE vUserType = 'client' AND eStatus != 'd'  LIMIT ? OFFSET ?",[body.limit,body.offset],cb);
+        db.query("SELECT * FROM tbl_users  JOIN tbl_parent ON tbl_users.iUserId = tbl_parent.iUserId  WHERE tbl_users.vUserType = 'client' AND tbl_users.eStatus != 'd'  LIMIT ? OFFSET ?",[body.limit,body.offset],cb);
     },
     total_users:function(body,cb){
         db.query("SELECT count(*) as TotalUser FROM tbl_users WHERE vUserType = 'client' AND eStatus != ? ",['d'],cb);
@@ -582,6 +584,35 @@ var Users = {
             "FROM tbl_exam_participant as RoundOne " +
             "JOIN tbl_exam_participant as RoundTwo ON RoundTwo.iParentParticipentId = RoundOne.iParticipantId " +
             "WHERE RoundOne.iParticipantId = ?",[body.iParticipantId],cb);
+    },
+    detail_result_round_one:function(body,cb){
+        db.query("SELECT " +
+            "tbl_participant_questions.eCheck as eCheck, " +
+            "tbl_questions.vModeName, " +
+            "tbl_questions.eType, " +
+            "tbl_questions.eTypeQuestion, " +
+            "tbl_questions.vQuestion, " +
+            "actual_ans.vAnswer as ActualAns, " +
+            "give_ans.vAnswer as GiveAns " +
+            "FROM tbl_participant_questions  " +
+            "JOIN tbl_questions ON tbl_questions.iQuestionId =  tbl_participant_questions.iQuestionId " +
+            "JOIN tbl_answers as actual_ans ON tbl_questions.iAnswerId = actual_ans.iAnswerId " +
+            "JOIN tbl_answers as give_ans ON tbl_participant_questions.iAnswerId = give_ans.iAnswerId " +
+            "WHERE tbl_participant_questions.iParticipantId = ?",[body.iParticipantId],cb);
+    },
+    detail_result_round_two:function(body,cb){
+        db.query("SELECT " +
+            "tbl_participant_questions.eCheck as eCheck, " +
+            "tbl_questions.vModeName, " +
+            "tbl_questions.eType, " +
+            "tbl_questions.eTypeQuestion, " +
+            "tbl_questions.vQuestion, " +
+            "actual_ans.vAnswer as ActualAns, " +
+            "tbl_participant_questions.vAnswer as GiveAns " +
+            "FROM tbl_participant_questions  " +
+            "JOIN tbl_questions ON tbl_questions.iQuestionId =  tbl_participant_questions.iQuestionId " +
+            "JOIN tbl_answers as actual_ans ON tbl_questions.iAnswerId = actual_ans.iAnswerId " +
+            "WHERE tbl_participant_questions.iParticipantId = ?",[body.iParticipantId],cb);
     }
 };
 module.exports = Users;
@@ -605,3 +636,5 @@ module.exports = Users;
  *
  *
  */
+
+

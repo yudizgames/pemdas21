@@ -71,6 +71,8 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
             $scope.examdata = {
                 "vTitle":res.data.vTitle,
                 "vDescription":res.data.vDescription,
+                "eExamType":res.data.eExamType,
+                "eExamSubType":res.data.eExamSubType,
                 "iRoundOneId":res.data.iRoundOneId,
                 "iRoundTwoId":res.data.iRoundTwoId,
                 "RoundOneScheduleId":res.data.RoundOneScheduleId,
@@ -117,6 +119,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
      */
 
     $scope.RoundOnefn = function(){
+            console.log($scope.examdata);
             // $scope.questionStatusROne = [];
             // $scope.questionSelectedROne = [];
             // $scope.examQuestionROne = [];
@@ -136,9 +139,10 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 url:'/list_mcq',
                 type:'POST',
                 dataType:'json',
-                // data:function(d){
-                //     $scope.questionStatusROne = [];
-                // }
+                data:function(d){
+                    d.vModeName = $scope.examdata.vModeName;
+                    d.eTypeQuestion = $scope.examdata.eTypeQuestion;
+                }
             }).withOption('processing', true) //for show progress bar
                 .withOption('serverSide', true) // for server side processing
                 .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
@@ -227,9 +231,10 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
             url:'/list_vsq',
             type:'POST',
             dataType:'json',
-            // data:function(d){
-            //     $scope.vsqQuestionStatus = [];
-            // }
+            data:function(d){
+                d.vModeName = $scope.examdata.vModeName;
+                d.eTypeQuestion = $scope.examdata.eTypeQuestion;
+            }
         }).withOption('processing', true) //for show progress bar
             .withOption('serverSide', true) // for server side processing
             .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
@@ -302,6 +307,8 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                     "iRoundTwoQuestion":$scope.vsqExamQuestion,
                     "vTitle":$scope.examdata.vTitle,
                     "vDescription":$scope.examdata.vDescription,
+                    "eExamType":$scope.examdata.eExamType,
+                    "eExamSubType":$scope.examdata.eExamSubType,
                     "ExamUser":ExamUser}
             }).then(function(res){
                 console.log(res);
@@ -362,6 +369,8 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 "RoundTwoScheduleId":$scope.examdata.RoundTwoScheduleId,
                 "vDescription":$scope.examdata.vDescription,
                 "vTitle":$scope.examdata.vTitle,
+                "eExamType":$scope.examdata.eExamType,
+                "eExamSubType":$scope.examdata.eExamSubType,
                 "RoundOneQuestion":$scope.examQuestionROne,
                 "RoundTwoQuestion":$scope.vsqExamQuestion,
                 "ExamUser":examUser

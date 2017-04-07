@@ -20,9 +20,9 @@ angular.module('Pemdas').controller('LoginCtrl',function ($scope,$http,$localFor
                         console.log("Local Storage Call");
                         console.log(data);
                         if(data.vUserType=='super_admin'){
-                            $state.transitionTo('admin.dashboard');
+                            $state.go('admin.dashboard');
                         }else{
-                            $state.transitionTo('client.dashboard');
+                            $state.go('client.dashboard');
                         }
                     });
                 });

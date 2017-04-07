@@ -67,6 +67,31 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                 }]
             }
     })
+    .state('client.profile',{
+            url:'/profile',
+            templateUrl:'templates/client/client_profile.html',
+            data :{ pageTitle:'Client Profile',bodyClass:'theme-blush' },
+            controller:'ClientProfileCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'client',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            //Must be include every page
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            'client/js/controllers/client_profilectrl.js'
+                        ]
+                    });
+                }]
+            }
+    })
     .state('client.cpass',{
             url:'/cpass',
             params:{
@@ -188,6 +213,39 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                 }]
             }
     })
+    .state('client.userresult',{
+            url:'/userresult',
+            params:{
+                iUserId:null,
+                ROneParticipantId:null,
+                RTwoParticipantId:null
+            },
+            templateUrl:'templates/client/details_reuslt.html',
+            data :{ pageTitle:'Users',bodyClass:'theme-blush' },
+            controller:'DetailResultCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'main',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            "assets/plugins/jquery-steps/jquery.steps.js",
+                            "assets/plugins/sweetalert/sweetalert.min.js",
+                            "assets/js/pages/forms/form-validation.js",
+                            'client/js/controllers/details_resultctrl.js'
+                        ]
+                    });
+                }]
+            }
+    })
+
     .state('client.exam',{
             url:'/exam',
             templateUrl:'templates/client/list_exam.html',

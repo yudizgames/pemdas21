@@ -41,6 +41,56 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
             }]
         }
     })
+    .state('admin.profile',{
+            url:'/profile',
+            templateUrl:'templates/admin/admin_profile.html',
+            data :{ pageTitle:'Admin Profile',bodyClass:'theme-blush' },
+            controller:'AdminProfileCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'admin',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            //Must be include every page
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            'admin/js/controllers/admin_profilectrl.js'
+                        ]
+                    });
+                }]
+            }
+    })
+    .state('admin.sitesettings',{
+            url:'/sitesettings',
+            templateUrl:'templates/admin/admin_sitesettings.html',
+            data :{ pageTitle:'Site Settings',bodyClass:'theme-blush' },
+            controller:'SiteSettingsCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'admin',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            //Must be include every page
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            'admin/js/controllers/admin_sitesettingsctrl.js'
+                        ]
+                    });
+                }]
+            }
+    })
     .state('admin.dashboard',{
             url:'/dashboard',
             templateUrl:'templates/admin/admin_dashboard.html',
@@ -184,6 +234,68 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                             "assets/plugins/sweetalert/sweetalert.min.js",
                             "assets/js/pages/forms/form-validation.js",
                             'admin/js/controllers/view_customerctrl.js'
+                        ]
+                    });
+                }]
+            }
+    })
+    .state('admin.viewusers',{
+            url:'/viewusers',
+            params:{
+                id:null,
+            },
+            templateUrl:'templates/admin/details_players.html',
+            data :{ pageTitle:'Users',bodyClass:'theme-blush' },
+            controller:'UserDetailsCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'main',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            "assets/plugins/jquery-steps/jquery.steps.js",
+                            "assets/plugins/sweetalert/sweetalert.min.js",
+                            "assets/js/pages/forms/form-validation.js",
+                            'admin/js/controllers/details_playersctrl.js'
+                        ]
+                    });
+                }]
+            }
+    })
+    .state('admin.userresult',{
+            url:'/userresult',
+            params:{
+                iUserId:null,
+                ROneParticipantId:null,
+                RTwoParticipantId:null
+            },
+            templateUrl:'templates/admin/details_reuslt.html',
+            data :{ pageTitle:'Users',bodyClass:'theme-blush' },
+            controller:'UserDetailResultCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'main',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            "assets/plugins/jquery-steps/jquery.steps.js",
+                            "assets/plugins/sweetalert/sweetalert.min.js",
+                            "assets/js/pages/forms/form-validation.js",
+                            'admin/js/controllers/details_resultctrl.js'
                         ]
                     });
                 }]
