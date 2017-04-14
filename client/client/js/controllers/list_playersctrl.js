@@ -46,20 +46,24 @@ angular.module('client').controller('ClientPlayersCtrl',function ($scope,$rootSc
         if(OperationType == 'view'){
             $state.go('client.viewusers',{'id':iUserId});
         }else if(OperationType == 'delete'){
-            $http({
-                method:'post',
-                url:'/useroperation',
-                dataType:'json',
-                data:postData
-            }).then(function(res){
-                toastr.success(res.data.message,"Success");
-                $scope.dtInstanceUsers.reloadData();
-                console.log("Success call");
-                console.log(res);
-            },function(err){
-                console.log("Error");
-                console.log(err);
-            });
+            var t = confirm("Are you sure want to delete this player.");
+
+            if(t == true){
+                $http({
+                    method:'post',
+                    url:'/useroperation',
+                    dataType:'json',
+                    data:postData
+                }).then(function(res){
+                    toastr.success(res.data.message,"Success");
+                    $scope.dtInstanceUsers.reloadData();
+                    console.log("Success call");
+                    console.log(res);
+                },function(err){
+                    console.log("Error");
+                    console.log(err);
+                });
+            }
         }else if(OperationType == 'edit'){
             $state.current.data.form_action = "Edit";
             $state.go('client.formusers',{'id':iUserId,'action':'Edit'});

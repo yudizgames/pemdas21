@@ -52,21 +52,25 @@ angular.module('client').controller('ExamCtrl',function ($scope,$rootScope,$reso
                 iExamId:id,
                 eStatus:'d'
             }
-            $http({
-                url:"/exam_status",
-                method:'post',
-                data:post
-            }).then(function(res){
-                if(res.status == 200){
-                    toastr.success(res.data.message,"Success");
-                    $scope.dtInstanceExam.reloadData();
-                }else{
-                    toastr.success("Something went wrong","Success");
-                }
-                console.log(res);
-            },function(err){
-                console.log(err);
-            });
+
+            var t  = confirm("Are you sure want to delete this exam");
+            if(t == true){
+                $http({
+                    url:"/exam_status",
+                    method:'post',
+                    data:post
+                }).then(function(res){
+                    if(res.status == 200){
+                        toastr.success(res.data.message,"Success");
+                        $scope.dtInstanceExam.reloadData();
+                    }else{
+                        toastr.success("Something went wrong","Success");
+                    }
+                    console.log(res);
+                },function(err){
+                    console.log(err);
+                });
+            }
         }else if(op == 'view'){
             $state.go('client.viewexam',{'id':id});
         }else{

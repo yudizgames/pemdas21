@@ -1,7 +1,7 @@
 /**
  * Created by YudizAshish on 24/03/17.
  */
-angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams,$rootScope,$resource,$http,$state,toastr,DTOptionsBuilder,DTColumnDefBuilder,DTColumnBuilder,$compile,$localForage) {
+angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams,$rootScope,$resource,$http,$state,toastr,DTOptionsBuilder,DTColumnBuilder,$compile,$localForage) {
     $scope.examdata = {};
     $scope.ExamDetails = true;
     $scope.RoundOneShow = false;
@@ -15,15 +15,42 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
     $scope.questionStatusROne = [];
     $scope.questionSelectedROne = [];
     $scope.examQuestionROne = [];
+    $scope.examQuestionROneUpdate = [];
     $scope.dtInstanceQuestionROne = {};
+
+
     //Round Two Question
     $scope.vsqQuestionStatus = [];
     $scope.vsqQuestionSelected = [];
     $scope.vsqExamQuestion = [];
+    $scope.vsqExamQuestionUpdate = [];
     $scope.dtInstanceQuestionRTwo = {};
     //Edit Purpose
     $scope.examQuestionOne = [];
     $scope.examQuestionTwo = [];
+
+
+    //Custom search add
+    $scope.oneSearchCount = 0;
+    $scope.searchOne = {
+        panethesis:false,
+        exponent:false,
+        mutiplication:false,
+        division:false,
+        addition:false,
+        subtraction:false
+    }
+    $scope.searchTwo = {
+        panethesis:false,
+        exponent:false,
+        mutiplication:false,
+        division:false,
+        addition:false,
+        subtraction:false
+    }
+    $scope.dtInstances = {};
+    $scope.dtInstances.dtInstanceQuestionROne = {};
+    $scope.dtInstances.dtInstanceQuestionRTwo = {};
     /**
      * Basic exam details
      */
@@ -59,7 +86,10 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
 
             console.log($scope.exam_users);
         }
+
     }
+
+
     if($stateParams.action == "Edit"){
         $http({
             method:'post',
@@ -119,6 +149,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
      */
 
     $scope.RoundOnefn = function(){
+            console.log("Round One Function Call");
             console.log($scope.examdata);
             // $scope.questionStatusROne = [];
             // $scope.questionSelectedROne = [];
@@ -127,6 +158,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
             $scope.dtColumnsROne = [
                 DTColumnBuilder.newColumn("iQuestionId", "Question Id").withOption('name', 'iQuestionId'),
                 DTColumnBuilder.newColumn("vModeName", "Difficulty level").withOption('name', 'vModeName'),
+                DTColumnBuilder.newColumn("eTypeQuestion", "Question Type").withOption('name', 'eTypeQuestion'),
                 DTColumnBuilder.newColumn("vQuestion", "Question").withOption('name', 'vQuestion'),
                 DTColumnBuilder.newColumn("vAnswer", "Answer").withOption('name', 'vAnswer'),
                 DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(actionsHtmlRoundOne),
@@ -140,17 +172,18 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 type:'POST',
                 dataType:'json',
                 data:function(d){
-                    d.vModeName = $scope.examdata.vModeName;
-                    d.eTypeQuestion = $scope.examdata.eTypeQuestion;
+                    d.eExamType = $scope.examdata.eExamType;
+                    d.eExamSubType = $scope.examdata.eExamSubType;
+                    d.CustomSearch = $scope.searchOne;
                 }
-            }).withOption('processing', true) //for show progress bar
+            })  .withOption('processing', true) //for show progress bar
                 .withOption('serverSide', true) // for server side processing
                 .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
                 .withDisplayLength(10) // Page size
                 .withOption('aaSorting',[0,'desc'])
                 .withOption('createdRow',function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
                     $compile(nRow)($scope);
-            });
+                });
 
     }
 
@@ -180,16 +213,33 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
 
     $scope.qOperationRoundOne = function(id,vOperation,eStatus){
         $scope.questionSelectedROne[id] = eStatus;
-        if(eStatus == 'y'){
-            $scope.examQuestionROne.push(id);
+        // if(eStatus == 'y'){
+        //     $scope.examQuestionROne.push(id);
+        // }else{
+        //     $scope.examQuestionROne.splice(getexamQuestionROneIndex(id),1);
+        // }
+
+        if($stateParams.action == "Edit"){
+            if(eStatus == 'y'){
+                $scope.examQuestionROneUpdate.push(id);
+            }else{
+                $scope.examQuestionROneUpdate.splice(getexamQuestionROneIndex(id,$scope.examQuestionROneUpdate),1);
+            }
         }else{
-            $scope.examQuestionROne.splice(getexamQuestionROneIndex(id),1);
+            if(eStatus == 'y'){
+                $scope.examQuestionROne.push(id);
+            }else{
+                $scope.examQuestionROne.splice(getexamQuestionROneIndex(id,$scope.examQuestionROne),1);
+            }
         }
+
+
+
     }
 
-    function getexamQuestionROneIndex(Id){
-        for(var i=0; i<$scope.examQuestionROne.length;i++){
-            if($scope.examQuestionROne[i] === Id){
+    function getexamQuestionROneIndex(Id,data){
+        for(var i=0; i<data.length;i++){
+            if(data[i] === Id){
                 return i;
             }
         }
@@ -217,6 +267,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
         $scope.dtColumnsRTwo = [
             DTColumnBuilder.newColumn("iQuestionId", "Question Id").withOption('name', 'iQuestionId'),
             DTColumnBuilder.newColumn("vModeName", "Difficulty level").withOption('name', 'vModeName'),
+            DTColumnBuilder.newColumn("eTypeQuestion", "Question Type").withOption('name', 'eTypeQuestion'),
             DTColumnBuilder.newColumn("vQuestion", "Question").withOption('name', 'vQuestion'),
             DTColumnBuilder.newColumn("vAnswer", "Answer").withOption('name', 'vAnswer'),
             DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(actionsHtmlRoundTwo),
@@ -234,6 +285,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
             data:function(d){
                 d.vModeName = $scope.examdata.vModeName;
                 d.eTypeQuestion = $scope.examdata.eTypeQuestion;
+                d.CustomSearch = $scope.searchTwo;
             }
         }).withOption('processing', true) //for show progress bar
             .withOption('serverSide', true) // for server side processing
@@ -267,21 +319,36 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
     $scope.qOperationRoundTwo = function(id,vOperation,eStatus){
         $scope.vsqQuestionSelected[id] = eStatus;
         console.log($scope.vsqQuestionSelected);
-        if(eStatus == 'y'){
-            $scope.vsqExamQuestion.push(id);
+        // if(eStatus == 'y'){
+        //     $scope.vsqExamQuestion.push(id);
+        // }else{
+        //     $scope.vsqExamQuestion.splice(getvsqExamQuestionIndex(id),1);
+        // }
+
+        if($stateParams.action == "Edit"){
+            if(eStatus == 'y'){
+                $scope.vsqExamQuestionUpdate.push(id);
+            }else{
+                $scope.vsqExamQuestionUpdate.splice(getvsqExamQuestionIndex(id,$scope.vsqExamQuestionUpdate),1);
+            }
         }else{
-            $scope.vsqExamQuestion.splice(getvsqExamQuestionIndex(id),1);
+            if(eStatus == 'y'){
+                $scope.vsqExamQuestion.push(id);
+            }else{
+                $scope.vsqExamQuestion.splice(getvsqExamQuestionIndex(id,$scope.vsqExamQuestion),1);
+            }
         }
+
+
     }
 
-    function getvsqExamQuestionIndex(Id){
-        for(var i=0; i<$scope.vsqExamQuestion.length;i++){
-            if($scope.vsqExamQuestion[i] === Id){
+    function getvsqExamQuestionIndex(Id,array){
+        for(var i=0; i<array.length;i++){
+            if(array[i] === Id){
                 return i;
             }
         }
     }
-
 
     $scope.vsqQuestion = function(){
         var ExamUser = [];
@@ -338,6 +405,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                             "iParentId":$scope.exam_users[i].iParentId,
                             "iScheduleId":$scope.exam_users[i].iScheduleId,
                             "iUserId":$scope.exam_users[i].iUserId,
+                            "isNewUser":false
                         });
                     }else{
                         examUser.push({
@@ -347,6 +415,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                             "iParentId":$scope.exam_users[i].iParentId,
                             "iScheduleId":0,
                             "iUserId":$scope.exam_users[i].iUserId,
+                            "isNewUser":false
                         });
                     }
                 }
@@ -359,6 +428,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                         "iParentId":$scope.exam_users[i].iParentId,
                         "iScheduleId":$scope.examdata.RoundOneScheduleId,
                         "iUserId":$scope.exam_users[i].iUserId,
+                        "isNewUser":true
                     });
                 }
             }
@@ -371,12 +441,13 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 "vTitle":$scope.examdata.vTitle,
                 "eExamType":$scope.examdata.eExamType,
                 "eExamSubType":$scope.examdata.eExamSubType,
-                "RoundOneQuestion":$scope.examQuestionROne,
-                "RoundTwoQuestion":$scope.vsqExamQuestion,
+                "RoundOneQuestion":$scope.examQuestionROneUpdate,
+                "RoundOneOldQuestion":$scope.examQuestionROne,
+                "RoundTwoQuestion":$scope.vsqExamQuestionUpdate,
+                "RoundTwoOldQuestion":$scope.vsqExamQuestion,
                 "ExamUser":examUser
             }
             console.log(postData);
-
             $http({
                 method:'post',
                 url:'/exam_details_update',
@@ -385,14 +456,14 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
             }).then(function(res){
                 console.log(res);
                 if(res.data.status == 200){
-                    toastr.success("Exam Updated Successfully","Success");
+                    toastr.success("Exam Updated Successfully.","Success");
                     $state.go('client.exam');
                 }else{
                     toastr.error(res.data.message,"Error");
                     $state.go('client.exam');
                 }
             },function(err){
-                toastr.error("Exam Generated Successfully","Error");
+                toastr.error("Exam Generated Successfully.","Error");
                 $state.go('client.exam');
             });
 
@@ -402,6 +473,68 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
 
     }
 
+    $scope.fnsearchone = function(str){
+        $scope.dtInstances.dtInstanceQuestionROne.reloadData();
+        if(str == 'reset'){
+            $scope.searchOne = {
+                panethesis:false,
+                exponent:false,
+                mutiplication:false,
+                division:false,
+                addition:false,
+                subtraction:false
+            }
+        }
+        $scope.dtOptionsROne = DTOptionsBuilder.newOptions().withOption('ajax',{
+            dataSrc:"data",
+            url:'/list_mcq',
+            type:'POST',
+            dataType:'json',
+            data:function(d){
+                d.eExamType = $scope.examdata.eExamType;
+                d.eExamSubType = $scope.examdata.eExamSubType;
+                d.CustomSearch = $scope.searchOne;
+            }
+            }).withOption('serverSide', true) // for server side processing
+            .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
+            .withDisplayLength(10) // Page size
+            .withOption('aaSorting',[0,'desc'])
+            .withOption('createdRow',function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+                $compile(nRow)($scope);
+            });
 
+    }
+
+    $scope.fnsearchtwo = function(str){
+        $scope.dtInstances.dtInstanceQuestionRTwo.reloadData();
+        if(str == 'reset'){
+            $scope.searchOne = {
+                panethesis:false,
+                exponent:false,
+                mutiplication:false,
+                division:false,
+                addition:false,
+                subtraction:false
+            }
+        }
+        $scope.dtOptionsROne = DTOptionsBuilder.newOptions().withOption('ajax',{
+            dataSrc:"data",
+            url:'/list_mcq',
+            type:'POST',
+            dataType:'json',
+            data:function(d){
+                d.eExamType = $scope.examdata.eExamType;
+                d.eExamSubType = $scope.examdata.eExamSubType;
+                d.CustomSearch = $scope.searchTwo;
+            }
+        }).withOption('serverSide', true) // for server side processing
+            .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
+            .withDisplayLength(10) // Page size
+            .withOption('aaSorting',[0,'desc'])
+            .withOption('createdRow',function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+                $compile(nRow)($scope);
+            });
+
+    }
 
 });

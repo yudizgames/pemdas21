@@ -39,7 +39,7 @@
                         <div class="form-group form-float">
 
                             <div class="form-line" >
-                                <input  type="email" placeholder="Email" value="" class="form-control" name="vEmail" id="vEmail" ng-readonly="{{form_action == 'Edit' ? true : false}}" required ng-model="user.vEmail">
+                                <input  type="email" placeholder="Email" value="" pattern="[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?" class="form-control" name="vEmail" id="vEmail" ng-readonly="{{form_action == 'Edit' ? true : false}}" required ng-model="user.vEmail">
                             </div>
                             <div ng-messages="form_user.vEmail.$error && form_user.vEmail.$dirty" ng-show="form_user.vEmail.$error && form_user.vEmail.$dirty" role="alert" class="text-danger">
                                 <div ng-message="required" ng-show="form_user.vEmail.$dirty && form_user.vEmail.$error.required">Email is required.</div>

@@ -18,14 +18,14 @@ angular.module('client').controller('ClientDashboardCtrl',function ($scope,$stat
             console.log(err);
         });
 
-        $http({
-            method:'post',
-            url:'/dashboard',
-        }).then(function(res){
-            console.log(res);
-            $scope.data = res.data;
-        },function (err) {
-            console.log(err);
-        })
+            $http({
+                method:'post',
+                url:'/dashboard',
+            }).then(function(res){
+                console.log(res);
+                $scope.data = res.data;
+            },function (err) {
+                console.log(err);
+            })
     });
 });

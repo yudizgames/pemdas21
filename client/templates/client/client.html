@@ -188,7 +188,7 @@
         <div class="user-info">
             <!--<div class="admin-image"> <img src="assets/images/random-avatar7.jpg" alt=""> </div>-->
             <div class="admin-action-info"> <span>Welcome</span>
-                <h3>{{vUserName}}</h3>
+                <h3>{{vUserName | limitTo:26 }}...</h3>
                 <ul>
                     <li><a data-placement="bottom" title="Go to Inbox"   ui-sref="client.dashboard"><i class="zmdi zmdi-email"></i></a></li>
                     <li><a data-placement="bottom" title="Go to Profile" ui-sref="client.profile"><i class="zmdi zmdi-account"></i></a></li>

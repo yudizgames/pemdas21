@@ -61,8 +61,12 @@ angular.module('admin').controller('CustomerFormCtrl',function ($scope,$rootScop
                 $rootScope.hideLoad = true;
                 console.log("Success call");
                 console.log(res);
-                toastr.success(res.data.message,"Successs");
-                $state.go('admin.customer');
+                if(res.data.status == 200){
+                    toastr.success(res.data.message,"Successs");
+                    $state.go('admin.customer');
+                }else{
+                    toastr.error(res.data.message,"Error");
+                }
             },function(err){
                 $rootScope.hideLoad = true;
                 console.log("Error");

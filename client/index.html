@@ -34,8 +34,33 @@
 	<!--<script src="/socket.io/socket.io.js"></script>-->
 </head>
 <body ng-controller="AppCtrl" class="{{$state.current.data.bodyClass}}">
-<noscript style="color: #ffffff; background-color: #9c3328">
-	You must have JavaScript enabled to use this app and reload the page.
+<style>
+	.image-noscript{
+		position: relative;
+		/*width: 100%; !* for IE 6 *!*/
+	}
+	.h2-noscript{
+		/*color: white;*/
+		position: absolute;
+		top: 250px;
+		left: 500px;
+		width: 100%;
+	}
+	.h1-noscript{
+		color: red;
+		position: absolute;
+		top: 200px;
+		left: 825px;
+		width: 100%;
+	}
+
+</style>
+<noscript>
+	<div class="image-noscript">
+		<img src="assets/images/bg-1.jpg">
+		<h1 style="top: 180px;" class="h1-noscript">Sorry!</h1>
+		<h2 class="h2-noscript" style="left: 750px;">JavaScript Required!!! </h2> <br><h2 class="h2-noscript" style="top: 300px;">SYSTEMIC 21  doesn’t work properly without JavaScript enabled. Reload Page...</h2>
+	</div>
 </noscript>
 <!-- END PAGE SPINNER -->
 <ui-view></ui-view>
@@ -68,7 +93,7 @@
 <script src="node_modules/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
 <!-- Angular infinity Scroll -->
 <script src="node_modules/ng-infinite-scroll/build/ng-infinite-scroll.min.js"></script>
-
+<!--<script src="assets/js/pages/ui/dialogs.js"></script>-->
 <!-- Angular Datatable Add  Lib-->
 
 <!-- Angular Datatable Add  Lib Close-->
@@ -81,6 +106,10 @@
 <!-- Lodash for Array Begin -->
 <script src="node_modules/lodash/lodash.min.js"></script>
 <!-- Lodash for Array End -->
+<!-- Ng sweet alert  -->
+
+<!-- Ng sweet alert End -->
+
 <!-- High Chart  -->
 <!-- High Chart End -->
 <!--<script src="assets/admin/pages/scripts/angular-datatable.js"></script>-->

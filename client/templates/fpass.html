@@ -6,7 +6,7 @@
             <form class="login-form" name="form_login" ng-submit="forgotPass(form_login)">
                 <div class="input-group"> <span class="input-group-addon"> <i class="zmdi zmdi-email"></i> </span>
                     <div class="form-line">
-                        <input class="form-control placeholder-no-fix" type="email" autocomplete="off" placeholder="Email" name="vEmail" data-ng-model="vEmail"  required />
+                        <input class="form-control placeholder-no-fix" type="email" autocomplete="off" placeholder="Email" name="vEmail" data-ng-model="vEmail" pattern="[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?"  required />
                         <span ng-show="form_login.vEmail.$dirty && form_login.vEmail.$error.required" class="help-block text-danger">Email is required</span>
                         <span ng-show="form_login.vEmail.$dirty && form_login.vEmail.$error.email" class="help-block text-danger">Please enter valid email</span>
                     </div>

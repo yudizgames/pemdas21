@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" cache-view="false">
     <div class="block-header" style="margin-bottom: -35px;">
         <h2>Customer</h2>
         <div class="body">
@@ -44,13 +44,13 @@
                             </div>
                             <div class="col-md-8 col-sm-8 col-xs-12">
                                 <div class="s-profile">
-                                    <h4 class="m-b-5">{{u.vFullName}}</h4>
+                                    <h4 class="m-b-5">{{u.vFullName |  limitTo:26}}<span ng-if="u.vFullName.length > 26 ? true :false">...</span></h4>
                                     <p class="text-muted"><span> <a href="#" class="text-pink">{{u.vEmail}}</a> </span></p>
                                     <p class="text-muted"><span> User Type : {{u.vParentType}} </span></p>
                                     <!--<p class="text-muted">795 Folsom Ave, Suite 600 San Francisco, CADGE 94107</p>-->
                                     <a href="javascript:;" ng-click="userOperation(u.iUserId,'view')"class="btn btn-raised btn-xs bg-light-blue waves-effect">View</a>
                                     <a href="javascript:;" ng-click="userOperation(u.iUserId,'edit')"class="btn btn-raised btn-xs bg-orange waves-effect">Edit</a>
-                                    <a href="javascript:;" ng-click="userOperation(u.iUserId,'delete')"class="btn btn-raised btn-xs bg-red waves-effect">Delete</a>
+                                    <a href="javascript:;" ng-click="userOperation(u.iUserId,'delete')"class="btn btn-raised btn-xs bg-red waves-effect" data-type="confirm">Delete</a>
                                     <div class="switch">
                                         <label>
                                             Status

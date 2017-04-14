@@ -34,7 +34,7 @@ angular.module('client').controller('ClientProfileCtrl',function ($scope,$rootSc
                     User.vUserName = $scope.user.vFullName;
                     $localForage.setItem('UserInfo',User);
                 });
-                toastr.success(res.data.message,"Success");
+                toastr.success("Profile updated successfully.","Success");
             }else{
                 toastr.error("Something went wrong","Error");
             }

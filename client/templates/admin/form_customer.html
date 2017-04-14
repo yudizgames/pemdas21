@@ -29,7 +29,7 @@
                     <form name="form_user" id="form_user" novalidate ng-submit="submitUser()">
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" placeholder="Full Name" value="" class="form-control" name="vFullName" id="vFullName" required ng-model="user.vFullName">
+                                <input type="text" placeholder="Full Name" value="" class="form-control" name="vFullName" id="vFullName"  required ng-model="user.vFullName">
                             </div>
                             <div ng-messages="form_user.vFullName.$error && form_user.vFullName.$dirty" ng-show="form_user.vFullName.$error && form_user.vFullName.$dirty" role="alert" class="text-danger">
                                 <div ng-message="required" ng-show="form_user.vFullName.$error.required">Full name is required</div>
@@ -39,8 +39,7 @@
                         <div class="form-group form-float">
 
                             <div class="form-line" >
-                                <input  type="email" placeholder="Email" value="" class="form-control" name="vEmail" id="vEmail" ng-readonly="{{form_action == 'Edit' ? true : false}}" required ng-model="user.vEmail">
-
+                                <input  type="email" placeholder="Email" value="" class="form-control" name="vEmail" id="vEmail" pattern="[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?" ng-readonly="{{form_action == 'Edit' ? true : false}}" required ng-model="user.vEmail">
                             </div>
                             <div ng-messages="form_user.vEmail.$error && form_user.vEmail.$dirty" ng-show="form_user.vEmail.$error && form_user.vEmail.$dirty" role="alert" class="text-danger">
                                 <div ng-message="required" ng-show="form_user.vEmail.$dirty && form_user.vEmail.$error.required">Email is required.</div>
@@ -60,8 +59,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-
-                            <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_user.$invalid"><i class="fa fa-check"></i> Submit</button>
+                                <button type="submit" style="color: #ffffff;" class="btn btn-raised btn-sm btn-primary waves-effect" data-ng-disabled="form_user.$invalid"><i class="fa fa-check"></i> Submit</button>
                         </div>
                     </form>
                 </div>

@@ -2,11 +2,13 @@
  * Created by YudizAshish on 21/03/17.
  */
 'use strict';
-angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$resource,$http,$state,toastr) {
+angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$resource,$http,$state,toastr,$templateCache) {
+    $templateCache.remove("/admin/customer");
     console.log("Cleints controller call");
     $scope.users = [];
     $scope.iTotalUser = 0;
     $scope.loadMore = function(){
+        $scope.disable = true;
         if($scope.iTotalUser > $scope.users.length || $scope.iTotalUser == 0){
             $http({
                 url:'/total_users',
@@ -20,6 +22,8 @@ angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$r
                 }
                 if($scope.users.length == iTotalUser){
                     $scope.disable = true;
+                }else{
+                    $scope.disable = false;
                 }
                 console.log("Success Call");
                 console.log(res);
@@ -41,20 +45,23 @@ angular.module('admin').controller('CustomerCtrl',function ($scope,$rootScope,$r
         if(OperationType == 'view'){
             $state.go('admin.viewcustomer',{'id':iUserId});
         }else if(OperationType == 'delete'){
-            $http({
-                method:'post',
-                url:'/clientoperation',
-                dataType:'json',
-                data:postData
-            }).then(function(res){
-                toastr.success(res.data.message,"Successs");
-            $scope.users.splice(findIndex($scope.users,iUserId),1);
-                console.log("Success call");
-                console.log(res);
-            },function(err){
-                console.log("Error");
-                console.log(err);
-            });
+            var t = confirm("Are you sure want to delete this user ");
+            if(t == true){
+                $http({
+                    method:'post',
+                    url:'/clientoperation',
+                    dataType:'json',
+                    data:postData
+                }).then(function(res){
+                    toastr.success(res.data.message,"Successs");
+                $scope.users.splice(findIndex($scope.users,iUserId),1);
+                    console.log("Success call");
+                    console.log(res);
+                },function(err){
+                    console.log("Error");
+                    console.log(err);
+                });
+            }
         }else if(OperationType == 'edit'){
             $state.current.data.form_action = "Edit";
             $state.go('admin.formcustomer',{'id':iUserId,'action':'Edit'});

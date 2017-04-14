@@ -1,5 +1,6 @@
 var formidable = require("formidable");
 var queries = require("../modules/queries");
+var queries_v1 = require("../modules/queries_v1");
 var md5 = require("md5");
 var path = require('path');
 var validator = require("validator");
@@ -23,29 +24,37 @@ module.exports = function (app,cli,mail) {
     app.post('/login',function(req,res){
         var body = req.body;
         var $status = 404;
-        var $message = "Something webnt wrong";
-        queries.getUser(body,function(err,rows){
-            if(err)throw err
+        var $message = "Please Check your email/password";
+        queries.getUserAdmin(body,function(err,rows){
+            console.log(JSON.stringify(rows));
+            if(err)throw err;
             if(rows.length === 1){
-                var hash = md5(rows[0].iUserId + Math.random() + Date.now());
-                var payload = { 'token':hash,'device':'DeskTop','vUserType':rows[0].vUserType};
-                var token = jwt.sign(payload,"pemdas");
-                queries.setTocket({
-                    'token': hash,
-                    'iUserId': rows[0].iUserId,
-                    'eDeviceType': 'Desktop'
-                },function (err,response) {
-                    if (err) throw err;
-                    cli.blue("After Insert");
-                    $status = 200;
-                    $message = "Success";
-                    res.json({
-                        'status':$status,'message':$message,'token':token,'vUserType':rows[0].vUserType,'vUserName':rows[0].vFullName,'iUserId':rows[0].iUserId
+                if(rows[0].eStatus == 'y'){
+
+                    var hash = md5(rows[0].iUserId + Math.random() + Date.now());
+                    var payload = { 'token':hash,'device':'DeskTop','vUserType':rows[0].vUserType};
+                    var token = jwt.sign(payload,"pemdas");
+                    queries.setTocket({
+                        'token': hash,
+                        'iUserId': rows[0].iUserId,
+                        'eDeviceType': 'Desktop'
+                    },function (err,response) {
+                        if (err) throw err;
+                        cli.blue("After Insert");
+                        $status = 200;
+                        $message = "Success";
+                        res.json({
+                            'status':$status,'message':$message,'token':token,'vUserType':rows[0].vUserType,'vUserName':rows[0].vFullName,'iUserId':rows[0].iUserId
+                        })
                     })
-                })
+
+                }else{
+                    res.json({
+                        'status': $status,
+                        'message': "Currently you are not active, please contact admin "
+                    });
+                }
             }else{
-                $status = 404;
-                $message = 'User not exists';
                 res.json({
                     'status': $status,
                     'message': $message
@@ -173,7 +182,7 @@ module.exports = function (app,cli,mail) {
                             if (error) throw error;
                             res.json({
                                 'status':200,
-                                'message':'Password Change Successfully.'
+                                'message':'Password Changed Successfully.'
                             });
                         })
                     }else{
@@ -234,7 +243,7 @@ module.exports = function (app,cli,mail) {
         }else{
             res.json({
                 "status":404,
-                "message":"Please fill all required value"
+                "message":"User is not registered."
             })
         }
     });
@@ -480,7 +489,7 @@ module.exports = function (app,cli,mail) {
 
                                                 res.json({
                                                     "status":200,
-                                                    "message":"User Insert Successfully."
+                                                    "message":"User Inserted Successfully."
                                                 });
 
                                             }else{
@@ -575,21 +584,48 @@ module.exports = function (app,cli,mail) {
 
                 }else if(req.body.vOperation == 'edit'){
 
-                    if(!validator.isEmpty(req.body.vFullName)){
-                        cli.green("Edit call");
-                        cli.red(req.body.id);
-                        queries.updateUserById({'id':req.body.id,'vFullName':req.body.vFullName},function(err,rows){
-                            if(err) throw err;
-                            res.status(200).json({
-                                'message':'User update successfully'
+
+
+                    if(req.user[0].vUserType == 'client' ){
+                        if(!validator.isEmpty(req.body.vFullName)){
+                            cli.green("Edit call");
+                            cli.red(req.body.id);
+                            queries.updateUserById({'id':req.body.id,'vFullName':req.body.vFullName},function(err,rows){
+                                if(err) throw err;
+                                res.status(200).json({
+                                    'message':'User updated successfully.'
+                                });
                             });
-                        });
+                        }else{
+                            res.json({
+                                "status":404,
+                                "message":"Please fill all required value"
+                            });
+                        }
                     }else{
-                        res.json({
-                            "status":404,
-                            "message":"Please fill all required value"
-                        });
+                        if(!validator.isEmpty(req.body.vFullName)){
+                            cli.green("Edit call");
+                            cli.red(req.body.id);
+                            queries.updateUserById({'id':req.body.id,'vFullName':req.body.vFullName},function(err,rows){
+                                if(err) throw err;
+                                res.status(200).json({
+                                    'message':'User updated successfully.'
+                                });
+                            });
+                            queries.updateTbl_parent({'id':req.body.id,'vParentType':req.body.vParentType},function(errParent,rowsParent){
+                                if(errParent) throw errParent;
+                            });
+                        }else{
+                            res.json({
+                                "status":404,
+                                "message":"Please fill all required value"
+                            });
+                        }
                     }
+
+
+
+
 
 
                 }else if(req.body.vOperation == 'delete'){
@@ -606,13 +642,13 @@ module.exports = function (app,cli,mail) {
                             if(error) throw error;
                             res.json({
                                 'status':200,
-                                'message':'User status change successfully'
+                                'message':'User status changed successfully.'
                             });
                         });
                     }else{
                         res.json({
                             "status":404,
-                            "message":"Please fill all required value"
+                            "message":"Please fill all required value."
                         })
                     }
                 } else{
@@ -663,10 +699,28 @@ module.exports = function (app,cli,mail) {
     });
 
     app.post('/list_q',function (req,res) {
+        cli.blue("List for search section");
+        cli.red(JSON.stringify(req.body.CustomSearch.vsq));
+
+
+        var eType = [];
+        var eTypeQuestion = [];
+        req.body.CustomSearch.mcq == "true" ? eType.push('MCQ') : '';
+        req.body.CustomSearch.vsq == "true" ? eType.push('VSQ') : '';
+        req.body.CustomSearch.panethesis == "true" ? eTypeQuestion.push('Parenthesis') : '';
+        req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
+        req.body.CustomSearch.mutiplication == "true" ? eTypeQuestion.push('Multiplication') : '';
+        req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
+        req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
+        req.body.CustomSearch.subtraction == "true" ? eTypeQuestion.push('Subtraction') : '';
+
         var obj = {
-            'vModeName':req.body.search.value,
-            'eType':req.body.search.value
+            'vModeName':'',
+            'eTypeQuestion':eTypeQuestion,
+            'eType':eType
         };
+
+        cli.yellow(JSON.stringify(obj));
         queries.ls_question_count(obj,function(err,record){
             if(err) throw err;
             var iTotalRecords = parseInt(record[0].iTotalRecords);
@@ -678,8 +732,9 @@ module.exports = function (app,cli,mail) {
             var obj = {
                 'limit': end,
                 'offset': iDisplayStart,
-                'vModeName':req.body.search.value,
-                'eType':req.body.search.value,
+                'vModeName':'',
+                'eTypeQuestion':eTypeQuestion,
+                'eType':eType,
                 'sort':getSorting(req.body)
             }
             queries.ls_question_select(obj,function(err,question){
@@ -700,6 +755,7 @@ module.exports = function (app,cli,mail) {
                         "vQuestion":question[i].vQuestion,
                         "vAnswer":question[i].vAnswer,
                         "eStatus":question[i].eStatus,
+                        "eTypeQuestion":question[i].eTypeQuestion,
                         "operation":operation
                     };
                 }
@@ -721,7 +777,7 @@ module.exports = function (app,cli,mail) {
                         if(rows.affectedRows > 0){
                             res.json({
                                 'status':200,
-                                'message':'Question status change successfully'
+                                'message':'Question status changed successfully.'
                             });
                         }else{
                             res.json({
@@ -829,7 +885,7 @@ module.exports = function (app,cli,mail) {
                                 }
                                 res.json({
                                     "status":200,
-                                    "message":"Update Successfully."
+                                    "message":"Question updated Successfully."
                                 })
                             }else{
                                 res.json({
@@ -877,7 +933,7 @@ module.exports = function (app,cli,mail) {
                                     if(row.affectedRows > 0){
                                         res.json({
                                             "status":200,
-                                            "message":"Update Successfully."
+                                            "message":"Question updated Successfully."
                                         })
                                     }else{
                                         res.json({
@@ -1081,18 +1137,26 @@ module.exports = function (app,cli,mail) {
      * END Question Add Operataion
      */
 
-
-
-
     /**
      * BEGIN List Mcq question
      */
 
     app.post('/list_mcq',function (req,res) {
+
+        var eTypeQuestion = [];
+        req.body.CustomSearch.panethesis == "true" ? eTypeQuestion.push('Parenthesis') : '';
+        req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
+        req.body.CustomSearch.mutiplication == "true" ? eTypeQuestion.push('Multiplication') : '';
+        req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
+        req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
+        req.body.CustomSearch.subtraction == "true" ? eTypeQuestion.push('Subtraction') : '';
+
         var obj = {
-            'vModeName':req.body.search.value,
-            'eType':req.body.search.value
+            'eExamType':req.body.search.eExamType,
+            'eExamSubType':req.body.search.eExamSubType,
+            'eTypeQuestion':eTypeQuestion
         };
+
         queries.ls_mcq_count(obj,function(err,record){
             if(err) throw err;
             var iTotalRecords = parseInt(record[0].iTotalRecords);
@@ -1106,7 +1170,8 @@ module.exports = function (app,cli,mail) {
                 'offset': iDisplayStart,
                 'vModeName':req.body.search.value,
                 'eType':req.body.search.value,
-                'sort':getSorting(req.body)
+                'sort':getSorting(req.body),
+                'eTypeQuestion':eTypeQuestion
             }
             queries.ls_mcq_select(obj,function(err,question){
                 if(err) throw err;
@@ -1122,6 +1187,7 @@ module.exports = function (app,cli,mail) {
                     operation+= '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
                     records['data'][i] = {"iQuestionId":question[i].iQuestionId,
                         "vModeName":question[i].vModeName,
+                        "eTypeQuestion":question[i].eTypeQuestion,
                         "eType":question[i].eType,
                         "vQuestion":question[i].vQuestion,
                         "vAnswer":question[i].vAnswer,
@@ -1144,9 +1210,19 @@ module.exports = function (app,cli,mail) {
 
 
     app.post('/list_vsq',function (req,res) {
+
+        var eTypeQuestion = [];
+        req.body.CustomSearch.panethesis == "true" ? eTypeQuestion.push('Parenthesis') : '';
+        req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
+        req.body.CustomSearch.mutiplication == "true" ? eTypeQuestion.push('Multiplication') : '';
+        req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
+        req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
+        req.body.CustomSearch.subtraction == "true" ? eTypeQuestion.push('Subtraction') : '';
+
         var obj = {
             'vModeName':req.body.search.value,
-            'eType':req.body.search.value
+            'eType':req.body.search.value,
+            'eTypeQuestion':eTypeQuestion
         };
         queries.ls_vsq_count(obj,function(err,record){
             if(err) throw err;
@@ -1161,7 +1237,8 @@ module.exports = function (app,cli,mail) {
                 'offset': iDisplayStart,
                 'vModeName':req.body.search.value,
                 'eType':req.body.search.value,
-                'sort':getSorting(req.body)
+                'sort':getSorting(req.body),
+                'eTypeQuestion':eTypeQuestion
             }
             queries.ls_vsq_select(obj,function(err,question){
                 if(err) throw err;
@@ -1177,6 +1254,7 @@ module.exports = function (app,cli,mail) {
                     operation+= '<button ng-click="qOperation('+question[i].iQuestionId+',&quot;delete&quot;)" title="Delete"  class="btn btn-danger  btn-xs">Delete</button>';
                     records['data'][i] = {"iQuestionId":question[i].iQuestionId,
                         "vModeName":question[i].vModeName,
+                        "eTypeQuestion":question[i].eTypeQuestion,
                         "eType":question[i].eType,
                         "vQuestion":question[i].vQuestion,
                         "vAnswer":question[i].vAnswer,
@@ -1597,7 +1675,7 @@ module.exports = function (app,cli,mail) {
                         queries.updateUserById({'id':req.body.id,'vFullName':req.body.vFullName},function(err,rows){
                             if(err) throw err;
                             res.status(200).json({
-                                'message':'User update successfully'
+                                'message':'User updated successfully'
                             });
                         });
                     }else{
@@ -1620,7 +1698,7 @@ module.exports = function (app,cli,mail) {
                             if(error) throw error;
                             res.json({
                                 'status':200,
-                                'message':'User status change successfully'
+                                'message':'User status changed successfully.'
                             });
                         });
                     }else{
@@ -1654,7 +1732,6 @@ module.exports = function (app,cli,mail) {
     });
 
     // End Client Module
-
 
     /**
      * Back Up For Before Selecting Users
@@ -1758,7 +1835,6 @@ module.exports = function (app,cli,mail) {
     app.post('/exam_generate',passport.authenticate('jwt',{session:false}),function(req,res){
         cli.blue(req.user);
         if(req.user.length > 0){
-
             req.checkBody("iRoundOneQuestion","Question must be required").notEmpty();
             req.checkBody("iRoundTwoQuestion","Question must be required").notEmpty();
             req.checkBody("vTitle","Title must be required").notEmpty();
@@ -1784,7 +1860,7 @@ module.exports = function (app,cli,mail) {
                                 queries.insert_exam_schedule({"iExamId":iRoundTwoExamId},function(err,resultTwo){
                                     var iRoundTwoScheduleId = resultTwo.insertId;
 
-                                    queries.get_child_by_client_id({'id':req.user[0].iUserId},function(error,childs){
+
 
                                         var tbl_exam_question = [];
                                         for(var i=0; i<req.body.iRoundOneQuestion.length ;i++){
@@ -1815,14 +1891,52 @@ module.exports = function (app,cli,mail) {
                                                     if(errUpdateExamUser) throw errUpdateExamUser;
                                                 });
                                             }
+
+                                            async.forEachOf(req.body.ExamUser,function(value,key,cb){
+                                                cli.blue("Total Question");
+                                                cli.red(req.body.iRoundOneQuestion.length);
+                                                cli.red(req.body.iRoundTwoQuestion.length);
+                                                queries_v1.ins_exam_participant({iScheduleId:iRoundOneScheduleId,iUserId:value.iUserId,iParentParticipentId:0,iTotalQuestion:req.body.iRoundOneQuestion.length},function(er1,r1){
+                                                    queries_v1.ins_exam_participant({iScheduleId:iRoundTwoScheduleId,iUserId:value.iUserId,iParentParticipentId:r1.insertId,iTotalQuestion:req.body.iRoundTwoQuestion.length},function(er2,r2){
+
+                                                        var tbl_participant_questions = [];
+                                                        for(var i=0; i<req.body.iRoundOneQuestion.length ;i++){
+                                                            var temp = [
+                                                                    r1.insertId,
+                                                                    req.body.iRoundOneQuestion[i],
+                                                                    "0",
+                                                                    "",
+                                                                    "wrong",
+                                                                    "n"
+                                                            ];
+                                                            tbl_participant_questions.push(temp);
+                                                        }
+                                                        for(var i=0; i<req.body.iRoundTwoQuestion.length ;i++){
+                                                            var temp = [
+                                                                r2.insertId,
+                                                                req.body.iRoundTwoQuestion[i],
+                                                                "0",
+                                                                "",
+                                                                "wrong",
+                                                                "n"
+                                                            ];
+                                                            tbl_participant_questions.push(temp);
+                                                        }
+                                                        queries_v1.ins_participant_question(tbl_participant_questions,function(e3,r3){
+                                                           if(e3) throw e3;
+                                                        });
+                                                    });
+                                                });
+                                                cb();
+                                            },function(err){
+                                                console.log("Call back call");
+                                                console.log("Get Round One Question");
+                                            });
                                             res.json({
                                                 'status':200,
                                                 'message':'Success',
                                             });
                                         });
-
-
-                                    });
 
                                 });
                             });
@@ -1947,8 +2061,8 @@ module.exports = function (app,cli,mail) {
     app.post('/exam_details_update',passport.authenticate('jwt',{session:false}),function(req,res){
         cli.blue("/exam_details_update call ***********************************");
         if(req.user.length > 0 ){
-            req.checkBody("RoundOneQuestion","Question must be required").notEmpty();
-            req.checkBody("RoundTwoQuestion","Question must be required").notEmpty();
+            // req.checkBody("RoundOneQuestion","Question must be required").notEmpty();
+            // req.checkBody("RoundTwoQuestion","Question must be required").notEmpty();
             req.checkBody("vTitle","Title must be required").notEmpty();
             req.checkBody("vDescription","Description must be required").notEmpty();
             req.checkBody("ExamUser","Must Be Select Exam User").notEmpty();
@@ -1970,53 +2084,166 @@ module.exports = function (app,cli,mail) {
                     //Update tbl_exams
                     queries.update_tbl_exams({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iExamId:req.body.iRoundOneId,eExamType:req.body.eExamType,eExamSubType:req.body.eExamSubType});
                     queries.update_tbl_exams({vTitle:req.body.vTitle,vDescription:req.body.vDescription,iExamId:req.body.iRoundTwoId,eExamType:req.body.eExamType,eExamSubType:req.body.eExamSubType});
-
-                    //Delete Question
-                    queries.delete_tbl_exam_question({iExamId:req.body.iRoundOneId},function(errOne,resOne){
-                        cli.blue("Delete Call First Time");
-                        if(errOne) throw errOne;
-
-                        queries.delete_tbl_exam_question({iExamId:req.body.iRoundTwoId},function(errTwo,resTwo){
-                            cli.blue("Delete Call Second Time");
-                            if(errTwo) throw errTwo;
-                            var tbl_exam_question = [];
-                            for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
-                                var temp = [
+                    var tbl_exam_question = [];
+                    for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
+                        var temp = [
                                     req.body.RoundOneScheduleId,
                                     req.body.iRoundOneId,
                                     req.body.RoundOneQuestion[i]
-                                ]
-                                tbl_exam_question.push(temp);
-                            }
-                            for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
+                                    ]
+                                    tbl_exam_question.push(temp);
+                    }
+                    for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
                                 var temp = [
                                     req.body.RoundTwoScheduleId,
                                     req.body.iRoundTwoId,
                                     req.body.RoundTwoQuestion[i]
                                 ]
                                 tbl_exam_question.push(temp);
-                            }
+                    }
 
-                            queries.insert_exam_question(tbl_exam_question,function(errorFour,resultFour){
-                                if(errorFour) throw errorFour;
-                                for(var i = 0; i< req.body.ExamUser.length; i++){
-                                    queries.updateExamUser({"iExamId":req.body.ExamUser[i].iExamId,
-                                        "iScheduleId":req.body.ExamUser[i].iScheduleId,
-                                        "eAvailable":req.body.ExamUser[i].eAvailable,
-                                        "iExamUserId":req.body.ExamUser[i].iExamUserId
-                                    },function(errUpdateExamUser,record){
-                                        if(errUpdateExamUser) throw errUpdateExamUser;
+                    if(tbl_exam_question.length > 0){
+
+                        queries.insert_exam_question(tbl_exam_question,function(errorFour,resultFour){
+                            if(errorFour) throw errorFour;
+                        });
+
+                    }
+
+                    for(var i = 0; i< req.body.ExamUser.length; i++){
+                        queries.updateExamUser({"iExamId":req.body.ExamUser[i].iExamId,
+                            "iScheduleId":req.body.ExamUser[i].iScheduleId,
+                            "eAvailable":req.body.ExamUser[i].eAvailable,
+                            "iExamUserId":req.body.ExamUser[i].iExamUserId
+                        },function(errUpdateExamUser,record){
+                            if(errUpdateExamUser) throw errUpdateExamUser;
+                        });
+                    }
+
+                    res.json({
+                        'status':200,
+                        'message':'Success',
+                    });
+                    async.forEachOf(req.body.ExamUser,function(value,key,cb){
+                        if(value.isNewUser == true){
+                            cli.blue("Total Question");
+                            cli.red(parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length)  );
+                            queries_v1.ins_exam_participant({iScheduleId:req.body.RoundOneScheduleId,iUserId:value.iUserId,iParentParticipentId:0,iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length) },function(er1,r1){
+                                queries_v1.ins_exam_participant({iScheduleId:req.body.RoundTwoScheduleId,iUserId:value.iUserId,iParentParticipentId:r1.insertId,iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length)},function(er2,r2){
+                                    var tbl_participant_questions = [];
+                                    for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
+                                        var temp = [
+                                            r1.insertId,
+                                            req.body.RoundOneQuestion[i],
+                                            "0",
+                                            "",
+                                            "wrong",
+                                            "n"
+                                        ];
+                                        tbl_participant_questions.push(temp);
+                                    }
+                                    for(var i=0; i<req.body.RoundOneOldQuestion.length ;i++){
+                                        var temp = [
+                                            r1.insertId,
+                                            req.body.RoundOneOldQuestion[i],
+                                            "0",
+                                            "",
+                                            "wrong",
+                                            "n"
+                                        ];
+                                        tbl_participant_questions.push(temp);
+                                    }
+
+                                    for(var i=0; i<req.body.RoundTwoOldQuestion.length ;i++){
+                                        var temp = [
+                                            r2.insertId,
+                                            req.body.RoundTwoOldQuestion[i],
+                                            "0",
+                                            "",
+                                            "wrong",
+                                            "n"
+                                        ];
+                                        tbl_participant_questions.push(temp);
+                                    }
+
+                                    for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
+                                        var temp = [
+                                            r2.insertId,
+                                            req.body.RoundTwoQuestion[i],
+                                            "0",
+                                            "",
+                                            "wrong",
+                                            "n"
+                                        ];
+                                        tbl_participant_questions.push(temp);
+                                    }
+                                    queries_v1.ins_participant_question(tbl_participant_questions,function(e3,r3){
+                                        if(e3) throw e3;
                                     });
-                                }
-                                res.json({
-                                    'status':200,
-                                    'message':'Success',
                                 });
                             });
 
+                        }else{
+                            cli.red("Get Value of Exam USers");
+                            cli.red(JSON.stringify(value));
+                            queries_v1.get_participant_id({iUserId:value.iUserId},function (e4,rFour) {
+                                if(e4) throw e4;
+                                cli.blue(JSON.stringify(rFour));
+                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length), iParticipantId: rFour[0].RoundOneParticipantId });
+                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length), iParticipantId: rFour[0].RoundTwoParticipantId });
+                                var tbl_participant_questions = [];
+                                for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
+                                    var temp = [
+                                        rFour[0].RoundOneParticipantId,
+                                        req.body.RoundOneQuestion[i],
+                                        "0",
+                                        "",
+                                        "wrong",
+                                        "n"
+                                    ];
+                                    tbl_participant_questions.push(temp);
+                                }
 
-                        });
+
+                                for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
+                                    var temp = [
+                                        rFour[0].RoundTwoParticipantId,
+                                        req.body.RoundTwoQuestion[i],
+                                        "0",
+                                        "",
+                                        "wrong",
+                                        "n"
+                                    ];
+                                    tbl_participant_questions.push(temp);
+                                }
+
+                                if(tbl_participant_questions.length > 0){
+                                    cli.yellow("Tbl_participant_question");
+                                    cli.green("if");
+                                    queries_v1.ins_participant_question(tbl_participant_questions,function(e5,r5){
+                                        if(e5) throw e5;
+                                    });
+                                 }else{
+                                    cli.yellow("Tbl_participant_question");
+                                    cli.blue(JSON.stringify(req.body.RoundOneQuestion));
+                                    cli.blue(JSON.stringify(req.body.RoundTwoQuestion));
+                                    cli.yellow("Tbl_participant_question");
+                                    cli.green("else");
+                                }
+                            });
+                        }
+                        cb();
+                    },function(err){
+                        console.log("Call back call");
+                        console.log("Get Round One Question");
                     });
+
+
+
+
+
+
+
 
 
 
@@ -2153,8 +2380,11 @@ module.exports = function (app,cli,mail) {
                         queries.tbl_exams_status({iExamId:req.body.iExamId,eStatus:req.body.eStatus},function(errOne,resOne){
                             if(errOne) throw  errOne;
                             if(resOne.affectedRows > 0){
+
+
+
                                 res.status(200).json({
-                                    "message":"Exam Status change Successfully"
+                                    "message":"Exam status changed Successfully."
                                 });
                             }else{
                                 res.status(400).json({
@@ -2170,7 +2400,7 @@ module.exports = function (app,cli,mail) {
                                 console.log(resTwo);
                                 if(resTwo.affectedRows > 0){
                                     res.status(200).json({
-                                        "message":"Exam Deleted Successfully"
+                                        "message":"Exam Deleted Successfully."
                                     });
                                 }else{
                                     res.status(400).json({
@@ -2270,7 +2500,8 @@ module.exports = function (app,cli,mail) {
                                         RTwoTotalQuestion:resOne[i].RTwoTotalQuestion,
                                         RTwoWrongAnswers:resOne[i].RTwoWrongAnswers,
                                         RTwoExamId:resOne[i].RTwoExamId,
-                                        ExamDate:resOne[i].ExamDate
+                                        ExamDate:resOne[i].ExamDate,
+                                        iTotalAttempt:resOne[i].iTotalAttempt
                                     });
                                     i == resOne.length -1 ? tempResult.push(result) : "";
                                 }else{
@@ -2297,7 +2528,8 @@ module.exports = function (app,cli,mail) {
                                         RTwoTotalQuestion:resOne[i].RTwoTotalQuestion,
                                         RTwoWrongAnswers:resOne[i].RTwoWrongAnswers,
                                         RTwoExamId:resOne[i].RTwoExamId,
-                                        ExamDate:resOne[i].ExamDate
+                                        ExamDate:resOne[i].ExamDate,
+                                        iTotalAttempt:resOne[i].iTotalAttempt
                                     });
                                     i == resOne.length -1 ? tempResult.push(result) : "";
                                     cli.blue(JSON.stringify(tempResult));
@@ -2324,6 +2556,7 @@ module.exports = function (app,cli,mail) {
 
     app.post('/dashboard',passport.authenticate('jwt',{session:false}),function(req,res){
         cli.blue("Dashboard call");
+        var eTypeQuestion = [];
         if(req.user.length > 0){
             console.log(JSON.stringify(req.user[0].vUserType));
             if(req.user[0].vUserType == 'client'){
@@ -2331,8 +2564,8 @@ module.exports = function (app,cli,mail) {
                     if(errOne) throw  errOne;
                     queries.get_total_exam_generated({"iUserId":req.user[0].iUserId},function(errTwo,resTwo){
                         if(errTwo) throw errTwo;
-                        queries.ls_mcq_count({},function(errThree,resThree){
-                            queries.ls_vsq_count({},function(errFour,resFour){
+                        queries.ls_mcq_count({eTypeQuestion:eTypeQuestion},function(errThree,resThree){
+                            queries.ls_vsq_count({eTypeQuestion:eTypeQuestion},function(errFour,resFour){
 
                                 res.status(200).json({TotalGameUser:resOne[0].TotalGameUser,
                                     TotalExam:resTwo[0].TotalExam,
@@ -2351,8 +2584,8 @@ module.exports = function (app,cli,mail) {
                     queries.get_total_game_users_for_admin_parent({},function(errTwo,resTwo){
                         cli.blue(resTwo);
                         if(errTwo) throw errTwo;
-                        queries.ls_mcq_count({},function(errThree,resThree){
-                            queries.ls_vsq_count({},function(errFour,resFour){
+                        queries.ls_mcq_count({eTypeQuestion:eTypeQuestion},function(errThree,resThree){
+                            queries.ls_vsq_count({eTypeQuestion:eTypeQuestion},function(errFour,resFour){
                                 queries.get_total_users_for_admin({vParentType:'Teacher'},function(errFive,resFive){
                                     queries.get_total_exams({},function(errSix,resSix){
                                         res.status(200).json({

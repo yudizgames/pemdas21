@@ -27,7 +27,7 @@ angular.module('Pemdas').controller('LoginCtrl',function ($scope,$http,$localFor
                     });
                 });
             }else{
-                toastr.error('Please Check your email/password', 'Error');
+                toastr.error(res.data.message, 'Error');
             }
             console.log("Success call");
         },function(err){

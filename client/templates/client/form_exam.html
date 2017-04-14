@@ -1,3 +1,14 @@
+<style>
+    #datatableone_filter{
+        display: none;
+    }
+    #datatabletwo_filter{
+        display: none;
+    }
+    button.btn.dropdown-toggle.btn-default{
+        display: none;
+    }
+</style>
 <div class="container-fluid">
     <div class="block-header">
         <h2>EXAM DETAILS</h2>
@@ -152,8 +163,72 @@
                 </div>
                 <div class="clearfix"></div>
                 <div class="body">
-                    <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
-                    <table id="datatableone" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable dt-options="dtOptionsROne" dt-columns="dtColumnsROne" dt-instance="dtInstanceQuestionROne"></table>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Parenthesis</th>
+                            <th>Exponent</th>
+                            <th>Multiplication</th>
+                            <th>Division</th>
+                            <th>Addition</th>
+                            <th>Subtraction</th>
+                            <th>Search {{oneSearchCount}}</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchOne.panethesis" ng-true-value="true" ng-false-value="false" ng-change="searchOne.panethesis == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchOne.exponent" ng-true-value="true" ng-false-value="false" ng-change="searchOne.exponent == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchOne.mutiplication" ng-true-value="true" ng-false-value="false" ng-change="searchOne.mutiplication == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchOne.division" ng-true-value="true" ng-false-value="false" ng-change="searchOne.division == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchOne.addition" ng-true-value="true" ng-false-value="false" ng-change="searchOne.addition == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchOne.subtraction" ng-true-value="true" ng-false-value="false" ng-change="searchOne.subtraction == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <button ng-click="fnsearchone('search')" class="btn btn-raised btn-sm btn-primary waves-effect" ng-disabled="oneSearchCount > 0 ? false : true">Search</button>
+                                <button ng-click="fnsearchone('reset')" class="btn btn-raised btn-sm btn-primary waves-effect">Reset</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="datatableone" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable="" dt-options="dtOptionsROne" dt-columns="dtColumnsROne" dt-instance="dtInstances.dtInstanceQuestionROne"></table>
                 </div>
             </div>
         </div>
@@ -170,7 +245,72 @@
                 <div class="clearfix"></div>
                 <div class="body" >
                     <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
-                    <table id="datatabletwo" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable dt-options="dtOptionsRTwo" dt-columns="dtColumnsRTwo" dt-instance="dtInstanceQuestionRTwo"></table>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Parenthesis</th>
+                            <th>Exponent</th>
+                            <th>Multiplication</th>
+                            <th>Division</th>
+                            <th>Addition</th>
+                            <th>Subtraction</th>
+                            <th>Search {{oneSearchCount}}</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchTwo.panethesis" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.panethesis == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = onetwoSearchCounttwoSearchCountearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchTwo.exponent" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.exponent == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchTwo.mutiplication" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.mutiplication == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchTwo.division" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.division == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchTwo.addition" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.addition == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-model="searchTwo.subtraction" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.subtraction == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <button ng-click="fnsearchtwo('search')" class="btn btn-raised btn-sm btn-primary waves-effect" ng-disabled="twoSearchCount > 0 ? false : true">Search</button>
+                                <button ng-click="fnsearchtwo('reset')" class="btn btn-raised btn-sm btn-primary waves-effect">Reset</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="datatabletwo" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable="" dt-options="dtOptionsRTwo" dt-columns="dtColumnsRTwo" dt-instance="dtInstances.dtInstanceQuestionRTwo"></table>
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@ angular.module('Pemdas').controller('FpassCtrl',function ($scope,$http,$localFor
         }).then(function (res) {
             console.log(res);
             if(res.data.status == 200){
-                toastr.success('Otp send on your password.', 'Success');
+                toastr.success('An email with OTP has been sent.', 'Success');
                 console.log("check mail");
             }else{
                 toastr.error(res.data.message,'Error');
