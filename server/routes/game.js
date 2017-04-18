@@ -317,7 +317,7 @@ module.exports = function (app,cli) {
                     });
                 }else{
                     if(req.body.iRound == 1){
-                        queries.check_round_one_question_answer({"iQuestionId":req.body.iQuestionId,"iAnswerId":req.body.iAnswerId},function(err,res1){
+                        queries.check_round_one_question_answer({"iQuestionId":req.body.iQuestionId,"iAnswerId":req.body.iAnswerId},function(err1,res1){
                             var updatParticipant = {};
                             var participantQuestions = {};
                             if(res1[0].rowCount > 0){
@@ -334,14 +334,13 @@ module.exports = function (app,cli) {
                                     "iWrongAnswers":-1,
                                     "iParticipantId":req.body.iParticipantId
                                 }
-
-                                res.json({
-                                    'status':200,
-                                    'message':'Success',
-                                    'eStatus':true
-                                });
-                                queries.update_exam_participant(updatParticipant,function(err,res3){
-                                    if(err) throw err;
+                                queries.update_exam_participant(updatParticipant,function(err3,res3){
+                                    if(err3) throw err3;
+                                    res.json({
+                                        'status':200,
+                                        'message':'Success',
+                                        'eStatus':true
+                                    });
                                 });
 
                             }else{
@@ -367,8 +366,8 @@ module.exports = function (app,cli) {
                             cli.red("Round One Data");
                             cli.blue(JSON.stringify(participantQuestions));
                             cli.blue(JSON.stringify(updatParticipant));
-                            queries_v1.update_participant_questions(participantQuestions,function(err,res2){
-                                if(err) throw err;
+                            queries_v1.update_participant_questions(participantQuestions,function(e,r){
+                                if(e) throw e;
                             });
 
                         });
@@ -390,14 +389,13 @@ module.exports = function (app,cli) {
                                     "iWrongAnswers":-1,
                                     "iParticipantId":req.body.iParticipantId
                                 }
-
-                                res.json({
-                                    'status':200,
-                                    'message':'Success',
-                                    'eStatus':true
-                                });
                                 queries.update_exam_participant(updatParticipant,function(err,res3){
                                     if(err) throw err;
+                                    res.json({
+                                        'status':200,
+                                        'message':'Success',
+                                        'eStatus':true
+                                    });
                                 });
                             }else{
                                 participantQuestions = {
@@ -468,7 +466,8 @@ module.exports = function (app,cli) {
     });
 
     app.get('/ws/v1/check_exam',passport.authenticate('jwt',{session:false}),function(req,res){
-
+        cli.red("Token");
+        cli.red(req);
         if(req.user.length > 0){
             queries_v1.check_exam_available({iUserId:req.user[0].iUserId},function(errOne,resOne){
                 if(resOne.length > 0){
@@ -476,10 +475,12 @@ module.exports = function (app,cli) {
                        if(resTwo[0].RoneiWrongAnswer > 0 || resTwo[0].RtwoiWrongAnswer){
                             var RoneiParticipantId = resTwo[0].RoneiParticipantId;
                             var RtwoiParticipantId = resTwo[0].RtwoiParticipantId;
+                            var TotalAttempt = resTwo[0].TotalAttempt;
                             var Response  = {};
                             var RoundOneQuestion = [];
                             var RoundTwoQuestion = [];
                             queries_v1.get_participant_question({iParticipantId: RoneiParticipantId},function(errThree,resThree){
+                                //TotalAttempt
                                 cli.green(JSON.stringify(resThree));
                                 if(resThree.length > 0){
                                     var mcq = [];
@@ -534,21 +535,46 @@ module.exports = function (app,cli) {
                                             }
                                             Response.RoundTwo = {
                                                 "iParticipantId":RtwoiParticipantId,
-                                                "isAvailable":false
+                                                "isAvailable":true
                                             }
+
                                             Response.RoundTwoQuestion = RoundTwoQuestion;
-                                            queries_v1.update_participant_attempt({iParticipantId:RtwoiParticipantId});
-                                            queries_v1.update_participant_attempt({iParticipantId:RoneiParticipantId});
+                                            queries_v1.update_participant_attempt({iParticipantId:RtwoiParticipantId},function(errSeven,resSeven){
+                                                    cli.red("Attempt ROne");
+                                                    if(errSeven) throw errSeven;
+                                                queries_v1.update_participant_attempt({iParticipantId:RoneiParticipantId},function (errEight,resEight) {
+                                                    cli.red("Attempt RTwo");
+                                                    if(errEight) throw errEight;
+                                                });
+                                            });
+                                            Response.TotalAttempt = TotalAttempt + 1;
                                             res.status(200).json({
                                                 'status':200,
                                                 data:Response
                                             });
+
                                         });
                                     }else{
                                         Response.RoundTwo = {
                                             "iParticipantId":RtwoiParticipantId,
                                             "isAvailable":false
                                         }
+
+                                        Response.TotalAttempt = TotalAttempt + 1;
+                                        res.status(200).json({
+                                            'status':200,
+                                            data:Response
+                                        });
+
+                                        queries_v1.update_participant_attempt({iParticipantId:RtwoiParticipantId},function(errSeven,resSeven){
+                                            cli.red("Attempt ROne");
+                                            if(errSeven) throw errSeven;
+                                            queries_v1.update_participant_attempt({iParticipantId:RoneiParticipantId},function (errEight,resEight) {
+                                                cli.red("Attempt RTwo");
+                                                if(errEight) throw errEight;
+                                            });
+                                        });
+
                                     }
 
                                 });
@@ -556,14 +582,14 @@ module.exports = function (app,cli) {
                         }else{
                         res.status(403).json({
                             'status':403,
-                            'message':'You already done exam'
+                            'message':'You already have completed this exam.'
                         })
                        }
                     });
                 }else{
                     res.status(404).json({
                         'status':404,
-                        'message':'Exam not available for you !'
+                        'message':'There is no exams schedule for you.'
                     });
                 }
             });

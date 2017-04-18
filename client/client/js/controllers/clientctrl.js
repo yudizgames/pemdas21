@@ -7,6 +7,7 @@ angular.module('client').controller('ClientCtrl',function ($scope,$http,$localFo
     $localForage.getItem('UserInfo').then(function (data) {
         console.log(data);
         $rootScope.vUserName = data.vUserName;
+        $rootScope.SITENAME = "asdfasdfadsf";
     });
     $scope.logout = function(){
         console.log("Log out call");

@@ -37,19 +37,22 @@ var Demo = {
         db.query("SELECT rtwo.iParentParticipentId as RoundOneParticipantId, rtwo.iParticipantId as RoundTwoParticipantId FROM tbl_exam_participant as rone JOIN tbl_exam_participant as rtwo ON rone.iParticipantId = rtwo.iParentParticipentId WHERE rone.iUserId = ? AND rone.iParentParticipentId = 0",[body.iUserId],cb);
     },
     update_total_question:function(body,cb){
-        db.query("UPDATE tbl_exam_participant SET iTotalQuestion = ?, iWrongAnswers = ? WHERE iParticipantId = ?",[body.iTotalQuestion,body.iTotalQuestion,body.iParticipantId]);
+        db.query("UPDATE tbl_exam_participant SET iTotalQuestion = ?, iWrongAnswers = iWrongAnswers + ? WHERE iParticipantId = ?",[body.iTotalQuestion,body.iWrongAnswers,body.iParticipantId]);
     },
     //Generate Exam End
 
     //Game Api
     check_exam_available:function(body,cb){
-        db.query("SELECT * FROM tbl_exam_users JOIN tbl_exams ON tbl_exams.iExamId = tbl_exam_users.iExamId WHERE tbl_exam_users.iUserId = 77 AND tbl_exam_users.iScheduleId > 0 AND tbl_exam_users.iExamId > 0 AND tbl_exam_users.eAvailable = 'y' AND tbl_exams.eStatus = 'y'",[body.iUserId],cb);
+        cli.blue("asdfasdfasdfasdfasdfasdfasdfasdf");
+        cli.red(JSON.stringify(body));
+        db.query("SELECT * FROM tbl_exam_users JOIN tbl_exams ON tbl_exams.iExamId = tbl_exam_users.iExamId WHERE tbl_exam_users.iUserId = ? AND tbl_exam_users.iScheduleId > 0 AND tbl_exam_users.iExamId > 0 AND tbl_exam_users.eAvailable = 'y' AND tbl_exams.eStatus = 'y'",[body.iUserId],cb);
     },
     chek_exam_participent:function(body,cb){
         db.query("SELECT rone.iParticipantId as RoneiParticipantId," +
                 "rone.iTotalQuestion as RoneiTotalQuestion," +
                 "rone.iRightAnswers as RoneiRightAnswer," +
                 "rone.iWrongAnswers as RoneiWrongAnswer," +
+                "rone.iTotalAttempt as TotalAttempt, "+
                 "rtwo.iParticipantId as RtwoiParticipantId," +
                 "rtwo.iTotalQuestion as RtwoiTotalQuestion," +
                 "rtwo.iRightAnswers as RtwoiRightAnswer," +
@@ -65,8 +68,8 @@ var Demo = {
         db.query("UPDATE tbl_participant_questions SET iAnswerId = ? , vAnswer = ?,eCheck = ?,eStatus = ? WHERE iParticipantId = ? AND iQuestionId = ?",
             [body.iAnswerId,body.vAnswer,body.eCheck,body.eStatus,body.iParticipantId,body.iQuestionId],cb);
     },
-    update_participant_attempt:function(body){
-        db.query("UPDATE tbl_exam_participant SET iTotalAttempt = iTotalAttempt + 1 WHERE iParticipantId = ?",[body.iParticipantId]);
+    update_participant_attempt:function(body,cb){
+        db.query("UPDATE tbl_exam_participant SET iTotalAttempt = iTotalAttempt + 1 WHERE iParticipantId = ?",[body.iParticipantId],cb);
     },
 
     //Game Api for end

@@ -283,12 +283,12 @@ var Users = {
                 Where += ")"
             }
         }
-
-
-
         if(typeof body.sort != 'undefined' && body.sort != "") {
             sort = body.sort
         }else{ sort = "iQuestionId DESC" };
+        cli.red("Order for question");
+        cli.red(sort);
+
         db.query("SELECT tbl_questions.*,tbl_answers.vAnswer FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus != 'd' "+Where+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit,cb);
     },
     viewQuestion:function(body,cb){

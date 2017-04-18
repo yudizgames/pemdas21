@@ -11,6 +11,13 @@ angular.module('admin').controller('DashboardCtrl',function ($scope,$state,$http
         }).then(function(res){
             console.log(res);
             $scope.data = res.data;
+            for(var i = 0; i < res.data.settings.length ; i++){
+                if(res.data.settings[i].vConstant == "SITENAME"){
+                    console.log("Settings call for dashboard controller");
+                    console.log(res.data.settings[i].vValue);
+                    $rootScope.SITENAME = res.data.settings[i].vValue;
+                }
+            }
         },function (err) {
             console.log(err);
         })

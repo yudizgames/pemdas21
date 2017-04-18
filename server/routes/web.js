@@ -735,7 +735,7 @@ module.exports = function (app,cli,mail) {
                 'vModeName':'',
                 'eTypeQuestion':eTypeQuestion,
                 'eType':eType,
-                'sort':getSorting(req.body)
+                'sort':req.body.draw == 1 ? "iQuestionId DESC" : getSorting(req.body)
             }
             queries.ls_question_select(obj,function(err,question){
                 if(err) throw err;
@@ -2189,8 +2189,8 @@ module.exports = function (app,cli,mail) {
                             queries_v1.get_participant_id({iUserId:value.iUserId},function (e4,rFour) {
                                 if(e4) throw e4;
                                 cli.blue(JSON.stringify(rFour));
-                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length), iParticipantId: rFour[0].RoundOneParticipantId });
-                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length), iParticipantId: rFour[0].RoundTwoParticipantId });
+                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length),iWrongAnswers:parseInt(req.body.RoundOneQuestion.length), iParticipantId: rFour[0].RoundOneParticipantId });
+                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length),iWrongAnswers:parseInt(req.body.RoundTwoQuestion.length), iParticipantId: rFour[0].RoundTwoParticipantId });
                                 var tbl_participant_questions = [];
                                 for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
                                     var temp = [
@@ -2554,7 +2554,7 @@ module.exports = function (app,cli,mail) {
      * Dashboard Api for Client And Admin
      */
 
-    app.post('/dashboard',passport.authenticate('jwt',{session:false}),function(req,res){
+    app.post('/dashboard',passport.authenticate('jwt',{session:false}),function(req,res)    {
         cli.blue("Dashboard call");
         var eTypeQuestion = [];
         if(req.user.length > 0){
@@ -2566,10 +2566,12 @@ module.exports = function (app,cli,mail) {
                         if(errTwo) throw errTwo;
                         queries.ls_mcq_count({eTypeQuestion:eTypeQuestion},function(errThree,resThree){
                             queries.ls_vsq_count({eTypeQuestion:eTypeQuestion},function(errFour,resFour){
-
-                                res.status(200).json({TotalGameUser:resOne[0].TotalGameUser,
-                                    TotalExam:resTwo[0].TotalExam,
-                                    iTotalQuestion:resThree[0].iTotalRecords + resFour[0].iTotalRecords
+                                queries.getSettings(req,function(errorFive,rowsFive){
+                                    res.status(200).json({TotalGameUser:resOne[0].TotalGameUser,
+                                        TotalExam:resTwo[0].TotalExam,
+                                        iTotalQuestion:resThree[0].iTotalRecords + resFour[0].iTotalRecords,
+                                        settings:rowsFive
+                                    });
                                 });
                             });
                         });
@@ -2588,12 +2590,15 @@ module.exports = function (app,cli,mail) {
                             queries.ls_vsq_count({eTypeQuestion:eTypeQuestion},function(errFour,resFour){
                                 queries.get_total_users_for_admin({vParentType:'Teacher'},function(errFive,resFive){
                                     queries.get_total_exams({},function(errSix,resSix){
-                                        res.status(200).json({
-                                            Parent:resOne[0].TotalUser,
-                                            Teacher:resFive[0].TotalUser,
-                                            TotalGameUser:resTwo[0].TotalGameUser,
-                                            iTotalQuestion:resThree[0].iTotalRecords + resFour[0].iTotalRecords,
-                                            TotalExam:resSix[0].TotalExam
+                                        queries.getSettings(req,function(errorSeven,resSeven){
+                                            res.status(200).json({
+                                                Parent:resOne[0].TotalUser,
+                                                Teacher:resFive[0].TotalUser,
+                                                TotalGameUser:resTwo[0].TotalGameUser,
+                                                iTotalQuestion:resThree[0].iTotalRecords + resFour[0].iTotalRecords,
+                                                TotalExam:resSix[0].TotalExam,
+                                                settings:resSeven
+                                            });
                                         });
                                     });
                                 });
@@ -2668,6 +2673,9 @@ function getSorting(req) {
     for (i = 0; i < req.order.length; i++) {
         vSort.push(req.columns[req.order[i].column].name + ' ' + req.order[i].dir);
     }
+    console.log("try me");
+    console.log(JSON.stringify(req));
+    console.log(vSort);
     return vSort.toString();
 }
 

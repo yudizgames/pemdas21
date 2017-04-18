@@ -41,7 +41,7 @@ angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootSc
         DTColumnBuilder.newColumn("eTypeQuestion", "Type").withOption('name', 'eTypeQuestion'),
         DTColumnBuilder.newColumn("vQuestion", "Question").withOption('name', 'vQuestion'),
         DTColumnBuilder.newColumn("vAnswer", "Answer").withOption('name', 'vAnswer'),
-        DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(actionsHtml),
+        DTColumnBuilder.newColumn(null).withTitle('Status').notSortable().renderWith(actionsHtml).notSortable(),
         // DTColumnBuilder.newColumn("Status",'Status').withOption('name','Status').notSortable(),
         DTColumnBuilder.newColumn("operation",'Operation').withOption('name','operation').notSortable()
     ];
@@ -59,7 +59,7 @@ angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootSc
         .withOption('serverSide', true) // for server side processing
         .withPaginationType('full_numbers') // for get full pagination options // first / last / prev / next and page numbers
         .withDisplayLength(10) // Page size
-        .withOption('aaSorting',[1,'desc'])
+        // .withOption('aaSorting')
         .withOption('createdRow',function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
             $compile(nRow)($scope);
     });
