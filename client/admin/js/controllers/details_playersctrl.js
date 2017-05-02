@@ -8,7 +8,7 @@ angular.module('admin').controller('UserDetailsCtrl',function ($scope,$rootScope
     }
     $scope.iUserId = $stateParams.id;
 
-
+    console.log("User Details Ctrl");
     $http({
         method:'post',
         url:'/statistics_by_user',

@@ -106,7 +106,6 @@ angular.module('client').controller('ClientPlayersCtrl',function ($scope,$rootSc
                 dataType:'json',
                 headers:{'Authorization':$http.defaults.headers.common.Authorization},
                 data:function(d){
-
                     $scope.userStatus = [];
                     console.log("data call");
                 }

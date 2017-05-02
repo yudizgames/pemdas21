@@ -7,11 +7,11 @@ module.exports = {
         'host':'localhost',
         'user':'root',
         'debug':true,
-        // 'password':'root',
-        'password':'!$ecUrepa55W0rd!',
-        // 'port':'8889',
-        // 'database':'yudiz_pemdas_dev',
-        'database':'pemdas2',
+        'password':'root',
+        // 'password':'!$ecUrepa55W0rd!',
+        'port':'8889',
+        'database':'yudiz_pemdas_dev',
+        // 'database':'pemdas2',
     },
     'users_table':'tbl_users'
 }

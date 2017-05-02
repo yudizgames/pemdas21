@@ -171,7 +171,6 @@ pemdas.run(function($state,$rootScope,$http,$localForage){
     });
     $rootScope.$state = $state;
     console.log("hello");
-
 });
 pemdas.controller('GlobalCtrl',function ($scope,$rootScope) {
     console.log("Global Controller call");

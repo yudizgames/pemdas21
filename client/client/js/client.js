@@ -245,6 +245,40 @@ app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyL
                 }]
             }
     })
+    .state('client.tryagain',{
+            url:'/tryagain',
+            params:{
+                iUserId:null,
+                ROneTryagainId:null,
+                RTwoTryagainId:null,
+                ROneParticipantId:null,
+                RTwoParticipantId:null
+            },
+            templateUrl:'templates/client/tryagain.html',
+            data :{ pageTitle:'Users',bodyClass:'theme-blush' },
+            controller:'TryagainCtrl',
+            resolve:{
+                depends:['$ocLazyLoad',function($ocLazyLoad){
+                    console.log("Lazy Load Call");
+                    return $ocLazyLoad.load({
+                        name:'main',
+                        insertBefore:'#ng_load_plugins_before',
+                        files:[
+                            'assets/css/main.css',
+                            'assets/css/themes/all-themes.css',
+                            'assets/bundles/libscripts.bundle.js',
+                            'assets/bundles/vendorscripts.bundle.js',
+                            'assets/bundles/mainscripts.bundle.js',
+                            'assets/js/pages/index.js',
+                            "assets/plugins/jquery-steps/jquery.steps.js",
+                            "assets/plugins/sweetalert/sweetalert.min.js",
+                            "assets/js/pages/forms/form-validation.js",
+                            'client/js/controllers/tryagainctrl.js'
+                        ]
+                    });
+                }]
+            }
+        })
 
     .state('client.exam',{
             url:'/exam',

@@ -23,6 +23,12 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-8 col-md-4 col-sm-6 col-xs-12">
+            <div class="card">
+                <div id="container"></div>
+                <!-- style="min-width: 310px; height: 400px; margin: 0 auto" -->
+            </div>
+        </div>
         <div ng-repeat="d in data" class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
             <div class="card">
                 <div class="header">
@@ -37,13 +43,13 @@
                         <table class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <td>Attempt</td>
+                                <td>Exam Attempt</td>
                                 <td>Total Question</td>
                                 <td>Round One Right Answer</td>
                                 <td>Round One Wrong Answer</td>
                                 <td>Round Two Right Answer</td>
                                 <td>Round Two Wrong Answer</td>
-                                <td>Total Attempt</td>
+                                <!--<td>Total Attempt</td>-->
                                 <td>Date</td>
                                 <td>Details</td>
                             </tr>
@@ -56,8 +62,8 @@
                                 <td>{{e.ROneWrongAnswers}}</td>
                                 <td>{{e.RTwoRightAnswers}}</td>
                                 <td>{{e.RTwoWrongAnswers}}</td>
-                                <td>{{e.iTotalAttempt}}</td>
-                                <td>{{e.ExamDate | date:"MM/dd/yyyy"}}</td>
+                                <!--<td>{{e.iTotalAttempt}}</td>-->
+                                <td>{{e.ExamDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>
                                 <td><button type="button" class="btn btn-raised btn-xs bg-light-blue waves-effect"
                                             ui-sref="client.userresult({ROneParticipantId:e.ROneParticipantId,RTwoParticipantId:e.RTwoParticipantId,'iUserId':iUserId})">
                                     Details

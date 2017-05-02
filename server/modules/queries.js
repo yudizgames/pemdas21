@@ -11,10 +11,11 @@ var dateFormat = require("dateformat"); //dateFormat(new Date(),"yyyy-mm-dd HH:m
 var Users = {
     //   *@   //
     getUser:function(body,callback){
-        return db.query("SELECT *  FROM `tbl_users` WHERE `vEmail` = ? AND `vPassword` = ? AND `eStatus` = 'y'",[body.vEmail,md5(body.vPassword)],callback);
+        db.query("SELECT *  FROM `tbl_users` WHERE `vEmail` = ? AND `vPassword` = ? AND `eStatus` = 'y'",[body.vEmail,md5(body.vPassword)],callback);
     },
     getUserAdmin:function(body,callback){
-        return db.query("SELECT *  FROM `tbl_users` WHERE `vEmail` = ? AND `vPassword` = ? AND `eStatus` != 'd'",[body.vEmail,md5(body.vPassword)],callback);
+        console.log("Api call");
+        db.query("SELECT *  FROM `tbl_users` WHERE `vEmail` = ? AND `vPassword` = ? AND `eStatus` != 'd'",[body.vEmail,md5(body.vPassword)],callback);
     },
     setTocket:function(body,callback){
         console.log("setTocken call");
@@ -483,7 +484,7 @@ var Users = {
         db.query("INSERT INTO tbl_exam_schedule (iExamId,dExamDate,iWinnerId,dCreatedDate) VALUES (?,?,?,?)",[body.iExamId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),0,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss")],cb);
     },
     insert_exam_participant:function(body,cb){
-        db.query("INSERT INTO tbl_exam_participant (iScheduleId,iUserId,dCreatedDate,iParentParticipentId,) VALUES (?,?,?,?) ",[body.iScheduleId,body.iUserId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iParentParticipentId],cb);
+        db.query("INSERT INTO tbl_exam_participant (iScheduleId,iUserId,dCreatedDate,iParentParticipentId) VALUES (?,?,?,?) ",[body.iScheduleId,body.iUserId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iParentParticipentId],cb);
     },
     insert_exam_question:function(body,cb){
         db.query("INSERT INTO tbl_exam_question (iExamId,iScheduleId,iQuestionId) VALUES ? ",[body],cb);
@@ -495,7 +496,7 @@ var Users = {
         db.query("INSERT INTO tbl_participant_questions (iParticipantId,iQuestionId,iAnswerId,vAnswer,eCheck,eStatus) VALUES (?,?,?,?,?,?)",[body.iParticipantId,body.iQuestionId,body.iAnswerId,body.vAnswer,body.eCheck,body.eStatus],cb);
     },
     update_exam_participant:function(body,cb){
-            db.query("UPDATE tbl_exam_participant SET iRightAnswers = iRightAnswers + ? , iWrongAnswers = iWrongAnswers + ? WHERE iParticipantId = ? ",[body.iRightAnswers,body.iWrongAnswers,body.iParticipantId],cb);
+        db.query("UPDATE tbl_exam_participant SET iRightAnswers = iRightAnswers + ? , iWrongAnswers = iWrongAnswers + ?, iTotalQuestion = iTotalQuestion + ? WHERE iParticipantId = ? ",[body.iRightAnswers,body.iWrongAnswers,body.iTotalQuestion,body.iParticipantId],cb);
     },
     check_round_two_question_answer:function(body,cb){
         db.query("SELECT COUNT(*) as rowCount FROM tbl_questions JOIN tbl_answers ON tbl_questions.iAnswerId = tbl_answers.iAnswerId WHERE tbl_questions.iQuestionId = ? AND tbl_answers.vAnswer = ? AND tbl_questions.eStatus != 'd'",[body.iQuestionId,body.vAnswer],cb);
@@ -731,6 +732,17 @@ var Users = {
             "JOIN tbl_exam_participant as RoundTwo ON RoundTwo.iParentParticipentId = RoundOne.iParticipantId " +
             "WHERE RoundOne.iParticipantId = ?",[body.iParticipantId],cb);
     },
+    get_exam_result_after_try_again:function(body,cb){
+        db.query("SELECT " +
+            "RoundOne.iTotalQuestion + RoundTwo.iTotalQuestion as TotalQuestion, " +
+            "RoundOne.iRightAnswers as ROneRightAnswers, " +
+            "RoundOne.iWrongAnswers as ROneWrongAnswers, " +
+            "RoundTwo.iRightAnswers as RTwoRightAnswers, " +
+            "RoundTwo.iWrongAnswers as RTwoWrongAnswers " +
+            "FROM tbl_tryagain as RoundOne " +
+            "JOIN tbl_tryagain as RoundTwo ON RoundTwo.iParentTryagainId = RoundOne.iTryagainId " +
+            "WHERE RoundOne.iTryagainId = ?",[body.iTryagainId],cb);
+    },
     detail_result_round_one:function(body,cb){
         db.query("SELECT " +
             "tbl_participant_questions.eCheck as eCheck, " +
@@ -759,7 +771,55 @@ var Users = {
             "JOIN tbl_questions ON tbl_questions.iQuestionId =  tbl_participant_questions.iQuestionId " +
             "JOIN tbl_answers as actual_ans ON tbl_questions.iAnswerId = actual_ans.iAnswerId " +
             "WHERE tbl_participant_questions.iParticipantId = ?",[body.iParticipantId],cb);
+    },
+
+    try_again_listing:function (body,cb) {
+        db.query("SELECT parent.iTryagainId as ROneTryagainId, " +
+            "parent.iTotalQuestion as ROneTotalQuestion, " +
+            "parent.iRightAnswers as ROneRightAnswers, " +
+            "parent.iWrongAnswers as ROneWrongAnswers, " +
+            "child.iTryagainId as RTwoTryagainId," +
+            "child.iTotalQuestion as RTwoTotalQuestion, " +
+            "child.iRightAnswers as RTwoRightAnswers, " +
+            "child.iWrongAnswers as RTwoWrongAnsers " +
+            "FROM tbl_tryagain as parent " +
+            "JOIN tbl_tryagain as child ON child.iParentTryagainId = parent.iTryagainId " +
+            "WHERE parent.iParticipantId = ?",[body.iParticipantId],cb);
+    },
+    detail_result_tryagain_round_one:function(body,cb){
+        db.query("SELECT tbl_tryagain_question.eCheck as eCheck," +
+            "tbl_questions.vModeName," +
+            "tbl_questions.eType," +
+            "tbl_questions.eTypeQuestion," +
+            "tbl_questions.vQuestion,actual_ans.vAnswer as ActualAns," +
+            "give_ans.vAnswer as GiveAns " +
+            "FROM tbl_tryagain_question " +
+            "JOIN tbl_questions ON tbl_questions.iQuestionId =  tbl_tryagain_question.iQuestionId " +
+            "JOIN tbl_answers as actual_ans ON tbl_questions.iAnswerId = actual_ans.iAnswerId " +
+            "JOIN tbl_answers as give_ans ON tbl_tryagain_question.iAnswerId = give_ans.iAnswerId " +
+            "WHERE tbl_tryagain_question.iTryagainId = ?",[body.iTryagainId],cb);
+    },
+    detail_result_tryagain_round_two:function(body,cb){
+        db.query("SELECT tbl_tryagain_question.eCheck as eCheck, " +
+                "tbl_questions.vModeName, " +
+                "tbl_questions.eType, " +
+                "tbl_questions.eTypeQuestion, " +
+                "tbl_questions.vQuestion, " +
+                "actual_ans.vAnswer as ActualAns, " +
+                "tbl_tryagain_question.vAnswer as GiveAns " +
+                "FROM tbl_tryagain_question " +
+                "JOIN tbl_questions ON tbl_questions.iQuestionId =  tbl_tryagain_question.iQuestionId " +
+                "JOIN tbl_answers as actual_ans ON tbl_questions.iAnswerId = actual_ans.iAnswerId " +
+                "WHERE tbl_tryagain_question.iTryagainId = ?",[body.iTryagainId],cb);
+    },
+    get_user_exam_graph:function (body, cb) {
+        db.query("SELECT COUNT(*) as TotalAttempt, tbl_exams.vTitle " +
+            "FROM tbl_exam_participant " +
+            "JOIN tbl_exam_schedule ON tbl_exam_schedule.iScheduleId = tbl_exam_participant.iScheduleId " +
+            "JOIN tbl_exams ON tbl_exam_schedule.iExamId = tbl_exams.iExamId " +
+            "WHERE tbl_exam_participant.iParentParticipentId = 0 AND tbl_exam_participant.iUserId = ?",[body.iUserId],cb);
     }
+
 };
 module.exports = Users;
 

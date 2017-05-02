@@ -43,8 +43,6 @@ var Demo = {
 
     //Game Api
     check_exam_available:function(body,cb){
-        cli.blue("asdfasdfasdfasdfasdfasdfasdfasdf");
-        cli.red(JSON.stringify(body));
         db.query("SELECT * FROM tbl_exam_users JOIN tbl_exams ON tbl_exams.iExamId = tbl_exam_users.iExamId WHERE tbl_exam_users.iUserId = ? AND tbl_exam_users.iScheduleId > 0 AND tbl_exam_users.iExamId > 0 AND tbl_exam_users.eAvailable = 'y' AND tbl_exams.eStatus = 'y'",[body.iUserId],cb);
     },
     chek_exam_participent:function(body,cb){
@@ -70,6 +68,25 @@ var Demo = {
     },
     update_participant_attempt:function(body,cb){
         db.query("UPDATE tbl_exam_participant SET iTotalAttempt = iTotalAttempt + 1 WHERE iParticipantId = ?",[body.iParticipantId],cb);
+    },
+    get_examId_scheduleId:function(body,cb){
+        console.log(body.iExamId);
+        db.query("SELECT parent.iExamId as RoundOneExamId, child.iExamId as RoundTwoExamId , RoundOne.iScheduleId as RoundOneScheduleId,  RoundTwo.iScheduleId as RoundTwoScheduleId from tbl_exams as parent JOIN tbl_exams as child ON parent.iExamId = child.iParentId JOIN tbl_exam_schedule as RoundOne ON parent.iExamId = RoundOne.iExamId JOIN tbl_exam_schedule as RoundTwo ON child.iExamId = RoundTwo.iExamId WHERE parent.iExamId = ?",[body.iExamId],cb);
+    },
+    get_wrong_question_attempt_first:function(body,cb){
+        db.query("SELECT * FROM tbl_participant_questions WHERE iParticipantId IN (?) AND eCheck = 'wrong'",[body.iParticipantId],cb);
+    },
+    insert_tbl_tryagain:function(body,cb){
+        db.query("INSERT INTO tbl_tryagain (iParticipantId,iTotalQuestion,iWrongAnswers,iRightAnswers,iParentTryagainId) values (?,?,?,?,?)",[body.iParticipantId,"0","0","0",body.iParentTryagainId],cb);
+    },
+    insert_tryagain_participant_questions:function(body,cb){
+        db.query("INSERT INTO tbl_tryagain_question (iTryagainId,iQuestionId,iAnswerId,vAnswer,eCheck,eStatus) VALUES (?,?,?,?,?,?)",[body.iTryagainId,body.iQuestionId,body.iAnswerId,body.vAnswer,body.eCheck,body.eStatus],cb);
+    },
+    update_tryagain_exam_participant:function(body,cb){
+        db.query("UPDATE tbl_tryagain SET iRightAnswers = iRightAnswers + ? , iWrongAnswers = iWrongAnswers + ?, iTotalQuestion = iTotalQuestion + ? WHERE iTryagainId = ? ",[body.iRightAnswers,body.iWrongAnswers,body.iTotalQuestion,body.iTryagainId],cb);
+    },
+    get_wrong_question_attempt_second:function(body,cb){
+        db.query("SELECT * FROM tbl_tryagain_question WHERE iTryagainId IN (?) AND eCheck = 'wrong'",[body.iTryagainId],cb);
     },
 
     //Game Api for end

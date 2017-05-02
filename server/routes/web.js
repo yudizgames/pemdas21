@@ -27,7 +27,7 @@ module.exports = function (app,cli,mail) {
         var $message = "Please Check your email/password";
         queries.getUserAdmin(body,function(err,rows){
             console.log(JSON.stringify(rows));
-            if(err)throw err;
+            if(err) throw err;
             if(rows.length === 1){
                 if(rows[0].eStatus == 'y'){
 
@@ -1892,46 +1892,48 @@ module.exports = function (app,cli,mail) {
                                                 });
                                             }
 
-                                            async.forEachOf(req.body.ExamUser,function(value,key,cb){
-                                                cli.blue("Total Question");
-                                                cli.red(req.body.iRoundOneQuestion.length);
-                                                cli.red(req.body.iRoundTwoQuestion.length);
-                                                queries_v1.ins_exam_participant({iScheduleId:iRoundOneScheduleId,iUserId:value.iUserId,iParentParticipentId:0,iTotalQuestion:req.body.iRoundOneQuestion.length},function(er1,r1){
-                                                    queries_v1.ins_exam_participant({iScheduleId:iRoundTwoScheduleId,iUserId:value.iUserId,iParentParticipentId:r1.insertId,iTotalQuestion:req.body.iRoundTwoQuestion.length},function(er2,r2){
+                                            // async.forEachOf(req.body.ExamUser,function(value,key,cb){
+                                            //     cli.blue("Total Question");
+                                            //     cli.red(req.body.iRoundOneQuestion.length);
+                                            //     cli.red(req.body.iRoundTwoQuestion.length);
+                                            //     queries_v1.ins_exam_participant({iScheduleId:iRoundOneScheduleId,iUserId:value.iUserId,iParentParticipentId:0,iTotalQuestion:req.body.iRoundOneQuestion.length},function(er1,r1){
+                                            //         queries_v1.ins_exam_participant({iScheduleId:iRoundTwoScheduleId,iUserId:value.iUserId,iParentParticipentId:r1.insertId,iTotalQuestion:req.body.iRoundTwoQuestion.length},function(er2,r2){
+                                            //
+                                            //             var tbl_participant_questions = [];
+                                            //             for(var i=0; i<req.body.iRoundOneQuestion.length ;i++){
+                                            //                 var temp = [
+                                            //                         r1.insertId,
+                                            //                         req.body.iRoundOneQuestion[i],
+                                            //                         "0",
+                                            //                         "",
+                                            //                         "wrong",
+                                            //                         "n"
+                                            //                 ];
+                                            //                 tbl_participant_questions.push(temp);
+                                            //             }
+                                            //             for(var i=0; i<req.body.iRoundTwoQuestion.length ;i++){
+                                            //                 var temp = [
+                                            //                     r2.insertId,
+                                            //                     req.body.iRoundTwoQuestion[i],
+                                            //                     "0",
+                                            //                     "",
+                                            //                     "wrong",
+                                            //                     "n"
+                                            //                 ];
+                                            //                 tbl_participant_questions.push(temp);
+                                            //             }
+                                            //             queries_v1.ins_participant_question(tbl_participant_questions,function(e3,r3){
+                                            //                if(e3) throw e3;
+                                            //             });
+                                            //         });
+                                            //     });
+                                            //     cb();
+                                            // },function(err){
+                                            //     console.log("Call back call");
+                                            //     console.log("Get Round One Question");
+                                            // });
 
-                                                        var tbl_participant_questions = [];
-                                                        for(var i=0; i<req.body.iRoundOneQuestion.length ;i++){
-                                                            var temp = [
-                                                                    r1.insertId,
-                                                                    req.body.iRoundOneQuestion[i],
-                                                                    "0",
-                                                                    "",
-                                                                    "wrong",
-                                                                    "n"
-                                                            ];
-                                                            tbl_participant_questions.push(temp);
-                                                        }
-                                                        for(var i=0; i<req.body.iRoundTwoQuestion.length ;i++){
-                                                            var temp = [
-                                                                r2.insertId,
-                                                                req.body.iRoundTwoQuestion[i],
-                                                                "0",
-                                                                "",
-                                                                "wrong",
-                                                                "n"
-                                                            ];
-                                                            tbl_participant_questions.push(temp);
-                                                        }
-                                                        queries_v1.ins_participant_question(tbl_participant_questions,function(e3,r3){
-                                                           if(e3) throw e3;
-                                                        });
-                                                    });
-                                                });
-                                                cb();
-                                            },function(err){
-                                                console.log("Call back call");
-                                                console.log("Get Round One Question");
-                                            });
+
                                             res.json({
                                                 'status':200,
                                                 'message':'Success',
@@ -2124,119 +2126,121 @@ module.exports = function (app,cli,mail) {
                         'status':200,
                         'message':'Success',
                     });
-                    async.forEachOf(req.body.ExamUser,function(value,key,cb){
-                        if(value.isNewUser == true){
-                            cli.blue("Total Question");
-                            cli.red(parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length)  );
-                            queries_v1.ins_exam_participant({iScheduleId:req.body.RoundOneScheduleId,iUserId:value.iUserId,iParentParticipentId:0,iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length) },function(er1,r1){
-                                queries_v1.ins_exam_participant({iScheduleId:req.body.RoundTwoScheduleId,iUserId:value.iUserId,iParentParticipentId:r1.insertId,iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length)},function(er2,r2){
-                                    var tbl_participant_questions = [];
-                                    for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
-                                        var temp = [
-                                            r1.insertId,
-                                            req.body.RoundOneQuestion[i],
-                                            "0",
-                                            "",
-                                            "wrong",
-                                            "n"
-                                        ];
-                                        tbl_participant_questions.push(temp);
-                                    }
-                                    for(var i=0; i<req.body.RoundOneOldQuestion.length ;i++){
-                                        var temp = [
-                                            r1.insertId,
-                                            req.body.RoundOneOldQuestion[i],
-                                            "0",
-                                            "",
-                                            "wrong",
-                                            "n"
-                                        ];
-                                        tbl_participant_questions.push(temp);
-                                    }
-
-                                    for(var i=0; i<req.body.RoundTwoOldQuestion.length ;i++){
-                                        var temp = [
-                                            r2.insertId,
-                                            req.body.RoundTwoOldQuestion[i],
-                                            "0",
-                                            "",
-                                            "wrong",
-                                            "n"
-                                        ];
-                                        tbl_participant_questions.push(temp);
-                                    }
-
-                                    for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
-                                        var temp = [
-                                            r2.insertId,
-                                            req.body.RoundTwoQuestion[i],
-                                            "0",
-                                            "",
-                                            "wrong",
-                                            "n"
-                                        ];
-                                        tbl_participant_questions.push(temp);
-                                    }
-                                    queries_v1.ins_participant_question(tbl_participant_questions,function(e3,r3){
-                                        if(e3) throw e3;
-                                    });
-                                });
-                            });
-
-                        }else{
-                            cli.red("Get Value of Exam USers");
-                            cli.red(JSON.stringify(value));
-                            queries_v1.get_participant_id({iUserId:value.iUserId},function (e4,rFour) {
-                                if(e4) throw e4;
-                                cli.blue(JSON.stringify(rFour));
-                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length),iWrongAnswers:parseInt(req.body.RoundOneQuestion.length), iParticipantId: rFour[0].RoundOneParticipantId });
-                                queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length),iWrongAnswers:parseInt(req.body.RoundTwoQuestion.length), iParticipantId: rFour[0].RoundTwoParticipantId });
-                                var tbl_participant_questions = [];
-                                for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
-                                    var temp = [
-                                        rFour[0].RoundOneParticipantId,
-                                        req.body.RoundOneQuestion[i],
-                                        "0",
-                                        "",
-                                        "wrong",
-                                        "n"
-                                    ];
-                                    tbl_participant_questions.push(temp);
-                                }
 
 
-                                for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
-                                    var temp = [
-                                        rFour[0].RoundTwoParticipantId,
-                                        req.body.RoundTwoQuestion[i],
-                                        "0",
-                                        "",
-                                        "wrong",
-                                        "n"
-                                    ];
-                                    tbl_participant_questions.push(temp);
-                                }
-
-                                if(tbl_participant_questions.length > 0){
-                                    cli.yellow("Tbl_participant_question");
-                                    cli.green("if");
-                                    queries_v1.ins_participant_question(tbl_participant_questions,function(e5,r5){
-                                        if(e5) throw e5;
-                                    });
-                                 }else{
-                                    cli.yellow("Tbl_participant_question");
-                                    cli.blue(JSON.stringify(req.body.RoundOneQuestion));
-                                    cli.blue(JSON.stringify(req.body.RoundTwoQuestion));
-                                    cli.yellow("Tbl_participant_question");
-                                    cli.green("else");
-                                }
-                            });
-                        }
-                        cb();
-                    },function(err){
-                        console.log("Call back call");
-                        console.log("Get Round One Question");
-                    });
+                    // async.forEachOf(req.body.ExamUser,function(value,key,cb){
+                    //     if(value.isNewUser == true){
+                    //         cli.blue("Total Question");
+                    //         cli.red(parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length)  );
+                    //         queries_v1.ins_exam_participant({iScheduleId:req.body.RoundOneScheduleId,iUserId:value.iUserId,iParentParticipentId:0,iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length) },function(er1,r1){
+                    //             queries_v1.ins_exam_participant({iScheduleId:req.body.RoundTwoScheduleId,iUserId:value.iUserId,iParentParticipentId:r1.insertId,iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length)},function(er2,r2){
+                    //                 var tbl_participant_questions = [];
+                    //                 for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
+                    //                     var temp = [
+                    //                         r1.insertId,
+                    //                         req.body.RoundOneQuestion[i],
+                    //                         "0",
+                    //                         "",
+                    //                         "wrong",
+                    //                         "n"
+                    //                     ];
+                    //                     tbl_participant_questions.push(temp);
+                    //                 }
+                    //                 for(var i=0; i<req.body.RoundOneOldQuestion.length ;i++){
+                    //                     var temp = [
+                    //                         r1.insertId,
+                    //                         req.body.RoundOneOldQuestion[i],
+                    //                         "0",
+                    //                         "",
+                    //                         "wrong",
+                    //                         "n"
+                    //                     ];
+                    //                     tbl_participant_questions.push(temp);
+                    //                 }
+                    //
+                    //                 for(var i=0; i<req.body.RoundTwoOldQuestion.length ;i++){
+                    //                     var temp = [
+                    //                         r2.insertId,
+                    //                         req.body.RoundTwoOldQuestion[i],
+                    //                         "0",
+                    //                         "",
+                    //                         "wrong",
+                    //                         "n"
+                    //                     ];
+                    //                     tbl_participant_questions.push(temp);
+                    //                 }
+                    //
+                    //                 for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
+                    //                     var temp = [
+                    //                         r2.insertId,
+                    //                         req.body.RoundTwoQuestion[i],
+                    //                         "0",
+                    //                         "",
+                    //                         "wrong",
+                    //                         "n"
+                    //                     ];
+                    //                     tbl_participant_questions.push(temp);
+                    //                 }
+                    //                 queries_v1.ins_participant_question(tbl_participant_questions,function(e3,r3){
+                    //                     if(e3) throw e3;
+                    //                 });
+                    //             });
+                    //         });
+                    //
+                    //     }else{
+                    //         cli.red("Get Value of Exam USers");
+                    //         cli.red(JSON.stringify(value));
+                    //         queries_v1.get_participant_id({iUserId:value.iUserId},function (e4,rFour) {
+                    //             if(e4) throw e4;
+                    //             cli.blue(JSON.stringify(rFour));
+                    //             queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundOneQuestion.length) + parseInt(req.body.RoundOneOldQuestion.length),iWrongAnswers:parseInt(req.body.RoundOneQuestion.length), iParticipantId: rFour[0].RoundOneParticipantId });
+                    //             queries_v1.update_total_question({iTotalQuestion:parseInt(req.body.RoundTwoQuestion.length) + parseInt(req.body.RoundTwoOldQuestion.length),iWrongAnswers:parseInt(req.body.RoundTwoQuestion.length), iParticipantId: rFour[0].RoundTwoParticipantId });
+                    //             var tbl_participant_questions = [];
+                    //             for(var i=0; i<req.body.RoundOneQuestion.length ;i++){
+                    //                 var temp = [
+                    //                     rFour[0].RoundOneParticipantId,
+                    //                     req.body.RoundOneQuestion[i],
+                    //                     "0",
+                    //                     "",
+                    //                     "wrong",
+                    //                     "n"
+                    //                 ];
+                    //                 tbl_participant_questions.push(temp);
+                    //             }
+                    //
+                    //
+                    //             for(var i=0; i<req.body.RoundTwoQuestion.length ;i++){
+                    //                 var temp = [
+                    //                     rFour[0].RoundTwoParticipantId,
+                    //                     req.body.RoundTwoQuestion[i],
+                    //                     "0",
+                    //                     "",
+                    //                     "wrong",
+                    //                     "n"
+                    //                 ];
+                    //                 tbl_participant_questions.push(temp);
+                    //             }
+                    //
+                    //             if(tbl_participant_questions.length > 0){
+                    //                 cli.yellow("Tbl_participant_question");
+                    //                 cli.green("if");
+                    //                 queries_v1.ins_participant_question(tbl_participant_questions,function(e5,r5){
+                    //                     if(e5) throw e5;
+                    //                 });
+                    //              }else{
+                    //                 cli.yellow("Tbl_participant_question");
+                    //                 cli.blue(JSON.stringify(req.body.RoundOneQuestion));
+                    //                 cli.blue(JSON.stringify(req.body.RoundTwoQuestion));
+                    //                 cli.yellow("Tbl_participant_question");
+                    //                 cli.green("else");
+                    //             }
+                    //         });
+                    //     }
+                    //     cb();
+                    // },function(err){
+                    //     console.log("Call back call");
+                    //     console.log("Get Round One Question");
+                    // });
 
 
 
@@ -2427,7 +2431,6 @@ module.exports = function (app,cli,mail) {
     /**
      * Total Users
      */
-
     app.post('/total_users',passport.authenticate('jwt',{session:false}),function(req,res){
         if(req.user.length > 0){
             req.checkBody("offset","Offset is required").notEmpty();
@@ -2461,11 +2464,9 @@ module.exports = function (app,cli,mail) {
             });
         }
     });
-
     /**
      * Statistics by iUserId
      */
-
     app.post('/statistics_by_user',passport.authenticate('jwt',{session:false}),function(req,res){
         console.log(JSON.stringify(req.body));
         if(req.user.length > 0){
@@ -2535,9 +2536,11 @@ module.exports = function (app,cli,mail) {
                                     cli.blue(JSON.stringify(tempResult));
                                 }
                             }
-                            console.log(tempResult);
-                            res.status(200).json({tempResult,"User":resTwo});
-
+                            queries.get_user_exam_graph({"iUserId":req.body.iUserId},function(errThree,resThree){
+                                if(errThree) throw errThree;
+                                cli.blue(resThree);
+                                res.status(200).json({tempResult,"User":resTwo,graph:resThree});
+                            });
                         });
                     });
                 }
@@ -2549,11 +2552,9 @@ module.exports = function (app,cli,mail) {
             });
         }
     });
-
     /**
      * Dashboard Api for Client And Admin
      */
-
     app.post('/dashboard',passport.authenticate('jwt',{session:false}),function(req,res)    {
         cli.blue("Dashboard call");
         var eTypeQuestion = [];
@@ -2614,12 +2615,9 @@ module.exports = function (app,cli,mail) {
             });
         }
     });
-
-
     /**
      * Details Result According to Exam
      */
-
     app.post('/detail_result',passport.authenticate('jwt',{session:false}),function (req,res) {
         if(req.user.length > 0){
             req.checkBody("ROneParticipantId","Participant required").notEmpty();
@@ -2635,18 +2633,25 @@ module.exports = function (app,cli,mail) {
                         if(errOne) throw errOne;
                         queries.detail_result_round_two({iParticipantId:req.body.RTwoParticipantId},function (errTwo,resTwo) {
                             if (errTwo) throw errTwo;
-                            if(resOne.length > 0 && resTwo.length > 0){
-                                res.status(200).json({
-                                    "status":200,
-                                    "RoundOne":resOne,
-                                    "RoundTwo":resTwo,
-                                });
-                            }else{
-                                res.status(404).json({
-                                    "status":404,
-                                    "message":"Data Not Found"
-                                });
-                            }
+                            queries.try_again_listing({iParticipantId:req.body.ROneParticipantId},function (errThree,resThree) {
+
+                                if(resOne.length > 0 && resTwo.length > 0){
+                                    res.status(200).json({
+                                        "status":200,
+                                        "RoundOne":resOne,
+                                        "RoundTwo":resTwo,
+                                        "TryAgain":resThree
+                                    });
+                                }else{
+                                    res.status(404).json({
+                                        "status":404,
+                                        "message":"Data Not Found"
+                                    });
+                                }
+
+                            });
+
+
                         });
                     });
                 }
@@ -2659,6 +2664,71 @@ module.exports = function (app,cli,mail) {
             });
         }
     });
+
+    app.post('/exam_attempt',passport.authenticate('jwt',{session:false}),function(req,res){
+        if(req.user.length > 0){
+            req.checkBody("ROneParticipantId","Participant required").notEmpty();
+            req.checkBody("RTwoParticipantId","Participant required").notEmpty();
+            req.getValidationResult().then(function(result) {
+                if(!result.isEmpty()){
+                    res.status(404).json({
+                        "message": "Please fill all required value",
+                        "Data":result.mapped()
+                    });
+                }
+                else{
+                    queries.try_again_listing({iParticipantId:ROneParticipantId},function (errOne,resOne) {
+                        if(errOne) throw errOne;
+                        res.status(200).json({
+                            'status':200,
+                            'data':resOne
+                        });
+                    });
+                }
+            });
+        }
+        else{
+            res.status(401).json({
+                "status":401,
+                "message":"Unothorize"
+            });
+        }
+    });
+
+    app.post('/tryagain_details',passport.authenticate('jwt',{session:false}),function(req,res){
+        if(req.user.length > 0){
+            req.checkBody("ROneTryagainId","Participant required").notEmpty();
+            req.checkBody("RTwoTryagainId","Participant required").notEmpty();
+            req.getValidationResult().then(function(result){
+               if(!result.isEmpty()){
+                   res.status(404).json({
+                       "message": "Please fill all required value",
+                       "Data":result.mapped()
+                   });
+               }else{
+                    queries.detail_result_tryagain_round_one({iTryagainId:req.body.ROneTryagainId},function(errOne,resOne){
+                        queries.detail_result_tryagain_round_two({iTryagainId:req.body.RTwoTryagainId},function(errTwo,resTwo){
+                            if(errOne) throw errOne;
+                            if(errTwo) throw errTwo;
+                            res.status(200).json({
+                                "status":200,
+                                "RoundOne":resOne,
+                                "RoundTwo":resTwo,
+                            });
+                        });
+                    });
+               }
+            });
+        }
+        else{
+            res.status(401).json({
+                "status":401,
+                "message":"Unothorize"
+            });
+        }
+    });
+
+
 
 }
 
