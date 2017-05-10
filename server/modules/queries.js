@@ -240,6 +240,9 @@ var Users = {
                 Where += ")"
             }
         }
+        if(body.vMultiplication > 0){
+            Where += " AND vMultiplication LIKE '%"+body.vMultiplication+"'";
+        }
         db.query("SELECT COUNT(*) as iTotalRecords FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus != 'd'"+Where,cb);
     },
     ls_question_select:function(body,cb){
@@ -289,11 +292,13 @@ var Users = {
         }else{ sort = "iQuestionId DESC" };
         cli.red("Order for question");
         cli.red(sort);
-
+        if(body.vMultiplication > 0){
+            Where += " AND vMultiplication LIKE '%"+body.vMultiplication+"'";
+        }
         db.query("SELECT tbl_questions.*,tbl_answers.vAnswer FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus != 'd' "+Where+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit,cb);
     },
     viewQuestion:function(body,cb){
-        db.query("SELECT tbl_answers.iAnswerId,tbl_questions.vModeName,tbl_questions.eTypeQuestion,tbl_questions.eType,tbl_questions.vQuestion,tbl_questions.dUpdatedDate,tbl_answers.vAnswer,tbl_questions.eStatus,IF(tbl_questions.iAnswerId = tbl_answers.iAnswerId,'y','n') as vRightAns FROM tbl_questions JOIN tbl_answers ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.eStatus != 'd' AND tbl_questions.iQuestionId = ?  ORDER BY vRightAns DESC",body.iQuestionId,cb);
+        db.query("SELECT tbl_answers.iAnswerId,tbl_questions.vModeName,tbl_questions.vMultiplication,tbl_questions.eTypeQuestion,tbl_questions.eType,tbl_questions.vQuestion,tbl_questions.dUpdatedDate,tbl_answers.vAnswer,tbl_questions.eStatus,IF(tbl_questions.iAnswerId = tbl_answers.iAnswerId,'y','n') as vRightAns FROM tbl_questions JOIN tbl_answers ON tbl_answers.iQuestionId = tbl_questions.iQuestionId WHERE tbl_questions.eStatus != 'd' AND tbl_questions.iQuestionId = ?  ORDER BY vRightAns DESC",body.iQuestionId,cb);
     },
     statusQuestion:function(body,cb){
         db.query("UPDATE tbl_questions SET eStatus = ? WHERE iQuestionId = ?",[body.eStatus,body.iQuestionId],cb);
@@ -306,10 +311,11 @@ var Users = {
         db.query("UPDATE tbl_answers SET vAnswer = ? ,dUpdatedDate = ?  WHERE iAnswerId= ?",[body.vAnswer,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iAnswerId],cb);
     },
     updateQuestion:function(body,cb){
-        db.query("UPDATE tbl_questions SET eTypeQuestion = ?, vModeName = ? ,eType = ? ,vQuestion = ?, iAnswerId = ?, dUpdatedDate = ? WHERE iQuestionId = ?",[body.eTypeQuestion,body.vModeName,body.eType,body.vQuestion,body.iAnswerId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.iQuestionId],cb);
+        cli.blue(body.vMultiplication);
+        db.query("UPDATE tbl_questions SET eTypeQuestion = ?, vModeName = ? ,eType = ? ,vQuestion = ?, iAnswerId = ?, dUpdatedDate = ?, vMultiplication= ? WHERE iQuestionId = ?",[body.eTypeQuestion,body.vModeName,body.eType,body.vQuestion,body.iAnswerId,dateFormat(new Date(),"yyyy-mm-dd HH:mm:ss"),body.vMultiplication,body.iQuestionId],cb);
     },
     insertQuestion:function(body,cb){
-        db.query("INSERT INTO tbl_questions (vModeName,eType,eTypeQuestion,vQuestion,iAnswerId,eStatus) VALUES (?,?,?,?,?,?)",[body.vModeName,body.eType,body.eTypeQuestion,body.vQuestion,'0','n'],cb);
+        db.query("INSERT INTO tbl_questions (vModeName,eType,eTypeQuestion,vQuestion,iAnswerId,eStatus,vMultiplication) VALUES (?,?,?,?,?,?,?)",[body.vModeName,body.eType,body.eTypeQuestion,body.vQuestion,'0','n',body.vMultiplication],cb);
     },
     insertAnswer:function(body,cb){
         db.query("INSERT INTO tbl_answers (iQuestionId,vAnswer) VALUES (?,?)",[body.iQuestionId,body.vAnswer],cb);
@@ -361,6 +367,7 @@ var Users = {
         // }
         var Where = "";
         cli.yellow(Where);
+
         for(var j = 0; j < body.eTypeQuestion.length ; j++){
             if(j == 0){
                 Where += " AND eTypeQuestion IN  ('"+body.eTypeQuestion[j]+"'";
@@ -368,9 +375,13 @@ var Users = {
             if( j != 0){
                 Where += ",'"+body.eTypeQuestion[j]+"'";
             }
+
             if( j == body.eTypeQuestion.length -1){
                 Where += ")"
             }
+        }
+        if(body.vMultiplication > 0){
+            Where += " AND vMultiplication LIKE '%"+body.vMultiplication+"'";
         }
         db.query("SELECT COUNT(*) as iTotalRecords FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus = 'y' AND tbl_questions.eType = 'MCQ'"+Where,cb);
     },
@@ -405,6 +416,10 @@ var Users = {
             }
         }
         if(typeof body.sort != 'undefined' && body.sort != "") {sort = body.sort};
+        if(body.vMultiplication > 0){
+            Where += " AND vMultiplication LIKE '%"+body.vMultiplication+"'";
+        }
+        cli.red("SELECT tbl_questions.*,tbl_answers.vAnswer, 'n' as eSelected FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus = 'y' AND tbl_questions.eType = 'MCQ'"+Where+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit);
         db.query("SELECT tbl_questions.*,tbl_answers.vAnswer, 'n' as eSelected FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus = 'y' AND tbl_questions.eType = 'MCQ'"+Where+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit,cb);
     },
     //EXAM MODULE VSQ START
@@ -435,13 +450,15 @@ var Users = {
                 Where += ")"
             }
         }
+        if(body.vMultiplication > 0){
+            Where += " AND vMultiplication LIKE '%"+body.vMultiplication+"'";
+        }
         db.query("SELECT COUNT(*) as iTotalRecords FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus = 'y' AND tbl_questions.eType = 'VSQ'"+Where,cb);
     },
     ls_vsq_select:function(body,cb){
         // var sWhere = "";
         // var aWhere = [];
         var sort = "";
-
         // if(typeof body.eType != 'undefined' && body.eType != "")
         // {
         //     sWhere += ' AND eType LIKE ?';
@@ -452,7 +469,6 @@ var Users = {
         //     sWhere += ' OR vModeName LIKE ?';
         //     aWhere.push('%'+body.vModeName+'%');
         // }
-
         var Where = "";
         cli.yellow(Where);
         for(var j = 0; j < body.eTypeQuestion.length ; j++){
@@ -466,8 +482,10 @@ var Users = {
                 Where += ")"
             }
         }
-
         if(typeof body.sort != 'undefined' && body.sort != "") {sort = body.sort};
+        if(body.vMultiplication > 0){
+            Where += " AND vMultiplication LIKE '%"+body.vMultiplication+"'";
+        }
         db.query("SELECT tbl_questions.*,tbl_answers.vAnswer, 'n' as eSelected FROM tbl_questions JOIN tbl_answers ON tbl_answers.iAnswerId = tbl_questions.iAnswerId WHERE tbl_questions.eStatus = 'y' AND tbl_questions.eType = 'VSQ'"+Where+" ORDER BY "+sort+" LIMIT "+body.offset +" ,"+body.limit,cb);
     },
     get_mcq_by_Ids:function(body,cb){
@@ -812,13 +830,35 @@ var Users = {
                 "JOIN tbl_answers as actual_ans ON tbl_questions.iAnswerId = actual_ans.iAnswerId " +
                 "WHERE tbl_tryagain_question.iTryagainId = ?",[body.iTryagainId],cb);
     },
-    get_user_exam_graph:function (body, cb) {
-        db.query("SELECT COUNT(*) as TotalAttempt, tbl_exams.vTitle " +
-            "FROM tbl_exam_participant " +
-            "JOIN tbl_exam_schedule ON tbl_exam_schedule.iScheduleId = tbl_exam_participant.iScheduleId " +
-            "JOIN tbl_exams ON tbl_exam_schedule.iExamId = tbl_exams.iExamId " +
-            "WHERE tbl_exam_participant.iParentParticipentId = 0 AND tbl_exam_participant.iUserId = ?",[body.iUserId],cb);
+    // get_user_exam_graph:function (body, cb) {
+    //     db.query("SELECT COUNT(*) as TotalAttempt, tbl_exams.vTitle " +
+    //         "FROM tbl_exam_participant " +
+    //         "JOIN tbl_exam_schedule ON tbl_exam_schedule.iScheduleId = tbl_exam_participant.iScheduleId " +
+    //         "JOIN tbl_exams ON tbl_exam_schedule.iExamId = tbl_exams.iExamId " +
+    //         "WHERE tbl_exam_participant.iParentParticipentId = 0 AND tbl_exam_participant.iUserId = ? GROUP BY tbl_exams.vTitle",[body.iUserId],cb);
+    // }
+
+    get_user_exam_graph:function(body,cb){
+        db.query("SELECT tbl_exams.vTitle, RoundOne.iTotalQuestion + RoundTwo.iTotalQuestion as TotalQuestion, RoundOne.iRightAnswers + RoundTwo.iRightAnswers as RightAnswer FROM tbl_exam_participant as RoundOne JOIN tbl_exam_participant as RoundTwo ON RoundTwo.iParentParticipentId = RoundOne.iParticipantId JOIN tbl_exam_schedule ON tbl_exam_schedule.iScheduleId = RoundTwo.iScheduleId JOIN tbl_exams ON tbl_exams.iExamId = tbl_exam_schedule.iExamId WHERE RoundOne.iUserId = ?",[body.iUserId],cb);
+    },
+
+    sp_get_participent_id:function(body,cb){
+        db.query("CALL `get_participent_id`(?)",[body.iUserId],cb);
+    },
+    get_exam_result_graph_according_to_pemdas:function(body,cb){
+        db.query("SELECT tbl_participant_questions.eCheck, tbl_questions.eTypeQuestion FROM tbl_participant_questions " +
+                "JOIN tbl_questions ON tbl_questions.iQuestionId = tbl_participant_questions.iQuestionId "+
+                "WHERE tbl_participant_questions.iParticipantId IN (?)",[body.iParticipantId],cb);
     }
+    /**
+     * If you want to graph according to exam wise
+     * SQL = "SELECT tbl_exam_participant.iParticipantId AS RoundTwoParticipantId,
+     *        tbl_exam_participant.iParentParticipentId as RoundOneParticipantId FROM tbl_exam_schedule
+     *        JOIN tbl_exam_participant ON tbl_exam_schedule.iScheduleId = tbl_exam_participant.iScheduleId
+     *        WHERE tbl_exam_participant.iUserId = 89 AND tbl_exam_schedule.iExamId = 761"
+     *
+     */
+
 
 };
 module.exports = Users;

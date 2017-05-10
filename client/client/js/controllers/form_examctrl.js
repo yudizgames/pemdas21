@@ -482,9 +482,11 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 mutiplication:false,
                 division:false,
                 addition:false,
-                subtraction:false
+                subtraction:false,
+                vMultiplication:""
             }
         }
+
         $scope.dtOptionsROne = DTOptionsBuilder.newOptions().withOption('ajax',{
             dataSrc:"data",
             url:'/list_mcq',
@@ -514,7 +516,8 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 mutiplication:false,
                 division:false,
                 addition:false,
-                subtraction:false
+                subtraction:false,
+                vMultiplication:""
             }
         }
         $scope.dtOptionsROne = DTOptionsBuilder.newOptions().withOption('ajax',{

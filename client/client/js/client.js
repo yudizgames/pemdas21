@@ -8,11 +8,26 @@ var app = angular.module('client',['ui.router',
     'oc.lazyLoad',
     'LocalForageModule',
     'toastr',
+    'chart.js',
     // 'datatables',
     'ngResource',
     // 'frapontillo.bootstrap-switch',
 ]);
-app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyLoadProvider,$localForageProvider,toastrConfig,$qProvider){
+app.config(function($stateProvider,$urlRouterProvider,$locationProvider,$ocLazyLoadProvider,$localForageProvider,toastrConfig,$qProvider,ChartJsProvider){
+
+    ChartJsProvider.setOptions({
+        // colors : [ '#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+        colors : [ '#00bcd4', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+        responsive: true
+    });
+    // Configure all line charts
+    ChartJsProvider.setOptions('line', {
+        showLines: true
+    });
+
+
+
+
     $stateProvider.state('client',{
         url:'/client',
         templateUrl:'templates/client/client.html',

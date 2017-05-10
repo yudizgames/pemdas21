@@ -7,6 +7,7 @@ var pemdas = angular.module('Pemdas',['ui.router',
     'LocalForageModule',
     'toastr',
     'ngResource',
+    // 'chart.js',
     // 'frapontillo.bootstrap-switch',
     // load your modules here
     "admin", // starting with the main module

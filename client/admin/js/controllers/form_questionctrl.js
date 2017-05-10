@@ -1,5 +1,6 @@
 angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScope,$state,$stateParams,$resource,$http,toastr){
     console.log("Question  Form Controller call");
+    $scope.mul = [1,2,3,4,5,6,7,8,9,10,11,12];
     if($stateParams.id == null){
         $scope.form_action = 'Add';
     }
@@ -20,15 +21,14 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
         }).then(function(res){
             $rootScope.hideLoad = true;
             console.log("Success call");
-
             var question = {
                 iQuestionId:$stateParams.id+'',
                 eType:res.data.result[0].eType,
                 vQuestion:res.data.result[0].vQuestion,
                 vModeName:res.data.result[0].vModeName,
-                eTypeQuestion:res.data.result[0].eTypeQuestion
+                eTypeQuestion:res.data.result[0].eTypeQuestion,
+                vMultiplication:res.data.result[0].vMultiplication
             }
-
             if(res.data.result[0].eType == "MCQ"){
                 question.vOptionOne = {
                     iAnswerId:res.data.result[0].iAnswerId,
@@ -83,7 +83,9 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         eType:$scope.question.eType,
                         vModeName:$scope.question.vModeName,
                         iAnswerId:gettingAnsId($scope.question.vOptionAns,$scope.question),
-                        eTypeQuestion:$scope.question.eTypeQuestion
+                        eTypeQuestion:$scope.question.eTypeQuestion,
+                        vMultiplication:$scope.question.vMultiplication
+
                     },
                     options:[
                         {
@@ -112,7 +114,8 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         eType:$scope.question.eType,
                         vModeName:$scope.question.vModeName,
                         iAnswerId:$scope.question.vAnsVsq.iAnswerId,
-                        eTypeQuestion:$scope.question.eTypeQuestion
+                        eTypeQuestion:$scope.question.eTypeQuestion,
+                        vMultiplication:$scope.question.vMultiplication
                     },
                     options:[
                         {
@@ -122,6 +125,7 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                     ]
                 };
             }
+            console.log(postData);
             $http({
                 method:'post',
                 url:'/questionedit',
@@ -150,7 +154,8 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         eType:$scope.question.eType,
                         vQuestion:$scope.question.vQuestion,
                         vModeName:$scope.question.vModeName,
-                        eTypeQuestion:$scope.question.eTypeQuestion
+                        eTypeQuestion:$scope.question.eTypeQuestion,
+                        vMultiplication:$scope.question.vMultiplication
                     },
                     options:[
                         {
@@ -179,7 +184,8 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
                         eType:$scope.question.eType,
                         vQuestion:$scope.question.vQuestion,
                         vModeName:$scope.question.vModeName,
-                        eTypeQuestion:$scope.question.eTypeQuestion
+                        eTypeQuestion:$scope.question.eTypeQuestion,
+                        vMultiplication:$scope.question.vMultiplication
                     },
                     options:[
                         {
@@ -190,6 +196,7 @@ angular.module('admin').controller('QuestionFormCtrl',function ($scope,$rootScop
 
             }
             console.log(postData);
+
             $http({
                 method:'post',
                 url:'/questionadd',

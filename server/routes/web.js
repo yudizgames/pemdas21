@@ -700,16 +700,21 @@ module.exports = function (app,cli,mail) {
 
     app.post('/list_q',function (req,res) {
         cli.blue("List for search section");
-        cli.red(JSON.stringify(req.body.CustomSearch.vsq));
+        cli.red(JSON.stringify(req.body.CustomSearch));
 
-
+        var vMultiplication = 0;
         var eType = [];
         var eTypeQuestion = [];
         req.body.CustomSearch.mcq == "true" ? eType.push('MCQ') : '';
         req.body.CustomSearch.vsq == "true" ? eType.push('VSQ') : '';
         req.body.CustomSearch.panethesis == "true" ? eTypeQuestion.push('Parenthesis') : '';
         req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
-        req.body.CustomSearch.mutiplication == "true" ? eTypeQuestion.push('Multiplication') : '';
+        if (req.body.CustomSearch.mutiplication == "true" ){
+            eTypeQuestion.push('Multiplication');
+            vMultiplication = req.body.CustomSearch.vMultiplication
+        }else{
+            vMultiplication = 0;
+        };
         req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
         req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
         req.body.CustomSearch.subtraction == "true" ? eTypeQuestion.push('Subtraction') : '';
@@ -717,7 +722,8 @@ module.exports = function (app,cli,mail) {
         var obj = {
             'vModeName':'',
             'eTypeQuestion':eTypeQuestion,
-            'eType':eType
+            'eType':eType,
+            'vMultiplication':vMultiplication
         };
 
         cli.yellow(JSON.stringify(obj));
@@ -735,7 +741,8 @@ module.exports = function (app,cli,mail) {
                 'vModeName':'',
                 'eTypeQuestion':eTypeQuestion,
                 'eType':eType,
-                'sort':req.body.draw == 1 ? "iQuestionId DESC" : getSorting(req.body)
+                'sort':req.body.draw == 1 ? "iQuestionId DESC" : getSorting(req.body),
+                'vMultiplication':vMultiplication
             }
             queries.ls_question_select(obj,function(err,question){
                 if(err) throw err;
@@ -854,6 +861,7 @@ module.exports = function (app,cli,mail) {
                         !validator.isEmpty(req.body.question.eTypeQuestion) &&
                         !validator.isEmpty(req.body.question.iQuestionId) &&
                         !validator.isEmpty(req.body.question.vQuestion) &&
+                        !validator.isEmpty(req.body.question.vMultiplication.toString()) &&
                         req.body.options.length == 4 &&
                         !validator.isEmpty(req.body.options[0].iAnswerId+"") &&
                         !validator.isEmpty(req.body.options[0].vAnswer) &&
@@ -870,6 +878,7 @@ module.exports = function (app,cli,mail) {
                             "iQuestionId":req.body.question.iQuestionId,
                             "vQuestion":req.body.question.vQuestion,
                             "eTypeQuestion":req.body.question.eTypeQuestion,
+                            "vMultiplication":req.body.question.vMultiplication,
                             "eType":"MCQ"
                         },function (err,rows) {
                             if(err) throw err;
@@ -908,6 +917,7 @@ module.exports = function (app,cli,mail) {
                         !validator.isEmpty(req.body.question.eTypeQuestion) &&
                         !validator.isEmpty(req.body.question.iQuestionId) &&
                         !validator.isEmpty(req.body.question.vQuestion) &&
+                        !validator.isEmpty(req.body.question.vMultiplication.toString()) &&
                         req.body.options.length == 1 &&
                         !validator.isEmpty(req.body.options[0].iAnswerId+"") &&
                         !validator.isEmpty(req.body.options[0].vAnswer)){
@@ -919,6 +929,7 @@ module.exports = function (app,cli,mail) {
                             "iQuestionId":req.body.question.iQuestionId,
                             "vQuestion":req.body.question.vQuestion,
                             "eTypeQuestion":req.body.question.eTypeQuestion,
+                            "vMultiplication":req.body.question.vMultiplication.toString(),
                             "eType":"VSQ"
                         },function(err,row){
                             if(err) throw err;
@@ -989,6 +1000,7 @@ module.exports = function (app,cli,mail) {
                         !validator.isEmpty(req.body.question.vModeName) &&
                         !validator.isEmpty(req.body.question.vQuestion) &&
                         !validator.isEmpty(req.body.question.eTypeQuestion) &&
+                        !validator.isEmpty(req.body.question.vMultiplication.toString()) &&
                         req.body.options.length == 4 &&
                         !validator.isEmpty(req.body.options[0].vAnswer) &&
                         !validator.isEmpty(req.body.options[0].isAnswer.toString()) &&
@@ -1004,6 +1016,7 @@ module.exports = function (app,cli,mail) {
                             "vQuestion":req.body.question.vQuestion,
                             "eType":req.body.question.eType,
                             "eTypeQuestion":req.body.question.eTypeQuestion,
+                            "vMultiplication":req.body.question.vMultiplication.toString(),
                         },function(err,row){
                             if(err) throw err;
                             if(row.insertId > 0){
@@ -1067,7 +1080,8 @@ module.exports = function (app,cli,mail) {
                             "vModeName":req.body.question.vModeName,
                             "vQuestion":req.body.question.vQuestion,
                             "eType":req.body.question.eType,
-                            "eTypeQuestion":req.body.question.eTypeQuestion
+                            "eTypeQuestion":req.body.question.eTypeQuestion,
+                            "vMultiplication":req.body.question.vMultiplication.toString(),
                         },function(err,row){
                             if(err) throw err;
                             if(row.insertId > 0){
@@ -1146,7 +1160,16 @@ module.exports = function (app,cli,mail) {
         var eTypeQuestion = [];
         req.body.CustomSearch.panethesis == "true" ? eTypeQuestion.push('Parenthesis') : '';
         req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
-        req.body.CustomSearch.mutiplication == "true" ? eTypeQuestion.push('Multiplication') : '';
+        if(req.body.CustomSearch.mutiplication == "true"){
+            eTypeQuestion.push('Multiplication');
+            if(req.body.CustomSearch.vMultiplication != undefined && req.body.CustomSearch.vMultiplication != null && req.body.CustomSearch.vMultiplication > 0){
+                console.log("vMultiplication Available");
+            }else{
+                req.body.CustomSearch.vMultiplication = "0";
+            }
+        }else{
+            req.body.CustomSearch.vMultiplication = "0";
+        }
         req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
         req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
         req.body.CustomSearch.subtraction == "true" ? eTypeQuestion.push('Subtraction') : '';
@@ -1154,7 +1177,8 @@ module.exports = function (app,cli,mail) {
         var obj = {
             'eExamType':req.body.search.eExamType,
             'eExamSubType':req.body.search.eExamSubType,
-            'eTypeQuestion':eTypeQuestion
+            'eTypeQuestion':eTypeQuestion,
+            'vMultiplication':req.body.CustomSearch.vMultiplication
         };
 
         queries.ls_mcq_count(obj,function(err,record){
@@ -1171,7 +1195,8 @@ module.exports = function (app,cli,mail) {
                 'vModeName':req.body.search.value,
                 'eType':req.body.search.value,
                 'sort':getSorting(req.body),
-                'eTypeQuestion':eTypeQuestion
+                'eTypeQuestion':eTypeQuestion,
+                'vMultiplication':req.body.CustomSearch.vMultiplication
             }
             queries.ls_mcq_select(obj,function(err,question){
                 if(err) throw err;
@@ -1214,7 +1239,16 @@ module.exports = function (app,cli,mail) {
         var eTypeQuestion = [];
         req.body.CustomSearch.panethesis == "true" ? eTypeQuestion.push('Parenthesis') : '';
         req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
-        req.body.CustomSearch.mutiplication == "true" ? eTypeQuestion.push('Multiplication') : '';
+        if(req.body.CustomSearch.mutiplication == "true"){
+            eTypeQuestion.push('Multiplication');
+            if(req.body.CustomSearch.vMultiplication != undefined && req.body.CustomSearch.vMultiplication != null && req.body.CustomSearch.vMultiplication > 0){
+                console.log("vMultiplication Available");
+            }else{
+                req.body.CustomSearch.vMultiplication = "0";
+            }
+        }else{
+            req.body.CustomSearch.vMultiplication = "0";
+        }
         req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
         req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
         req.body.CustomSearch.subtraction == "true" ? eTypeQuestion.push('Subtraction') : '';
@@ -1222,7 +1256,8 @@ module.exports = function (app,cli,mail) {
         var obj = {
             'vModeName':req.body.search.value,
             'eType':req.body.search.value,
-            'eTypeQuestion':eTypeQuestion
+            'eTypeQuestion':eTypeQuestion,
+            'vMultiplication':req.body.CustomSearch.vMultiplication
         };
         queries.ls_vsq_count(obj,function(err,record){
             if(err) throw err;
@@ -1238,7 +1273,8 @@ module.exports = function (app,cli,mail) {
                 'vModeName':req.body.search.value,
                 'eType':req.body.search.value,
                 'sort':getSorting(req.body),
-                'eTypeQuestion':eTypeQuestion
+                'eTypeQuestion':eTypeQuestion,
+                'vMultiplication':req.body.CustomSearch.vMultiplication
             }
             queries.ls_vsq_select(obj,function(err,question){
                 if(err) throw err;
@@ -2516,6 +2552,8 @@ module.exports = function (app,cli,mail) {
                                     }
                                     itempId = resOne[i].ROneExamId;
                                     result.vTitle = resOne[i].vTitle;
+                                    result.ROneExamId = resOne[i].ROneExamId;
+                                    result.RTwoExamId = resOne[i].RTwoExamId;
                                     result.vDescription = resOne[i].vDescription;
                                     result.ExamAttempt == undefined ? result.ExamAttempt = [] : "";
                                     result.ExamAttempt.push({
@@ -2539,7 +2577,95 @@ module.exports = function (app,cli,mail) {
                             queries.get_user_exam_graph({"iUserId":req.body.iUserId},function(errThree,resThree){
                                 if(errThree) throw errThree;
                                 cli.blue(resThree);
-                                res.status(200).json({tempResult,"User":resTwo,graph:resThree});
+
+
+                                queries.sp_get_participent_id({"iUserId":req.body.iUserId},function(errFour,resFour){
+                                    if(errFour) throw errFour;
+                                    if(resFour[0].length > 0){
+                                        let iParticepentId = [];
+                                        for(var i = 0; i<resFour[0].length; i++){
+                                            iParticepentId.push(resFour[0][i].RoundTwoParticipantId);
+                                            iParticepentId.push(resFour[0][i].RoundOneParticipantId);
+                                        }
+                                        queries.get_exam_result_graph_according_to_pemdas({iParticipantId:iParticepentId},function(errFive,resFive){
+                                            if(errFive) throw errFive;
+                                            let TotalParenthesis = 0;
+                                            let RightParenthesis = 0;
+                                            let TotalExponent = 0;
+                                            let RightExponent = 0;
+                                            let TotalMultiplication = 0;
+                                            let RightMultiplication = 0;
+                                            let TotalDivision = 0;
+                                            let RightDivision = 0;
+                                            let TotalAddition = 0;
+                                            let RightAddition = 0;
+                                            let TotalSubtraction = 0;
+                                            let RightSubtraction = 0;
+                                            cli.blue(resFive.length);
+                                            for(var i =0;  i < resFive.length; i++){
+
+                                                if(resFive[i].eTypeQuestion == "Parenthesis"){
+                                                    if(resFive[i].eCheck == "right"){
+                                                        TotalParenthesis++;
+                                                        RightParenthesis++;
+                                                    }else{
+                                                        TotalParenthesis++;
+                                                    }
+                                                } else if(resFive[i].eTypeQuestion == "Exponent"){
+                                                    if(resFive[i].eCheck == "right"){
+                                                        TotalExponent = TotalExponent + 1;
+                                                        RightExponent = RightExponent + 1;
+                                                    }else{
+                                                        TotalExponent = TotalExponent + 1;
+                                                    }
+                                                } else if(resFive[i].eTypeQuestion == "Multiplication"){
+                                                    if(resFive[i].eCheck == "right"){
+                                                        TotalMultiplication = TotalMultiplication + 1;
+                                                        RightMultiplication = RightMultiplication + 1;
+                                                    }else{
+                                                        TotalMultiplication = TotalMultiplication + 1;
+                                                    }
+                                                } else if(resFive[i].eTypeQuestion == "Division"){
+                                                    if(resFive[i].eCheck == "right"){
+                                                        TotalDivision = TotalDivision + 1;
+                                                        RightDivision = RightDivision+ 1;
+                                                    }else{
+                                                        TotalDivision = TotalDivision + 1;
+                                                    }
+                                                } else if(resFive[i].eTypeQuestion == "Addition"){
+                                                    if(resFive[i].eCheck == "right"){
+                                                        TotalAddition = TotalAddition + 1;
+                                                        RightAddition = RightAddition + 1;
+                                                    }else{
+                                                        TotalAddition = TotalAddition + 1;
+                                                    }
+                                                } else if(resFive[i].eTypeQuestion == "Subtraction"){
+                                                    if(resFive[i].eCheck == "right"){
+                                                        TotalSubtraction = TotalSubtraction + 1;
+                                                        RightSubtraction = RightSubtraction + 1;
+                                                    }else{
+                                                        TotalSubtraction = TotalSubtraction + 1;
+                                                    }
+                                                }
+                                            }
+
+                                            let graphTwo = [
+                                                [TotalParenthesis,TotalExponent,TotalMultiplication,TotalDivision,TotalAddition,TotalSubtraction],
+                                                [RightParenthesis,RightExponent,RightMultiplication,RightDivision,RightAddition,RightSubtraction]
+                                            ];
+                                            console.log(graphTwo);
+
+                                            res.status(200).json({tempResult,"User":resTwo,graph:resThree,graphTwo:graphTwo});
+                                        });
+                                    }else{
+                                        res.status(200).json({tempResult,"User":resTwo,graph:resThree,graphTwo:[]});
+                                    }
+                                });
+
+
+
+
+
                             });
                         });
                     });
@@ -2552,6 +2678,15 @@ module.exports = function (app,cli,mail) {
             });
         }
     });
+
+
+    /**
+     * Chutiyappa
+     */
+
+    app.post('/')
+
+
     /**
      * Dashboard Api for Client And Admin
      */

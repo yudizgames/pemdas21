@@ -76,8 +76,32 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" ng-if="question.eTypeQuestion == 'Multiplication' ? true : false">
+                            <div class="form-line">
+                                <p>Multiplication of </p>
+                                <select class="form-control" name="vMultiplication" id="vMultiplication" ng-model="question.vMultiplication" required>
+                                    <option value="">Select value</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div ng-messages="form_question.vMultiplication.$error && form_question.vMultiplication.$dirty" ng-show="form_question.vMultiplication.$error && form_question.vMultiplication.$dirty" role="alert" class="text-danger">
+                                <div ng-message="required" ng-show="form_question.vMultiplication.$error.required">Mutiplication of required</div>
+                            </div>
+                        </div>
 
+
+                        <div class="form-group">
                             <div class="form-line">
                                 <input type="text" value="" class="form-control" name="vQuestion" id="vQuestion"  placeholder="Please Enter Question" ng-model="question.vQuestion" required>
                             </div>
@@ -89,14 +113,12 @@
 
                         <!-- Options -->
                         <div class="form-group" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
-
                             <div class="form-line">
                                 <input type="text" value="" class="form-control" name="vOptionOne" id="vOptionOne" placeholder="Option A"  ng-model="question.vOptionOne.vAnswer" ng-required="(question.eType == 'VSQ' || question.eType == null)? false : true" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">
                             </div>
                             <div ng-messages="form_question.vOptionOne.$error && form_question.vOptionOne.$dirty" ng-show="form_question.vOptionOne.$error && form_question.vOptionOne.$dirty" role="alert" class="text-danger">
                                 <div ng-message="required" ng-show="form_question.vOptionOne.$error.required">Option A is required</div>
                             </div>
-
                         </div>
 
                         <div class="form-group" ng-class="(question.eType == 'VSQ' || question.eType == null)? 'hide' : ''">

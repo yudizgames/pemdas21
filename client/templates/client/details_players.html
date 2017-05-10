@@ -1,3 +1,105 @@
+<!--<div class="container-fluid">-->
+    <!--<div class="block-header">-->
+        <!--<h2>USER DETAILS</h2>-->
+        <!--<div class="body">-->
+            <!--<ol class="breadcrumb">-->
+                <!--<li> <a ui-sref="client.dashboard"> <i class="material-icons">home</i> Home </a> </li>-->
+                <!--<li> <a ui-sref="client.users"> <i class="zmdi zmdi-account"></i>Users List</a></li>-->
+                <!--<li> <i class="material-icons">library_books</i>User Details</li>-->
+            <!--</ol>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row clearfix">-->
+        <!--<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">-->
+            <!--<div class="card">-->
+                <!--<div class="header">-->
+                    <!--<h2>Details</h2>-->
+                <!--</div>-->
+                <!--<div class="body">-->
+                    <!--<strong>Full Name</strong>-->
+                    <!--<p>{{user.vFullName}}</p>-->
+                    <!--<strong>Email ID</strong>-->
+                    <!--<p>{{user.vEmail}}</p>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-lg-6 col-md-8 col-sm-3 col-xs-6">-->
+            <!--<div class="card">-->
+                <!--&lt;!&ndash;<div id="container"></div>&ndash;&gt;-->
+                <!--<div class="header">-->
+                    <!--<h2>Exam Details</h2>-->
+                <!--</div>-->
+                <!--<div class="body">-->
+                    <!--<canvas id="line" class="chart chart-line" chart-data="chart_data"-->
+                            <!--chart-labels="labels" chart-series="series" chart-options="options" chart-colors="color"-->
+                            <!--chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; style="min-width: 310px; height: 400px; margin: 0 auto" &ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div ng-repeat="d in data" class="col-lg-12 col-md-12 col-sm-6 col-xs-12">-->
+            <!--<div class="card">-->
+                <!--<div class="header">-->
+                    <!--<h2>List of Exam Attempt</h2>-->
+                <!--</div>-->
+                <!--<div class="body">-->
+                    <!--<strong>Title</strong>-->
+                    <!--<p>{{d.vTitle}}</p>-->
+                    <!--<strong>Description</strong>-->
+                    <!--<p>{{d.vDescription}}</p>-->
+                    <!--<div class="form-group">-->
+                        <!--<table class="table table-bordered table-striped">-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<td>Exam Attempt</td>-->
+                                <!--<td>Total Question</td>-->
+                                <!--<td>Round One Right Answer</td>-->
+                                <!--<td>Round One Wrong Answer</td>-->
+                                <!--<td>Round Two Right Answer</td>-->
+                                <!--<td>Round Two Wrong Answer</td>-->
+                                <!--&lt;!&ndash;<td>Total Attempt</td>&ndash;&gt;-->
+                                <!--<td>Date</td>-->
+                                <!--<td>Details</td>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody>-->
+                            <!--<tr ng-repeat="e in d.ExamAttempt track by $index">-->
+                                <!--<td>{{$index + 1}}</td>-->
+                                <!--<td>{{e.ROneTotalQuestion + e.RTwoTotalQuestion}}</td>-->
+                                <!--<td>{{e.ROneRightAnswer}}</td>-->
+                                <!--<td>{{e.ROneWrongAnswers}}</td>-->
+                                <!--<td>{{e.RTwoRightAnswers}}</td>-->
+                                <!--<td>{{e.RTwoWrongAnswers}}</td>-->
+                                <!--&lt;!&ndash;<td>{{e.iTotalAttempt}}</td>&ndash;&gt;-->
+                                <!--<td>{{e.ExamDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>-->
+                                <!--<td><button type="button" class="btn btn-raised btn-xs bg-light-blue waves-effect"-->
+                                            <!--ui-sref="client.userresult({ROneParticipantId:e.ROneParticipantId,RTwoParticipantId:e.RTwoParticipantId,'iUserId':iUserId})">-->
+                                    <!--Details-->
+                                    <!--</button>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<style>
+    #DataTables_Table_0_filter{
+        display: none;
+    }
+    button.btn.dropdown-toggle.btn-default{
+        display: none;
+    },
+    .dataTables_filter{
+        display: none;
+    },
+    div.dataTables_filter {
+        display: none;
+    }
+</style>
 <div class="container-fluid">
     <div class="block-header">
         <h2>USER DETAILS</h2>
@@ -23,12 +125,38 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-8 col-md-4 col-sm-6 col-xs-12">
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <div class="card">
-                <div id="container"></div>
+                <!--<div id="container"></div>-->
+                <div class="header">
+                    <h2>Exam Details</h2>
+                </div>
+                <div class="body">
+                    <canvas id="line" class="chart chart-line" chart-data="chart_data"
+                            chart-labels="labels" chart-series="series" chart-options="options" chart-colors="color"
+                            chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+                </div>
                 <!-- style="min-width: 310px; height: 400px; margin: 0 auto" -->
             </div>
         </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="card">
+                <!--<div id="container"></div>-->
+                <div class="header">
+                    <h2>Question Details</h2>
+                </div>
+                <div class="body">
+                    <canvas id="line" class="chart chart-line" chart-data="chartone_data"
+                            chart-labels="labels_one" chart-series="series" chart-options="options" chart-colors="color"
+                            chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+                </div>
+                <!-- style="min-width: 310px; height: 400px; margin: 0 auto" -->
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
         <div ng-repeat="d in data" class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
             <div class="card">
                 <div class="header">
@@ -67,7 +195,7 @@
                                 <td><button type="button" class="btn btn-raised btn-xs bg-light-blue waves-effect"
                                             ui-sref="client.userresult({ROneParticipantId:e.ROneParticipantId,RTwoParticipantId:e.RTwoParticipantId,'iUserId':iUserId})">
                                     Details
-                                    </button>
+                                </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -78,3 +206,5 @@
         </div>
     </div>
 </div>
+
+
