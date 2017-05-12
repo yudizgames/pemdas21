@@ -700,20 +700,25 @@ module.exports = function (app,cli,mail) {
 
     app.post('/list_q',function (req,res) {
         cli.blue("List for search section");
-        cli.red(JSON.stringify(req.body.CustomSearch));
+        cli.red(JSON.stringify(req.body.CustomSearch.mutiplication));
 
-        var vMultiplication = 0;
+        var vMultiplication = [];
         var eType = [];
         var eTypeQuestion = [];
         req.body.CustomSearch.mcq == "true" ? eType.push('MCQ') : '';
         req.body.CustomSearch.vsq == "true" ? eType.push('VSQ') : '';
         req.body.CustomSearch.panethesis == "true" ? eTypeQuestion.push('Parenthesis') : '';
         req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
-        if (req.body.CustomSearch.mutiplication == "true" ){
+        if (req.body.CustomSearch.mutiplication == "true"){
+            cli.yellow("mutiplication true");
             eTypeQuestion.push('Multiplication');
-            vMultiplication = req.body.CustomSearch.vMultiplication
+            if(req.body.CustomSearch.vMultiplication != undefined){
+                vMultiplication = req.body.CustomSearch.vMultiplication
+            }else{
+                vMultiplication = [];
+            }
         }else{
-            vMultiplication = 0;
+            vMultiplication = [];
         };
         req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
         req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
@@ -1162,13 +1167,13 @@ module.exports = function (app,cli,mail) {
         req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
         if(req.body.CustomSearch.mutiplication == "true"){
             eTypeQuestion.push('Multiplication');
-            if(req.body.CustomSearch.vMultiplication != undefined && req.body.CustomSearch.vMultiplication != null && req.body.CustomSearch.vMultiplication > 0){
+            if(req.body.CustomSearch.vMultiplication != undefined && req.body.CustomSearch.vMultiplication != null){
                 console.log("vMultiplication Available");
             }else{
-                req.body.CustomSearch.vMultiplication = "0";
+                req.body.CustomSearch.vMultiplication = [];
             }
         }else{
-            req.body.CustomSearch.vMultiplication = "0";
+            req.body.CustomSearch.vMultiplication = [];
         }
         req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
         req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
@@ -1180,7 +1185,8 @@ module.exports = function (app,cli,mail) {
             'eTypeQuestion':eTypeQuestion,
             'vMultiplication':req.body.CustomSearch.vMultiplication
         };
-
+        cli.blue("Custom Search");
+        cli.blue(req.body.CustomSearch.vMultiplication);
         queries.ls_mcq_count(obj,function(err,record){
             if(err) throw err;
             var iTotalRecords = parseInt(record[0].iTotalRecords);
@@ -1241,18 +1247,17 @@ module.exports = function (app,cli,mail) {
         req.body.CustomSearch.exponent == "true" ? eTypeQuestion.push('Exponent') : '';
         if(req.body.CustomSearch.mutiplication == "true"){
             eTypeQuestion.push('Multiplication');
-            if(req.body.CustomSearch.vMultiplication != undefined && req.body.CustomSearch.vMultiplication != null && req.body.CustomSearch.vMultiplication > 0){
+            if(req.body.CustomSearch.vMultiplication != undefined && req.body.CustomSearch.vMultiplication != null){
                 console.log("vMultiplication Available");
             }else{
-                req.body.CustomSearch.vMultiplication = "0";
+                req.body.CustomSearch.vMultiplication = [];
             }
         }else{
-            req.body.CustomSearch.vMultiplication = "0";
+            req.body.CustomSearch.vMultiplication = [];
         }
         req.body.CustomSearch.division == "true" ? eTypeQuestion.push('Division') : '';
         req.body.CustomSearch.addition == "true" ? eTypeQuestion.push('Addition') : '';
         req.body.CustomSearch.subtraction == "true" ? eTypeQuestion.push('Subtraction') : '';
-
         var obj = {
             'vModeName':req.body.search.value,
             'eType':req.body.search.value,
@@ -2700,8 +2705,8 @@ module.exports = function (app,cli,mail) {
                     if(errOne) throw  errOne;
                     queries.get_total_exam_generated({"iUserId":req.user[0].iUserId},function(errTwo,resTwo){
                         if(errTwo) throw errTwo;
-                        queries.ls_mcq_count({eTypeQuestion:eTypeQuestion},function(errThree,resThree){
-                            queries.ls_vsq_count({eTypeQuestion:eTypeQuestion},function(errFour,resFour){
+                        queries.ls_mcq_count({eTypeQuestion:eTypeQuestion,vMultiplication:[]},function(errThree,resThree){
+                            queries.ls_vsq_count({eTypeQuestion:eTypeQuestion,vMultiplication:[]},function(errFour,resFour){
                                 queries.getSettings(req,function(errorFive,rowsFive){
                                     res.status(200).json({TotalGameUser:resOne[0].TotalGameUser,
                                         TotalExam:resTwo[0].TotalExam,
@@ -2722,8 +2727,8 @@ module.exports = function (app,cli,mail) {
                     queries.get_total_game_users_for_admin_parent({},function(errTwo,resTwo){
                         cli.blue(resTwo);
                         if(errTwo) throw errTwo;
-                        queries.ls_mcq_count({eTypeQuestion:eTypeQuestion},function(errThree,resThree){
-                            queries.ls_vsq_count({eTypeQuestion:eTypeQuestion},function(errFour,resFour){
+                        queries.ls_mcq_count({eTypeQuestion:eTypeQuestion,vMultiplication:[]},function(errThree,resThree){
+                            queries.ls_vsq_count({eTypeQuestion:eTypeQuestion,vMultiplication:[]},function(errFour,resFour){
                                 queries.get_total_users_for_admin({vParentType:'Teacher'},function(errFive,resFive){
                                     queries.get_total_exams({},function(errSix,resSix){
                                         queries.getSettings(req,function(errorSeven,resSeven){

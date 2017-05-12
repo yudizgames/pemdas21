@@ -3,7 +3,7 @@
  */
 angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootScope,toastr,$state,DTOptionsBuilder, DTColumnBuilder,$compile) {
     console.log("Question controller call");
-
+    $scope.multiples = [0,0,0,0,0,0,0,0,0,0,0,0];
     $scope.search={
         mcq:false,
         vsq:false,
@@ -12,7 +12,8 @@ angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootSc
         mutiplication:false,
         division:false,
         addition:false,
-        subtraction:false
+        subtraction:false,
+        vMultiplication:[1,2,3,4,5,6,7,8,9,10,11,12]
     }
     $scope.searchCount = 0;
 
@@ -145,7 +146,14 @@ angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootSc
      * Search
      */
     $scope.fnsearch = function (str) {
-
+        var  mutiplication = [];
+        console.log($scope.multiples);
+        for(var i = 0; i<$scope.multiples.length; i++){
+            if($scope.multiples[i] != 0){
+                mutiplication.push($scope.multiples[i]);
+            }
+        }
+        console.log(mutiplication);
         if(str == 'reset'){
             $scope.search={
                 mcq:false,
@@ -156,8 +164,12 @@ angular.module('admin').controller('QuestionCtrl',function ($scope,$http,$rootSc
                 division:false,
                 addition:false,
                 subtraction:false
-            }
+            };
+            $scope.multiples = [0,0,0,0,0,0,0,0,0,0,0,0];
         }
+        $scope.mutiplication = mutiplication;
+        $scope.search.vMultiplication = mutiplication;
+
         console.log($scope.dtInstanceQuestion);
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax',{
             dataSrc:"data",

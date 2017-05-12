@@ -17,6 +17,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
     $scope.examQuestionROne = [];
     $scope.examQuestionROneUpdate = [];
     $scope.dtInstanceQuestionROne = {};
+    $scope.multiplesOne = [0,0,0,0,0,0,0,0,0,0,0,0];
 
 
     //Round Two Question
@@ -25,6 +26,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
     $scope.vsqExamQuestion = [];
     $scope.vsqExamQuestionUpdate = [];
     $scope.dtInstanceQuestionRTwo = {};
+    $scope.multiplesTwo = [0,0,0,0,0,0,0,0,0,0,0,0];
     //Edit Purpose
     $scope.examQuestionOne = [];
     $scope.examQuestionTwo = [];
@@ -149,6 +151,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
      */
 
     $scope.RoundOnefn = function(){
+            // console.log($scope.multiplesOne);
             console.log("Round One Function Call");
             console.log($scope.examdata);
             // $scope.questionStatusROne = [];
@@ -183,7 +186,7 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 .withOption('aaSorting',[0,'desc'])
                 .withOption('createdRow',function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
                     $compile(nRow)($scope);
-                });
+            });
 
     }
 
@@ -474,7 +477,6 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
     }
 
     $scope.fnsearchone = function(str){
-        $scope.dtInstances.dtInstanceQuestionROne.reloadData();
         if(str == 'reset'){
             $scope.searchOne = {
                 panethesis:false,
@@ -483,9 +485,20 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
                 division:false,
                 addition:false,
                 subtraction:false,
-                vMultiplication:""
+                vMultiplication:[]
+            };
+            $scope.multiplesOne = [0,0,0,0,0,0,0,0,0,0,0,0];
+        }
+        var vMultiplication = [];
+        for(var i = 0; i < $scope.multiplesOne.length; i++){
+            if($scope.multiplesOne[i] != 0){
+                vMultiplication.push($scope.multiplesOne[i]);
+                console.log("not match");
             }
         }
+        $scope.searchOne.vMultiplication = vMultiplication;
+        $scope.dtInstances.dtInstanceQuestionROne.reloadData();
+
 
         $scope.dtOptionsROne = DTOptionsBuilder.newOptions().withOption('ajax',{
             dataSrc:"data",
@@ -508,18 +521,28 @@ angular.module('client').controller('ExamFormCtrl',function ($scope,$stateParams
     }
 
     $scope.fnsearchtwo = function(str){
-        $scope.dtInstances.dtInstanceQuestionRTwo.reloadData();
         if(str == 'reset'){
-            $scope.searchOne = {
+            $scope.searchTwo = {
                 panethesis:false,
                 exponent:false,
                 mutiplication:false,
                 division:false,
                 addition:false,
                 subtraction:false,
-                vMultiplication:""
+                vMultiplication:[]
+            };
+            $scope.multiplesTwo = [0,0,0,0,0,0,0,0,0,0,0,0];
+        }
+        console.log($scope.multiplesTwo);
+        var vMultiplication = [];
+        for(var i = 0; i < $scope.multiplesTwo.length; i++){
+            if($scope.multiplesTwo[i] != 0){
+                vMultiplication.push($scope.multiplesTwo[i]);
+                console.log("not match");
             }
         }
+        $scope.searchTwo.vMultiplication = vMultiplication;
+        $scope.dtInstances.dtInstanceQuestionRTwo.reloadData();
         $scope.dtOptionsROne = DTOptionsBuilder.newOptions().withOption('ajax',{
             dataSrc:"data",
             url:'/list_mcq',

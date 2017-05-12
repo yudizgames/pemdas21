@@ -38,7 +38,7 @@
                         <!--</li>-->
                     <!--</ul>-->
                 </div>
-                <div class="body">
+                <div class="body ">
                     <form name="form_user" id="form_user" novalidate ng-submit="submitExamDetails()">
                         <div class="form-group">
                             <div class="form-line">
@@ -154,7 +154,7 @@
     <!-- Basic Examples -->
     <div class="row clearfix" ng-if="RoundOneShow" ng-init="RoundOnefn()">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card card-exam">
                 <div class="header">
                     <h2 class="header-subject">Round One Question List</h2>
                     <ul class="header-dropdown m-r--5" style="margin-top: -20px;">
@@ -162,100 +162,192 @@
                     </ul>
                 </div>
                 <div class="clearfix"></div>
-                <div class="body">
-                    <table class="table table-striped table-bordered">
-                        <tr>
-                            <th>Parenthesis</th>
-                            <th>Exponent</th>
-                            <th>Multiplication</th>
-                            <th>Division</th>
-                            <th>Addition</th>
-                            <th>Subtraction</th>
-                            <th>Search {{oneSearchCount}}</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox" ng-model="searchOne.panethesis" ng-true-value="true" ng-false-value="false" ng-change="searchOne.panethesis == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
-                                        <span class="lever"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox" ng-model="searchOne.exponent" ng-true-value="true" ng-false-value="false" ng-change="searchOne.exponent == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
-                                        <span class="lever"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox" ng-model="searchOne.mutiplication" ng-true-value="true" ng-false-value="false" ng-change="searchOne.mutiplication == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
-                                        <span class="lever"></span>
-                                    </label>
-                                </div>
-                                <div ng-if="searchOne.mutiplication" style="margin-top: 10px;">
-                                    <span>Multiplication Of </span>
-                                    <select name="multiplicationOne" class="form-control" ng-model="searchOne.vMultiplication" style="border: 1px solid;border-color: green;" required>
-                                        <option selected="selected" value="0">All</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                    <!--<input type="number" ng-model="searchOne.vMultiplication" required ng-minlength="1">-->
-                                </div>
-                            </td>
-                            <td>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox" ng-model="searchOne.division" ng-true-value="true" ng-false-value="false" ng-change="searchOne.division == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
-                                        <span class="lever"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox" ng-model="searchOne.addition" ng-true-value="true" ng-false-value="false" ng-change="searchOne.addition == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
-                                        <span class="lever"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox" ng-model="searchOne.subtraction" ng-true-value="true" ng-false-value="false" ng-change="searchOne.subtraction == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
-                                        <span class="lever"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <button ng-click="fnsearchone('search')" class="btn btn-raised btn-sm btn-primary waves-effect" ng-disabled="oneSearchCount > 0 ? false : true">Search</button>
-                                <button ng-click="fnsearchone('reset')" class="btn btn-raised btn-sm btn-primary waves-effect">Reset</button>
-                            </td>
-                        </tr>
-
-                    </table>
-                    <table id="datatableone" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable="" dt-options="dtOptionsROne" dt-columns="dtColumnsROne" dt-instance="dtInstances.dtInstanceQuestionROne"></table>
+                <div class="body exam-body" ng-class="searchOne.mutiplication == true ? 'search-body-active' : '' ">
+                    <div class="responsive-table">
+                        <table class="table table-striped table-bordered">
+                            <tr>
+                                <th colspan="2">Parenthesis</th>
+                                <th colspan="2">Exponent</th>
+                                <th colspan="2">Multiplication</th>
+                                <th colspan="2">Division</th>
+                                <th colspan="2">Addition</th>
+                                <th colspan="2">Subtraction</th>
+                                <th>Search</th>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox" ng-disabled="searchOne.mutiplication == true ? true : false" ng-model="searchOne.panethesis" ng-true-value="true" ng-false-value="false" ng-change="searchOne.panethesis == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"  ng-disabled="searchOne.mutiplication == true ? true : false" ng-model="searchOne.exponent" ng-true-value="true" ng-false-value="false" ng-change="searchOne.exponent == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox" ng-model="searchOne.mutiplication" ng-true-value="true" ng-false-value="false" ng-change="searchOne.mutiplication == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"  ng-disabled="searchOne.mutiplication == true ? true : false" ng-model="searchOne.division" ng-true-value="true" ng-false-value="false" ng-change="searchOne.division == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"  ng-disabled="searchOne.mutiplication == true ? true : false" ng-model="searchOne.addition" ng-true-value="true" ng-false-value="false" ng-change="searchOne.addition == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <div class="switch">
+                                        <label>
+                                            <input type="checkbox"  ng-disabled="searchOne.mutiplication == true ? true : false" ng-model="searchOne.subtraction" ng-true-value="true" ng-false-value="false" ng-change="searchOne.subtraction == true ? oneSearchCount = oneSearchCount + 1 : oneSearchCount = oneSearchCount - 1">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button ng-click="fnsearchone('search')" class="btn btn-raised btn-sm btn-primary waves-effect" ng-disabled="oneSearchCount > 0 ? false : true">Search</button>
+                                    <button ng-click="fnsearchone('reset')" class="btn btn-raised btn-sm btn-primary waves-effect">Reset</button>
+                                </td>
+                            </tr>
+                            <tr ng-if="searchOne.mutiplication" class="tr_search_one">
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 1
+                                            <input type="checkbox" ng-model="multiplesOne[0]" ng-true-value="1" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 2
+                                            <input type="checkbox" ng-model="multiplesOne[1]" ng-true-value="2" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 3
+                                            <input type="checkbox" ng-model="multiplesOne[2]" ng-true-value="3" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 4
+                                            <input type="checkbox" ng-model="multiplesOne[3]" ng-true-value="4" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 5
+                                            <input type="checkbox" ng-model="multiplesOne[4]" ng-true-value="5" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 6
+                                            <input type="checkbox" ng-model="multiplesOne[5]" ng-true-value="6" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 7
+                                            <input type="checkbox" ng-model="multiplesOne[6]" ng-true-value="7" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 8
+                                            <input type="checkbox" ng-model="multiplesOne[7]" ng-true-value="8" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 9
+                                            <input type="checkbox" ng-model="multiplesOne[8]" ng-true-value="9" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 10
+                                            <input type="checkbox" ng-model="multiplesOne[9]" ng-true-value="10" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 11
+                                            <input type="checkbox" ng-model="multiplesOne[10]" ng-true-value="11" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Multiples of 12
+                                            <input type="checkbox" ng-model="multiplesOne[11]" ng-true-value="12" ng-false-value="0">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <table id="datatableone" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered datatableone" datatable="" dt-options="dtOptionsROne" dt-columns="dtColumnsROne" dt-instance="dtInstances.dtInstanceQuestionROne"></table>
                 </div>
             </div>
         </div>
     </div>
     <div class="row clearfix" ng-if="RoundTwoShow" ng-init="RoundTwofn()">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card card-exam">
                 <div class="header">
                     <h2 class="header-subject">Round Two Question List</h2>
                     <ul class="header-dropdown m-r--5" style="margin-top: -20px;">
@@ -263,86 +355,64 @@
                     </ul>
                 </div>
                 <div class="clearfix"></div>
-                <div class="body" >
+                <div class="body exam-body" ng-class="searchTwo.mutiplication == true ? 'search-body-active' : ' ' ">
                     <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
-                    <table class="table table-striped table-bordered">
+                    <div class="responsive-table">
+                        <table class="table table-striped table-bordered">
                         <tr>
-                            <th>Parenthesis</th>
-                            <th>Exponent</th>
-                            <th>Multiplication</th>
-                            <th>Division</th>
-                            <th>Addition</th>
-                            <th>Subtraction</th>
+                            <th colspan="2">Parenthesis</th>
+                            <th colspan="2">Exponent</th>
+                            <th colspan="2">Multiplication</th>
+                            <th colspan="2">Division</th>
+                            <th colspan="2">Addition</th>
+                            <th colspan="2">Subtraction</th>
                             <th>Search</th>
                         </tr>
                         <tr>
-                            <td>
-                                <div class="switch">
+                            <td colspan="2">
+                                <div class="switch" >
                                     <label>
-                                        <input type="checkbox" ng-model="searchTwo.panethesis" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.panethesis == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = onetwoSearchCounttwoSearchCountearchCount - 1">
+                                        <input type="checkbox"  ng-disabled="searchTwo.mutiplication == true ? true : false"  ng-model="searchTwo.panethesis"  ng-true-value="true" ng-false-value="false" ng-change="searchTwo.panethesis == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = onetwoSearchCounttwoSearchCountearchCount - 1">
                                         <span class="lever"></span>
                                     </label>
                                 </div>
                             </td>
-                            <td>
+                            <td colspan="2">
                                 <div class="switch">
                                     <label>
-                                        <input type="checkbox" ng-model="searchTwo.exponent" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.exponent == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <input type="checkbox" ng-disabled="searchTwo.mutiplication == true ? true : false" ng-model="searchTwo.exponent" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.exponent == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
                                         <span class="lever"></span>
                                     </label>
                                 </div>
                             </td>
-                            <td>
+                            <td colspan="2">
                                 <div class="switch">
                                     <label>
-                                        <input type="checkbox" ng-model="searchTwo.mutiplication" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.mutiplication == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
-                                        <span class="lever"></span>
-                                    </label>
-                                </div>
-                                <!--<div ng-if="searchTwo.mutiplication">-->
-                                    <!--<span>Multiplication Of </span> <input type="number" ng-model="searchTwo.vMultiplication" required ng-minlength="1">-->
-                                <!--</div>-->
-                                <div ng-if="searchTwo.mutiplication" style="margin-top: 10px;">
-                                    <span>Multiplication Of </span>
-                                    <select name="multiplicationOne" class="form-control" ng-model="searchTwo.vMultiplication" style="border: 1px solid;border-color: green;" required>
-                                        <option selected="selected" value="0">All</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                    <!--<input type="number" ng-model="searchOne.vMultiplication" required ng-minlength="1">-->
-                                </div>
-
-                            </td>
-                            <td>
-                                <div class="switch">
-                                    <label>
-                                        <input type="checkbox" ng-model="searchTwo.division" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.division == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <input type="checkbox"  ng-model="searchTwo.mutiplication" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.mutiplication == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
                                         <span class="lever"></span>
                                     </label>
                                 </div>
                             </td>
-                            <td>
+                            <td colspan="2">
                                 <div class="switch">
                                     <label>
-                                        <input type="checkbox" ng-model="searchTwo.addition" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.addition == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <input type="checkbox" ng-disabled="searchTwo.mutiplication == true ? true : false" ng-model="searchTwo.division" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.division == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
                                         <span class="lever"></span>
                                     </label>
                                 </div>
                             </td>
-                            <td>
+                            <td colspan="2">
                                 <div class="switch">
                                     <label>
-                                        <input type="checkbox" ng-model="searchTwo.subtraction" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.subtraction == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <input type="checkbox" ng-disabled="searchTwo.mutiplication == true ? true : false" ng-model="searchTwo.addition" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.addition == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td colspan="2">
+                                <div class="switch">
+                                    <label>
+                                        <input type="checkbox" ng-disabled="searchTwo.mutiplication == true ? true : false" ng-model="searchTwo.subtraction" ng-true-value="true" ng-false-value="false" ng-change="searchTwo.subtraction == true ? twoSearchCount = twoSearchCount + 1 : twoSearchCount = twoSearchCount - 1">
                                         <span class="lever"></span>
                                     </label>
                                 </div>
@@ -352,7 +422,118 @@
                                 <button ng-click="fnsearchtwo('reset')" class="btn btn-raised btn-sm btn-primary waves-effect">Reset</button>
                             </td>
                         </tr>
+                        <tr ng-if="searchTwo.mutiplication" class="tr_search_one">
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 1
+                                        <input type="checkbox" ng-model="multiplesTwo[0]" ng-true-value="1" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 2
+                                        <input type="checkbox" ng-model="multiplesTwo[1]" ng-true-value="2" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 3
+                                        <input type="checkbox" ng-model="multiplesTwo[2]" ng-true-value="3" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 4
+                                        <input type="checkbox" ng-model="multiplesTwo[3]" ng-true-value="4" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 5
+                                        <input type="checkbox" ng-model="multiplesTwo[4]" ng-true-value="5" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 6
+                                        <input type="checkbox" ng-model="multiplesTwo[5]" ng-true-value="6" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 7
+                                        <input type="checkbox" ng-model="multiplesTwo[6]" ng-true-value="7" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 8
+                                        <input type="checkbox" ng-model="multiplesTwo[7]" ng-true-value="8" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 9
+                                        <input type="checkbox" ng-model="multiplesTwo[8]" ng-true-value="9" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 10
+                                        <input type="checkbox" ng-model="multiplesTwo[9]" ng-true-value="10" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 11
+                                        <input type="checkbox" ng-model="multiplesTwo[10]" ng-true-value="11" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        Multiples of 12
+                                        <input type="checkbox" ng-model="multiplesTwo[11]" ng-true-value="12" ng-false-value="0">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
+                    </div>
                     <table id="datatabletwo" style="border-bottom: solid 1px #eeeeee;" class="table table-striped table-bordered" datatable="" dt-options="dtOptionsRTwo" dt-columns="dtColumnsRTwo" dt-instance="dtInstances.dtInstanceQuestionRTwo"></table>
                 </div>
             </div>
